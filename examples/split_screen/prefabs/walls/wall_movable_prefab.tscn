@@ -1,7 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://b5g52djlb36hm"]
+[gd_scene load_steps=6 format=3 uid="uid://dg0arsjg6i3w8"]
 
-[ext_resource type="Script" path="res://_project/scripts/utils/collisions_3d_data/collision_3d_data_controller.gd" id="1_e1pry"]
-[ext_resource type="Resource" uid="uid://duolfw0vsfe0o" path="res://_project/datas/collision_3d_data.tres" id="2_u31cs"]
+[ext_resource type="Script" path="res://utils/scripts/collisions_3d_data/collision_3d_data_controller.gd" id="1_13u2a"]
+[ext_resource type="Resource" uid="uid://duolfw0vsfe0o" path="res://examples/split_screen/datas/collision_3d_data.tres" id="2_cltw7"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_oeksc"]
 
@@ -11,7 +11,7 @@ albedo_color = Color(0.205117, 0.205117, 0.205117, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_320ow"]
 size = Vector3(50, 1, 50)
 
-[node name="Wall" type="StaticBody3D"]
+[node name="Wall" type="AnimatableBody3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 50, 0, 0, 0)
@@ -23,7 +23,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_vfqq3")
 shape = SubResource("BoxShape3D_320ow")
 
 [node name="Collision3DDataController" type="Node" parent="." node_paths=PackedStringArray("collision_object")]
-script = ExtResource("1_e1pry")
-collision_object = NodePath("..")
+script = ExtResource("1_13u2a")
+collision_object = NodePath("")
 collision_name = &"Wall"
-collision_data = ExtResource("2_u31cs")
+collision_data = ExtResource("2_cltw7")
