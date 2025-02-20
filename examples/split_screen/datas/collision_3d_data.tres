@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Collision3DDataResource" load_steps=5 format=3 uid="uid://duolfw0vsfe0o"]
 
-[ext_resource type="Script" path="res://utils/scripts/collisions_3d_data/collision_3d_model_data.gd" id="1_5p7al"]
-[ext_resource type="Script" path="res://utils/scripts/collisions_3d_data/collision_3d_data_resource.gd" id="2_rsykl"]
+[ext_resource type="Script" path="res://utils/scripts/datas_and_controllers/collisions_3d_data/collision_3d_model_data.gd" id="1_5p7al"]
+[ext_resource type="Script" path="res://utils/scripts/datas_and_controllers/collisions_3d_data/collision_3d_data_resource.gd" id="2_rsykl"]
 
 [sub_resource type="Resource" id="Resource_3lcpx"]
 script = ExtResource("1_5p7al")
