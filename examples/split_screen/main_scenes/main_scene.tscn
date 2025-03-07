@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://4nds2pcusf5u"]
 
-[ext_resource type="Script" path="res://utils/scripts/split_screen_manager/split_screen_manager.gd" id="1_b1w35"]
+[ext_resource type="Script" uid="uid://c0fle32pe5d0x" path="res://utils/scripts/split_screen_manager/split_screen_manager.gd" id="1_b1w35"]
 [ext_resource type="PackedScene" uid="uid://byn0rt8cp6x30" path="res://examples/split_screen/prefabs/player_prefab.tscn" id="2_8uwa8"]
 [ext_resource type="PackedScene" uid="uid://b5g52djlb36hm" path="res://examples/split_screen/prefabs/walls/wall_prefab.tscn" id="3_ui6wo"]
 
