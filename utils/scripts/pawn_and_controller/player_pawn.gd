@@ -25,8 +25,8 @@ func unpossess():
 
 ##called when a controller possess this pawn
 func on_possess(new_controller : PlayerController):
-	on_possess_event.emit()
+	on_possess_event.emit(new_controller)
 
 ##called when a controller unpossess this pawn
 func on_unpossess(previous_controller : PlayerController):
-	on_unpossess_event.emit()
+	on_unpossess_event.emit(previous_controller)
