@@ -1,8 +1,8 @@
 class_name PlayerPawn extends Node
 
 var current_controller : PlayerController
-var on_possess_event : Signal
-var on_unpossess_event : Signal
+signal on_possess_event
+signal on_unpossess_event
 
 ##call possess on controller, to possess this pawn
 func possess(player_controller : PlayerController):
