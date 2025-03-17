@@ -2,7 +2,10 @@ extends Node
 
 class_name Player
 
+##-1 is only keyboard, from 0 to number of players is the joypad index
 @export var player_index : int
+##ignore player index and use inputs set in editor. So works with both mouse and joypad
+@export var work_with_every_device : bool
 @export var body : CharacterBody3D
 @export var camera : Camera3D
 
@@ -11,11 +14,12 @@ const JUMP_VELOCITY = 4.5
 var input_suffix : String
 
 func _ready() -> void:
-	#save input_suffix for multiple gamepad. If lower than 0 is keyboard, so ignore suffix
-	if player_index >= 0:
-		input_suffix = SplitScreenInputs.get_device_suffix(player_index)
-	else:
+	#use inputs in editor (both mouse and joypad)
+	if work_with_every_device:
 		input_suffix = ""
+	#or save suffix for multiple devices
+	else:
+		input_suffix = SplitScreenInputs.get_device_suffix(player_index)
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.

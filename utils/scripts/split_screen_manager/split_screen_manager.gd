@@ -62,7 +62,10 @@ func set_cameras():
 	for i in number_of_players:
 		SplitScreenViewports.set_camera_viewport(cameras[i], viewports_rects[i], screen_size, str("Camera Player ", i), scene_tree)
 
-## Duplicate joypad inputs for other players
+## Duplicate inputs for every player
 func add_inputs():
+	#create a copy of joypad inputs for every device
 	for i in range(number_of_players):
-		SplitScreenInputs.add_device(i)
+		SplitScreenInputs.add_device(i, true, false)
+	#create also a copy of mouse and keyboard inputs with device suffix -1
+	SplitScreenInputs.add_device(-1, false, true)
