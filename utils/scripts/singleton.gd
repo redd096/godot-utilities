@@ -20,7 +20,7 @@ static func instance(type : String, script_type : Object = null) -> Variant:
 	#if singleton isn't already registered
 	else:
 		#try find it in scene
-		var obj_instance : Object = null#find_object_of_type(type)
+		var obj_instance : Object = find_object_of_type(type)
 		#or instantiate it
 		if obj_instance == null and script_type != null:
 			print(type, " is null. It will be automatically instantiated")
