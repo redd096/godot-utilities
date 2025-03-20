@@ -1,22 +1,27 @@
 extends Node
 
 class_name SplitScreenManager 
-
+## Split screen in _ready() function. If false, you have to call manually update_split_screen()
+@export var auto_start : bool = true
 ## Number of players for this game
 @export_range(1, 4) var number_of_players : int = 1
-## True if use Camera2D or False if use Camera3D. Used if cameras is not set
-@export var is_camera_2d : bool
 ## True = split up and down, False = split left and right
 @export var prefer_vertical : bool = true
 ## Your players in scene and in the correct order (player 1, player 2, etc...). If they exceed the number of players, they are destroyed
 @export var players : Array[Node]
 ## Your cameras in scene and in the correct order (cam for player 1, cam for player 2, etc...). If they aren't set, will try to get camera inside the player
 @export var cameras : Array[Node]
+## True if use Camera2D or False if use Camera3D. Used if cameras is not set
+@export var is_camera_2d : bool
 
 ## Screen rect for every camera
 var viewports_rects : Array[Rect2]
 
 func _ready() -> void:
+	if auto_start:
+		update_split_screen()
+
+func update_split_screen() -> void:
 	var players_ok = destroy_exceed_players()
 	var cameras_ok = get_cameras()
 	var rects_ok = get_viewports_rects()
@@ -28,7 +33,7 @@ func _ready() -> void:
 func destroy_exceed_players() -> bool:
 	#be sure there is the correct number of players
 	if number_of_players > players.size():
-		push_error(str("Need ", number_of_players, "players but they are ", players.size()))
+		push_error(str("Need ", number_of_players, " players but they are ", players.size()))
 		return false
 		
 	for i in range(number_of_players, players.size()):
