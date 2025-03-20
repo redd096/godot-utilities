@@ -12,7 +12,7 @@ class_name Singleton
 ## Return registered instance. If not registered, find in scene or instantiate it. 
 ## NB instantiate only if scrit_type is != null. 
 ## e.g. Singleton.instance("Camera2D", Camera2D) to look for Camera2D in scene, else instantiate it
-## e.g. Singleton.instance("Camera") to look for Camera2D in scene, else return null
+## e.g. Singleton.instance("Camera2D") to look for Camera2D in scene, else return null
 static func instance(type : String, script_type : Object = null) -> Variant:
 	#if singleton is already registered, return it
 	if Engine.has_singleton(type):
