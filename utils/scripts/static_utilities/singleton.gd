@@ -28,25 +28,26 @@ static func check_instance(self_obj : Node) -> bool:
 ## e.g. Singleton.instance("Camera2D", Camera2D) to look for Camera2D in scene, else instantiate it
 ## e.g. Singleton.instance("Camera2D") to look for Camera2D in scene, else return null
 static func instance(type : String, script_type : Object = null) -> Variant:
-	#if singleton is already registered, return it
+	#if singleton is already registered and it's still valid, return it
 	if Engine.has_singleton(type):
-		return Engine.get_singleton(type)
-	#if singleton isn't already registered
-	else:
-		#try find it in scene
-		var obj_instance : Object = find_object_of_type(type)
-		#or instantiate it
-		if obj_instance == null and script_type != null:
-			print(type, " is null. It will be automatically instantiated")
-			obj_instance = script_type.new()
-			obj_instance.name = str(type, " (Auto Instantiated)")
-		#register it
-		if obj_instance:
-			Engine.register_singleton(type, obj_instance)
-			#if this is a Node be sure is in the tree and DontDestroyOnLoad
-			if obj_instance is Node:
-				dont_destroy_on_load(obj_instance)
-		return obj_instance
+		var current_instance = Engine.get_singleton(type)
+		if current_instance:
+			return current_instance
+	#if singleton isn't already registered or it is no more valid
+	#try find it in scene
+	var obj_instance : Object = find_object_of_type(type)
+	#or instantiate it
+	if obj_instance == null and script_type != null:
+		print(type, " is null. It will be automatically instantiated")
+		obj_instance = script_type.new()
+		obj_instance.name = str(type, " (Auto Instantiated)")
+	#register it
+	if obj_instance:
+		Engine.register_singleton(type, obj_instance)
+		#if this is a Node be sure is in the tree and DontDestroyOnLoad
+		if obj_instance is Node:
+			dont_destroy_on_load(obj_instance)
+	return obj_instance
 
 ## Equivalent of unity FindObjectOfType<type>
 static func find_object_of_type(type : String) -> Variant:
