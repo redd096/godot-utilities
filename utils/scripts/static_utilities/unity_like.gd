@@ -1,4 +1,4 @@
-class_name ExtNode
+class_name UnityLike
 
 ## Equivalent of unity node.GetComponentsInChildren<type>
 static func get_components_in_children(node : Node, type : String) -> Array:
