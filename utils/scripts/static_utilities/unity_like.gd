@@ -28,8 +28,13 @@ static func find_object_of_type(type : String) -> Variant:
 
 ## Equivalent of unity DontDestroyOnLoad(GameObject)
 static func dont_destroy_on_load(node : Node) -> void:
-	#remove from current parent
-	if node.get_parent():
-		node.get_parent().remove_child.call_deferred(node)
-	#set child of Root node (this isn't destroyed when change scene)
-	Engine.get_main_loop().root.add_child().call_deferred(node)
+	#check if this is already child of root node
+	var parent : Node = node.get_parent()
+	var root : Node = Engine.get_main_loop().root
+	if parent and parent == root:
+		return
+	#else remove from current parent
+	if parent:
+		parent.remove_child.call_deferred(node)
+	#and set child of root node (this isn't destroyed when change scene)
+	root.add_child.call_deferred(node)

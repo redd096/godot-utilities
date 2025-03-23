@@ -9,6 +9,20 @@
 
 class_name Singleton
 
+## If this is the instance, be sure is DontDestroyOnload and return true. 
+## If there is another instance, destroy this node and return false
+static func check_instance(self_obj : Node) -> bool:
+	#get current instance or find in scene
+	var current_instance : Object = instance(self_obj.get_class())
+	#if this is the instance, set DontDestroyOnload and return true
+	if current_instance == self_obj:
+		dont_destroy_on_load(self_obj)
+		return true
+	#else, destroy and return false
+	else:
+		self_obj.queue_free()
+		return false
+
 ## Return registered instance. If not registered, find in scene or instantiate it. 
 ## NB instantiate only if scrit_type is != null. 
 ## e.g. Singleton.instance("Camera2D", Camera2D) to look for Camera2D in scene, else instantiate it
@@ -26,12 +40,12 @@ static func instance(type : String, script_type : Object = null) -> Variant:
 			print(type, " is null. It will be automatically instantiated")
 			obj_instance = script_type.new()
 			obj_instance.name = str(type, " (Auto Instantiated)")
-			#add to tree if this is a Node (under root to have it as DontDestroyOnLoad)
-			if obj_instance is Node:
-				Engine.get_main_loop().root.add_child.call_deferred(obj_instance)
 		#register it
 		if obj_instance:
 			Engine.register_singleton(type, obj_instance)
+			#if this is a Node be sure is in the tree and DontDestroyOnLoad
+			if obj_instance is Node:
+				dont_destroy_on_load(obj_instance)
 		return obj_instance
 
 ## Equivalent of unity FindObjectOfType<type>
@@ -40,3 +54,16 @@ static func find_object_of_type(type : String) -> Variant:
 	#get components in children but ignore root node
 	var components : Array = root_node.find_children("*", str(type))
 	return components[0] if components.size() > 0 else null
+
+## Equivalent of unity DontDestroyOnLoad(GameObject)
+static func dont_destroy_on_load(node : Node) -> void:
+	#check if this is already child of root node
+	var parent : Node = node.get_parent()
+	var root : Node = Engine.get_main_loop().root
+	if parent and parent == root:
+		return
+	#else remove from current parent
+	if parent:
+		parent.remove_child.call_deferred(node)
+	#and set child of root node (this isn't destroyed when change scene)
+	root.add_child.call_deferred(node)
