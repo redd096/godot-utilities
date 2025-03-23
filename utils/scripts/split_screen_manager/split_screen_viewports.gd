@@ -48,7 +48,7 @@ static func get_viewports_rects(number_of_cameras : int, prefer_vertical : bool)
 	return rects
 
 ## Add subviewport for this camera
-static func set_camera_viewport(camera, viewport_rect : Rect2, screen_size : Vector2, container_name : String, scene_tree : SceneTree):
+static func set_camera_viewport(camera, viewport_rect : Rect2, screen_size : Vector2, container_name : String, keep_camera_parent : bool):
 	#create subviewport and container
 	var viewport = SubViewport.new()
 	var viewport_container = SubViewportContainer.new()
@@ -57,8 +57,10 @@ static func set_camera_viewport(camera, viewport_rect : Rect2, screen_size : Vec
 	#set position and size
 	viewport_container.position = screen_size * viewport_rect.position
 	viewport_container.size = screen_size * viewport_rect.size
-	#set hierarchy
-	scene_tree.current_scene.add_child.call_deferred(viewport_container)
+	#set hierarchy (set subviewport parent of camera or camera's parent)
+	var target_node : Node = camera.get_parent() if keep_camera_parent else camera
+	var target_node_parent : Node = target_node.get_parent()
+	target_node_parent.remove_child.call_deferred(target_node)
+	target_node_parent.add_child.call_deferred(viewport_container)
 	viewport_container.add_child.call_deferred(viewport)
-	camera.get_parent().remove_child.call_deferred(camera)
-	viewport.add_child.call_deferred(camera)
+	viewport.add_child.call_deferred(target_node)

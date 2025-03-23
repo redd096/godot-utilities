@@ -7,11 +7,13 @@ class_name SplitScreenManager
 @export_range(1, 4) var number_of_players : int = 1
 ## True = split up and down, False = split left and right
 @export var prefer_vertical : bool = true
+## If false, set Camera child of SubViewport. If true, set Camera's Parent child of SubViewport
+@export var keep_camera_parent : bool
 ## Your players in scene and in the correct order (player 1, player 2, etc...). If they exceed the number of players, they are destroyed
 @export var players : Array[Node]
 ## Your cameras in scene and in the correct order (cam for player 1, cam for player 2, etc...). If they aren't set, will try to get camera inside the player
 @export var cameras : Array[Node]
-## True if use Camera2D or False if use Camera3D. Used if cameras is not set
+## If cameras is null or empty, try get Camera2D or Camera3D in players childs
 @export var is_camera_2d : bool
 
 ## Screen rect for every camera
@@ -65,7 +67,7 @@ func set_cameras():
 	var screen_size : Vector2 = get_viewport().size
 	var scene_tree : SceneTree = get_tree()
 	for i in number_of_players:
-		SplitScreenViewports.set_camera_viewport(cameras[i], viewports_rects[i], screen_size, str("Camera Player ", i), scene_tree)
+		SplitScreenViewports.set_camera_viewport(cameras[i], viewports_rects[i], screen_size, str("Camera Player ", i), keep_camera_parent)
 
 ## Duplicate inputs for every player
 func add_inputs():
