@@ -9,7 +9,7 @@ class_name CollisionSpringArm3DDataController
 ## Find data inside a Resource in your project by Name
 @export var collision_data : CollisionSpringArm3DDataResource
 	
-func _ready() -> void:	
+func _ready() -> void:
 	#set layer to 3 
 	#(-1 because the parameter is an index but in inspector start from 1)
 	#spring_arm.collision_mask = 1 << (3-1)

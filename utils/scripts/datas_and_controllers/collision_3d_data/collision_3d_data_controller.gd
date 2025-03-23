@@ -11,7 +11,7 @@ class_name Collision3DDataController
 ## Find data inside a Resource in your project by Name
 @export var collision_data : Collision3DDataResource
 	
-func _ready() -> void:	
+func _ready() -> void:
 	#set layer to 3 
 	#(-1 because the parameter is an index but in inspector start from 1)
 	#collision_object.collision_layer = 1 << (3-1)
