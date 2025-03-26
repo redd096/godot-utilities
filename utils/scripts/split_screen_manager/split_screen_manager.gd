@@ -64,10 +64,8 @@ func get_viewports_rects() -> bool:
 
 ## Split vertical and horizontal
 func set_cameras():
-	#var screen_size : Vector2 = get_viewport().size
-	var screen_size = DisplayServer.screen_get_size()
 	for i in number_of_players:
-		SplitScreenViewports.set_camera_viewport(cameras[i], viewports_rects[i], screen_size, str("Camera Player ", i), keep_camera_parent)
+		SplitScreenViewports.set_camera_viewport(cameras[i], viewports_rects[i], str("Camera Player ", i), keep_camera_parent)
 
 ## Duplicate inputs for every player
 func add_inputs():

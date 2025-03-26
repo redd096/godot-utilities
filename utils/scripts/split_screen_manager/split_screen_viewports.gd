@@ -48,7 +48,10 @@ static func get_viewports_rects(number_of_cameras : int, prefer_vertical : bool)
 	return rects
 
 ## Add subviewport for this camera
-static func set_camera_viewport(camera, viewport_rect : Rect2, screen_size : Vector2, container_name : String, keep_camera_parent : bool):
+static func set_camera_viewport(camera, viewport_rect : Rect2, container_name : String, keep_camera_parent : bool):
+	#var screen_size : Vector2 = camera.get_viewport().size
+	#var screen_size = DisplayServer.screen_get_size()
+	var screen_size : Vector2 = camera.get_tree().root.content_scale_size
 	#create subviewport and container
 	var viewport = SubViewport.new()
 	var viewport_container = SubViewportContainer.new()

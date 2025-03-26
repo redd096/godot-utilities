@@ -48,9 +48,9 @@ remote_path = NodePath("../../Camera3D")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46162, -0.338215)
 current = true
 
-[node name="Crosshair CanvasLayer" type="CanvasLayer" parent="."]
+[node name="Crosshair CanvasLayer" type="CanvasLayer" parent="Camera3D"]
 
-[node name="Label" type="Label" parent="Crosshair CanvasLayer"]
+[node name="Label" type="Label" parent="Camera3D/Crosshair CanvasLayer"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
