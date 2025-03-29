@@ -17,9 +17,9 @@ static func get_component_in_children(node : Node, type : String) -> Variant:
 
 ## Equivalent of unity FindObjectsOfType<type>
 static func find_objects_of_type(type : String) -> Array:
-	var root_node : Node = Engine.get_main_loop().current_scene
+	var root_node : Node = Engine.get_main_loop().root
 	#get components in children but ignore root node
-	return root_node.find_children("*", str(type))
+	return root_node.find_children("*", str(type), true, false)
 
 ## Equivalent of unity FindObjectOfType<type>
 static func find_object_of_type(type : String) -> Variant:
