@@ -3,10 +3,18 @@ class_name SplitScreenInputs
 const SUFFIX : String = "_device"
 
 ## Duplicate every action with a new suffix for this device
-static func add_device(device : int, duplicate_joypad_events : bool, duplicate_keyboard_and_mouse_events : bool):
+static func add_device(device : int, duplicate_joypad_events : bool, duplicate_keyboard_and_mouse_events : bool) -> void:
 	var device_suffix = get_device_suffix(device)
 	for base_action in InputMap.get_actions():
-		duplicate_action(base_action, device, device_suffix, duplicate_joypad_events, duplicate_keyboard_and_mouse_events)
+		var new_action : String = base_action + device_suffix
+		duplicate_action(base_action, new_action, device, duplicate_joypad_events, duplicate_keyboard_and_mouse_events)
+
+## Remove every action for this device
+static func remove_device(device : int) -> void:
+	var device_suffix = get_device_suffix(device)
+	for base_action in InputMap.get_actions():
+		var action_name : String = base_action + device_suffix
+		remove_action(action_name)
 
 ## Return device suffix. Save it to to call actions
 ## e.g. Input.is_action_pressed("ui_select" + device_suffix)
@@ -15,9 +23,8 @@ static func get_device_suffix(device : int) -> String:
 
 ## Duplicate base_action and add device_suffix.
 ## Return true if the action is created
-static func duplicate_action(base_action : String, device : int, device_suffix : String, duplicate_joypad_events : bool, duplicate_keyboard_and_mouse_events : bool) -> bool:
+static func duplicate_action(base_action : String, new_action : String, device : int, duplicate_joypad_events : bool, duplicate_keyboard_and_mouse_events : bool) -> bool:
 	#be sure this action doesn't already exists
-	var new_action = base_action + device_suffix
 	if InputMap.has_action(new_action):
 		push_error(str("Already exists an action with this name: ", new_action))
 		return false
@@ -35,4 +42,16 @@ static func duplicate_action(base_action : String, device : int, device_suffix :
 			new_event.device = device
 			InputMap.action_add_event(new_action, new_event)
 			
+	return true
+
+## Remove action with this name. 
+## Return true if the action is removed
+static func remove_action(action_name : String) -> bool:
+	#be sure this action exists
+	if InputMap.has_action(action_name) == false:
+		push_error(str("Doesn't exists an action with this name: ", action_name))
+		return false
+	
+	#delete action
+	InputMap.erase_action(action_name)
 	return true
