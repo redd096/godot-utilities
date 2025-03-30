@@ -26,7 +26,7 @@ static func find_object_of_type(type : String) -> Variant:
 	var components : Array = find_objects_of_type(type)
 	return components[0] if components.size() > 0 else null
 
-## Equivalent of unity DontDestroyOnLoad(GameObject)
+## Equivalent of unity DontDestroyOnLoad(node)
 static func dont_destroy_on_load(node : Node) -> void:
 	#check if this is already child of root node
 	var parent : Node = node.get_parent()
@@ -38,3 +38,10 @@ static func dont_destroy_on_load(node : Node) -> void:
 		parent.remove_child.call_deferred(node)
 	#and set child of root node (this isn't destroyed when change scene)
 	root.add_child.call_deferred(node)
+
+## Equivalent of unity node.SetParent(parent)
+static func set_parent(node : Node, parent : Node) -> void:
+	var current_parent = node.get_parent()
+	if current_parent:
+		current_parent.remove_child.call_deferred(node)
+	parent.add_child.call_deferred(node)
