@@ -48,7 +48,7 @@ static func get_viewports_rects(number_of_cameras : int, prefer_vertical : bool)
 	return rects
 
 ## Add subviewport for this camera
-static func set_camera_viewport(camera, viewport_rect : Rect2, container_name : String, keep_camera_parent : bool):
+static func set_camera_viewport(camera, viewport_rect : Rect2, container_name : String, keep_camera_parents : int):
 	#var screen_size : Vector2 = camera.get_viewport().size
 	#var screen_size = DisplayServer.screen_get_size()
 	var screen_size : Vector2 = camera.get_tree().root.content_scale_size
@@ -60,8 +60,17 @@ static func set_camera_viewport(camera, viewport_rect : Rect2, container_name : 
 	#set position and size
 	viewport_container.position = screen_size * viewport_rect.position
 	viewport_container.size = screen_size * viewport_rect.size
-	#set hierarchy (set subviewport parent of camera or camera's parent)
-	var target_node : Node = camera.get_parent() if keep_camera_parent else camera
+	#set hierarchy (set subviewport parent of camera, or parent of N camera's parent)
+	#e.g. with keep_camera_parents = 2
+	# | target_node_parent - parent of 2 keep_camera_parents (camera.get_parent().get_parent().get_parent())
+	# |- viewport_container
+	# |-- viewport
+	# |--- target_node - 2 keep_camera_parents (camera.get_parent().get_parent())
+	# |---- 1 keep_camera_parents (camera.get_parent())
+	# |----- 0 keep_camera_parents (camera)
+	var target_node : Node = camera
+	for i in range(1, keep_camera_parents + 1):
+		target_node = target_node.get_parent()
 	var target_node_parent : Node = target_node.get_parent()
 	target_node_parent.remove_child.call_deferred(target_node)
 	target_node_parent.add_child.call_deferred(viewport_container)
