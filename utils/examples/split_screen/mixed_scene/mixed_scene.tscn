@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://c55sl33xp5aqx"]
+
+[ext_resource type="Script" uid="uid://bly4qjkuw6ab7" path="res://utils/examples/split_screen/mixed_scene/scripts/mixed_scene_manager.gd" id="1_50r60"]
+[ext_resource type="PackedScene" uid="uid://bf685s6q3ogg3" path="res://utils/examples/split_screen/core_select_device/select_device_scene.tscn" id="2_wajgi"]
+[ext_resource type="PackedScene" uid="uid://4nds2pcusf5u" path="res://utils/examples/split_screen/core_split_screen/split_screen_scene.tscn" id="4_yd7dt"]
+
+[node name="MixedScene" type="Node"]
+
+[node name="MixedSceneManager" type="Node" parent="." node_paths=PackedStringArray("split_screen_manager", "select_device_container", "select_device_manager")]
+script = ExtResource("1_50r60")
+number_of_players = 4
+split_screen_manager = NodePath("../SplitScreenScene/SplitScreenManager")
+select_device_container = NodePath("../SelectDeviceScene/UIMarginContainer")
+select_device_manager = NodePath("../SelectDeviceScene/SelectDeviceManager")
+metadata/_custom_type_script = "uid://bly4qjkuw6ab7"
+
+[node name="SplitScreenScene" parent="." instance=ExtResource("4_yd7dt")]
+
+[node name="SelectDeviceScene" parent="." instance=ExtResource("2_wajgi")]
+
+[editable path="SplitScreenScene"]
+[editable path="SelectDeviceScene"]

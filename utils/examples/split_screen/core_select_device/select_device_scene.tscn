@@ -11,7 +11,7 @@
 
 [node name="SelectDeviceScene" type="Node"]
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="UIMarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,28 +22,53 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="BackgroundColorRect" type="ColorRect" parent="MarginContainer"]
+[node name="BackgroundColorRect" type="ColorRect" parent="UIMarginContainer"]
 layout_mode = 2
 color = Color(0.190762, 0.190762, 0.190762, 1)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UIMarginContainer"]
 layout_mode = 2
+
+[node name="ColumnsContainer" type="HBoxContainer" parent="UIMarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="Unused" parent="MarginContainer/HBoxContainer" instance=ExtResource("1_xqbb4")]
+[node name="Unused" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" instance=ExtResource("1_xqbb4")]
 layout_mode = 2
 
-[node name="Player1" parent="MarginContainer/HBoxContainer" instance=ExtResource("1_xqbb4")]
+[node name="Player1" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" instance=ExtResource("1_xqbb4")]
 layout_mode = 2
 
-[node name="Player2" parent="MarginContainer/HBoxContainer" instance=ExtResource("1_xqbb4")]
+[node name="Player2" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" instance=ExtResource("1_xqbb4")]
 layout_mode = 2
 
-[node name="Player3" parent="MarginContainer/HBoxContainer" instance=ExtResource("1_xqbb4")]
+[node name="Player3" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" instance=ExtResource("1_xqbb4")]
 layout_mode = 2
 
-[node name="Player4" parent="MarginContainer/HBoxContainer" instance=ExtResource("1_xqbb4")]
+[node name="Player4" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" instance=ExtResource("1_xqbb4")]
 layout_mode = 2
+
+[node name="ButtonsMarginContainer" type="MarginContainer" parent="UIMarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UIMarginContainer/VBoxContainer/ButtonsMarginContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 2
+
+[node name="CancelButton" type="Button" parent="UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="ConfirmButton" type="Button" parent="UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Confirm"
 
 [node name="ConnectionDevicesManager" type="Node" parent="."]
 script = ExtResource("4_l1o71")
@@ -55,15 +80,16 @@ connection_devices = NodePath("../ConnectionDevicesManager")
 number_of_players = 4
 metadata/_custom_type_script = "uid://c1ani4ww6m83a"
 
-[node name="SD_UIManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "errors_manager", "columns_container")]
+[node name="SD_UIManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "columns_container", "cancel_button", "confirm_button")]
 script = ExtResource("5_xqbb4")
 select_device_manager = NodePath("../SelectDeviceManager")
-errors_manager = NodePath("../SD_ErrorsManager")
 column_prefab = ExtResource("1_xqbb4")
 keyboard_prefab = ExtResource("4_xqbb4")
 joypad_prefab = ExtResource("5_1sfdm")
 empty_device_prefab = ExtResource("7_l1o71")
-columns_container = NodePath("../MarginContainer/HBoxContainer")
+columns_container = NodePath("../UIMarginContainer/VBoxContainer/ColumnsContainer")
+cancel_button = NodePath("../UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer/CancelButton")
+confirm_button = NodePath("../UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer/ConfirmButton")
 metadata/_custom_type_script = "uid://ddq7geg837t1o"
 
 [node name="SD_ErrorsManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "ui_manager")]

@@ -2,41 +2,20 @@ class_name SelectDeviceErrorsManager extends Node
 
 @export var select_device_manager : SelectDeviceManager
 @export var ui_manager : SelectDeviceUIManager
-@export var error_color : Color = Color.RED
+@export var error_color : Color = Color.DARK_RED
 @export var only_one_device_per_column : bool = true
 @export var at_least_one_player_set : bool = true
 
-var is_initialized : bool
 var default_colors : Array[Color]
 
-func initialize_manager() -> void:
-	if is_initialized:
-		return
-	#save default colors
-	for column in ui_manager.columns:
-		default_colors.append(column.color_rect.color)
+func _ready() -> void:
 	#register to events
 	select_device_manager.on_update_devices_positions.connect(on_update_devices_positions)
 	select_device_manager.on_check_errors.connect(on_check_errors)
 	select_device_manager.on_cancel.connect(on_cancel)
 	select_device_manager.on_confirm_succeeded.connect(on_confirm_succeeded)
 	select_device_manager.on_confirm_failed.connect(on_confirm_failed)
-	#update var
-	is_initialized = true
-
-func deinitialize_manager() -> void:
-	if is_initialized == false:
-		return
-	#clear colors
-	default_colors.clear()
-	#unregister from events
-	select_device_manager.on_update_devices_positions.disconnect(on_update_devices_positions)
-	select_device_manager.on_check_errors.disconnect(on_check_errors)
-	select_device_manager.on_cancel.disconnect(on_cancel)
-	select_device_manager.on_confirm_succeeded.disconnect(on_confirm_succeeded)
-	select_device_manager.on_confirm_failed.disconnect(on_confirm_failed)
-	#update var
-	is_initialized = false
+	ui_manager.on_recreate_columns.connect(recalculate_default_colors)
 
 func on_update_devices_positions(_devices_positions : Dictionary[int, int], show_unused_column : SelectDeviceManager.UnusedColumnPosition) -> void:
 	var players_devices : Array[Array] = select_device_manager.get_players_devices()
@@ -69,18 +48,23 @@ func on_check_errors(output_error : SelectDeviceManager.ErrorResult) -> void:
 			output_error.error_message += "There aren't players with a connected device!"
 
 func on_cancel() -> void:
-	print("Cancel!")
+	print("SelectDeviceErrorsManager: Cancel!")
 
 func on_confirm_succeeded(players_devices : Array[Array]) -> void:
-	print("Confirm Success!") 
+	print("SelectDeviceErrorsManager: Confirm Success!") 
 	for i in players_devices.size(): 
 		var s : String = ""
 		for device in players_devices[i]: 
 			s += str(device, ",")
-		print ("Player ", i, " has device: ", s)
+		print ("SelectDeviceErrorsManager: Player ", i, " has device: ", s)
 
 func on_confirm_failed(error_message : String) -> void:
-	print("Confirm Failed! \n", error_message)
+	print("SelectDeviceErrorsManager: Confirm Failed! \n", error_message)
+
+## Save default colors for every ui column
+func recalculate_default_colors() -> void:
+	for column in ui_manager.columns:
+		default_colors.append(column.color_rect.color)
 
 ## If at least one player has a device, return true. Else return false
 func check_at_least_one_player_set(players_devices : Array[Array]) -> bool:

@@ -2,7 +2,6 @@
 class_name SelectDeviceUIManager extends Node
 
 @export var select_device_manager : SelectDeviceManager
-@export var errors_manager : SelectDeviceErrorsManager
 @export_category("Prefabs")
 @export var column_prefab : PackedScene
 @export var keyboard_prefab : PackedScene
@@ -10,6 +9,8 @@ class_name SelectDeviceUIManager extends Node
 @export var empty_device_prefab : PackedScene
 @export_category("UI")
 @export var columns_container : Node
+@export var cancel_button : Button
+@export var confirm_button : Button
 @export var use_empty_to_fill_row : bool = true
 
 ## Containers are in order as in scene from left to right
@@ -21,9 +22,14 @@ var device_elements : Array[DeviceElementUI]
 ## This is just a list of every Empty instantiated to fill rows
 var empty_elements : Array[Node]
 
+signal on_recreate_columns()
+
 func _ready() -> void:
 	#register to update event
 	select_device_manager.on_update_devices_positions.connect(recreate_prefabs)
+	#set buttons
+	cancel_button.pressed.connect(func(): if select_device_manager.is_initialized: select_device_manager.press_cancel())
+	confirm_button.pressed.connect(func(): if select_device_manager.is_initialized: select_device_manager.press_confirm())
 
 ## Destroy previous instances and recreate prefabs for every device
 func recreate_prefabs(devices_positions : Dictionary[int, int], show_unused_column : SelectDeviceManager.UnusedColumnPosition) -> void:
@@ -60,9 +66,7 @@ func recreate_columns(number_of_players : int, show_unused_column : SelectDevice
 		instantiate_obj(column_prefab, str("Player ", i+1), columns, columns_container)
 	if show_unused_column == SelectDeviceManager.UnusedColumnPosition.RIGHT:
 		instantiate_obj(column_prefab, "Unused", columns, columns_container)
-	#update errors manager
-	errors_manager.deinitialize_manager()
-	errors_manager.initialize_manager()
+	on_recreate_columns.emit()
 
 ## Instantiate Keyboard or Joypad prefab + Empty for every other column in the row
 func instantiate_element(device : int, is_keyboard : bool, column_index : int) -> void:

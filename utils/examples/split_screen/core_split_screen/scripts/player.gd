@@ -2,7 +2,7 @@ extends Node
 
 class_name Player
 
-## -1 is only keyboard, from 0 to number of players is the joypad index
+## -2 is null, -1 is only keyboard, from 0 to number of players is the joypad index
 @export var player_index : int
 ## If there is only one player, ignore player index and use inputs set in editor. 
 ## So works with both mouse and joypad
@@ -15,15 +15,24 @@ const JUMP_VELOCITY = 4.5
 var input_suffix : String
 
 func _ready() -> void:
+	#set default device
+	update_device(player_index)
+
+func update_device(device : int) -> void:
 	#save suffix
+	player_index = device
 	input_suffix = SplitScreenInputs.get_device_suffix(player_index)
-	#if there is only one player, use both mouse and keyboard set by default in project
+	#if already in gameplay scene and there is only one player, 
+	#use both mouse and keyboard set by default in project
 	if single_player_use_every_device:
 		var split_screen_manager : SplitScreenManager = Singleton.instance("SplitScreenManager")
 		if (split_screen_manager and split_screen_manager.number_of_players == 1):
 			input_suffix = ""
 
 func _physics_process(delta: float) -> void:
+	if player_index < -1:
+		return
+	
 	# Add the gravity.
 	if not body.is_on_floor():
 		body.velocity += body.get_gravity() * delta
