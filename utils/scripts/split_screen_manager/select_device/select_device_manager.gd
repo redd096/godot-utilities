@@ -6,15 +6,19 @@ class ErrorResult:
 	var has_error : bool
 	var error_message : String
 
+@export var initialize_on_ready : bool = true
 @export var connection_devices : ConnectionDevicesManager
 @export_range(1, 4) var number_of_players : int = 1
 ## Can move device to "unused". This can be at -1 (Left) or greater than number_of_players (Right). 
 ## If None, every device must have a player
 @export var show_unused_column : UnusedColumnPosition
 @export_category("Inputs")
+@export var can_navigate : bool = true
 @export var move_left : String = "ui_left"
 @export var move_right : String = "ui_right"
+@export var can_confirm : bool = true
 @export var confirm : String = "ui_accept"
+@export var can_cancel : bool = true
 @export var cancel : String = "ui_cancel"
 
 ## Key: device index (-1 is keyboard, >= 0 are joypads), Value: player index or "unused" (unused can be -1 or number_of_players)
@@ -34,24 +38,35 @@ signal on_confirm_failed(error_message : String)
 signal on_cancel()
 
 func _ready() -> void:
-	#register to event when change connected devices, and update current connected devices
+	if initialize_on_ready:
+		initialize_manager()
+
+## Register to event when change connected devices and start check inputs
+func initialize_manager() -> void:
+	process_mode = Node.PROCESS_MODE_INHERIT
 	connection_devices.on_changed_devices_connection.connect(on_changed_devices_connection)
-	on_changed_devices_connection()
+	connection_devices.reset_vars()
+
+## Deregister from event when change connected devices and stop check inputs
+func deinitialize_manager() -> void:
+	process_mode = Node.PROCESS_MODE_DISABLED
+	connection_devices.on_changed_devices_connection.disconnect(on_changed_devices_connection)
 
 func _process(_delta: float) -> void:
+	print("_process")
 	for device in devices_positions:
 		var suffix : String = get_device_suffix(device)
 		#move device left
-		if Input.is_action_just_pressed(move_left + suffix):
+		if can_navigate and Input.is_action_just_pressed(move_left + suffix):
 			move_device(device, false)
 		#move device right
-		elif Input.is_action_just_pressed(move_right + suffix):
+		elif can_navigate and Input.is_action_just_pressed(move_right + suffix):
 			move_device(device, true)
 		#press confirm
-		elif Input.is_action_just_pressed(confirm + suffix):
+		elif can_confirm and Input.is_action_just_pressed(confirm + suffix):
 			press_confirm()
 		#press cancel
-		elif Input.is_action_just_pressed(cancel + suffix):
+		elif can_cancel and Input.is_action_just_pressed(cancel + suffix):
 			press_cancel()
 
 func on_changed_devices_connection():

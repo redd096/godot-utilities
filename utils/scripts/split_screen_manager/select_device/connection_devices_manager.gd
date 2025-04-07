@@ -9,7 +9,11 @@ signal on_changed_devices_connection()
 func _ready() -> void:
 	#register to event to know when joypad connect or disconnect
 	Input.joy_connection_changed.connect(on_joy_connection_changed)
-	#get current connected joypads
+	reset_vars()
+
+## Reset vars, get connected joypads and emit event
+func reset_vars():
+	is_mouse_or_keyboard_available = false
 	connected_joypads = Input.get_connected_joypads()
 	on_changed_devices_connection.emit()
 
