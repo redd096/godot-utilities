@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://bk147y1ii5joj"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_l51ik"]
+font_size = 10
+
+[node name="EmptyPrefab" type="MarginContainer"]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_l51ik")
+horizontal_alignment = 1
+vertical_alignment = 1

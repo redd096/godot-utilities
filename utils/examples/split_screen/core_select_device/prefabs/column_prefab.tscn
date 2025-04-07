@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://dylpxvlsgcb07"]
+
+[ext_resource type="Script" uid="uid://b8he2e27lfs6d" path="res://utils/examples/split_screen/core_select_device/scripts/column_ui.gd" id="1_wv2im"]
+
+[node name="Player1" type="MarginContainer" node_paths=PackedStringArray("color_rect", "label", "elements_container")]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 62.0
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_wv2im")
+color_rect = NodePath("BackgroundColorRect")
+label = NodePath("VBoxContainer/Label")
+elements_container = NodePath("VBoxContainer/ElementsContainer")
+
+[node name="BackgroundColorRect" type="ColorRect" parent="."]
+layout_mode = 2
+color = Color(0.190762, 0.190762, 0.190762, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Player 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ElementsContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
