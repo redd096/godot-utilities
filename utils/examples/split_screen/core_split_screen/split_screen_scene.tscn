@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://4nds2pcusf5u"]
 
-[ext_resource type="Script" uid="uid://c0fle32pe5d0x" path="res://utils/scripts/split_screen_manager/split_screen_manager.gd" id="1_b1w35"]
-[ext_resource type="PackedScene" uid="uid://byn0rt8cp6x30" path="res://examples/split_screen/prefabs/player_prefab.tscn" id="2_8uwa8"]
-[ext_resource type="PackedScene" uid="uid://b5g52djlb36hm" path="res://examples/split_screen/prefabs/walls/wall_prefab.tscn" id="3_ui6wo"]
+[ext_resource type="Script" uid="uid://c0fle32pe5d0x" path="res://utils/scripts/split_screen_manager/split_screen_manager.gd" id="1_p7elm"]
+[ext_resource type="PackedScene" uid="uid://byn0rt8cp6x30" path="res://utils/examples/split_screen/core_split_screen/prefabs/player_prefab.tscn" id="2_q6q70"]
+[ext_resource type="PackedScene" uid="uid://b5g52djlb36hm" path="res://utils/examples/split_screen/core_split_screen/prefabs/wall_prefab.tscn" id="3_suwxp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_o3gx6"]
 
@@ -15,7 +15,7 @@ sky = SubResource("Sky_lfm7e")
 tonemap_mode = 2
 tonemap_exposure = 1.1
 
-[node name="MainScene" type="Node"]
+[node name="SplitScreenScene" type="Node"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.714839, 0.699289, 0, -0.699289, 0.714839, 0, 5.79758, 0)
@@ -27,31 +27,31 @@ environment = SubResource("Environment_40nsw")
 [node name="------------------------------------" type="Node" parent="."]
 
 [node name="SplitScreenManager" type="Node" parent="." node_paths=PackedStringArray("players")]
-script = ExtResource("1_b1w35")
+script = ExtResource("1_p7elm")
 number_of_players = 4
 players = [NodePath("../Players/Player"), NodePath("../Players/Player2"), NodePath("../Players/Player3"), NodePath("../Players/Player4")]
 
 [node name="Players" type="Node" parent="."]
 
-[node name="Player" parent="Players" instance=ExtResource("2_8uwa8")]
+[node name="Player" parent="Players" instance=ExtResource("2_q6q70")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 player_index = -1
 
-[node name="Player2" parent="Players" instance=ExtResource("2_8uwa8")]
+[node name="Player2" parent="Players" instance=ExtResource("2_q6q70")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.53677, 0.5, 0)
 
-[node name="Player3" parent="Players" instance=ExtResource("2_8uwa8")]
+[node name="Player3" parent="Players" instance=ExtResource("2_q6q70")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3133, 0.5, 0)
 player_index = 1
 
-[node name="Player4" parent="Players" instance=ExtResource("2_8uwa8")]
+[node name="Player4" parent="Players" instance=ExtResource("2_q6q70")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.87782, 0.5, 0)
 player_index = 2
 
 [node name="------------------------------------2" type="Node" parent="."]
 
-[node name="Floor" parent="." instance=ExtResource("3_ui6wo")]
+[node name="Floor" parent="." instance=ExtResource("3_suwxp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
-[node name="Wall" parent="." instance=ExtResource("3_ui6wo")]
+[node name="Wall" parent="." instance=ExtResource("3_suwxp")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -24.8295, -1, -18.2681)

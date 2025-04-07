@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://b5g52djlb36hm"]
 
-[ext_resource type="Script" uid="uid://bmyntv4hbv2ur" path="res://utils/scripts/datas_and_controllers/collisions_3d_data/collision_3d_data_controller.gd" id="1_e1pry"]
-[ext_resource type="Resource" uid="uid://duolfw0vsfe0o" path="res://examples/split_screen/datas/collision_3d_data.tres" id="2_u31cs"]
+[ext_resource type="Script" uid="uid://bmyntv4hbv2ur" path="res://utils/scripts/datas_and_controllers/collision_3d_data/collision_3d_data_controller.gd" id="1_e1pry"]
+[ext_resource type="Resource" uid="uid://duolfw0vsfe0o" path="res://utils/examples/split_screen/core_split_screen/datas/collision_3d_data.tres" id="2_u31cs"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_oeksc"]
 
