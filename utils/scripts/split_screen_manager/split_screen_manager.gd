@@ -1,10 +1,13 @@
-extends Node
+class_name SplitScreenManager extends Node
 
-class_name SplitScreenManager 
+enum EManageExceedPlayers {HIDE, DESTROY, LEAVE_TREE, NOTHING}
+
 ## Split screen in _ready() function. If false, you have to call manually update_split_screen()
 @export var auto_start : bool = true
 ## Number of players for this game
 @export_range(1, 4) var number_of_players : int = 1
+## Destroy, turn off, or do nothing to players that exceed the necessary number_of_players
+@export var when_exceed_players : EManageExceedPlayers
 ## True = split up and down, False = split left and right
 @export var prefer_vertical : bool = true
 ## If 0, set Camera child of SubViewport. Else set N camera's parents child of SubViewport
@@ -24,7 +27,7 @@ func _ready() -> void:
 		update_split_screen()
 
 func update_split_screen() -> void:
-	var players_ok = destroy_exceed_players()
+	var players_ok = manage_exceed_players()
 	var cameras_ok = get_cameras()
 	var rects_ok = get_viewports_rects()
 	if (players_ok && cameras_ok && rects_ok):
@@ -32,15 +35,22 @@ func update_split_screen() -> void:
 		add_inputs()
 
 ## Destroy players exceed number_of_players
-func destroy_exceed_players() -> bool:
+func manage_exceed_players() -> bool:
 	#be sure there is the correct number of players
 	if number_of_players > players.size():
 		push_error(str("Need ", number_of_players, " players but they are ", players.size()))
 		return false
-		
+	
 	for i in range(number_of_players, players.size()):
+		#turn off process mode
 		players[i].process_mode = Node.PROCESS_MODE_DISABLED
-		players[i].queue_free()
+		#and manage them
+		if when_exceed_players == EManageExceedPlayers.HIDE:
+			players[i].hide()
+		elif when_exceed_players == EManageExceedPlayers.DESTROY:
+			players[i].queue_free()
+		elif when_exceed_players == EManageExceedPlayers.LEAVE_TREE:
+			players[i].get_parent().remove_child(players[i])
 	
 	return true
 
