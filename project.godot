@@ -15,10 +15,6 @@ run/main_scene="res://utils/examples/split_screen/core_split_screen/split_screen
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/anthonyec.camera_preview/plugin.cfg")
-
 [input]
 
 rotate_right={
