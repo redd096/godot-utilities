@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="godot-utilities"
-run/main_scene="res://utils/examples/split_screen/core_split_screen/split_screen_scene.tscn"
+run/main_scene="res://utils/examples/split_screen/split_screen_scene/split_screen_scene.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 

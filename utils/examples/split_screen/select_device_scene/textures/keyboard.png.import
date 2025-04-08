@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ctlqa8k1m850t"
-path="res://.godot/imported/joypad.png-f38533065a182ddd9de2a862212c0973.ctex"
+uid="uid://mgom5ytjfbhv"
+path="res://.godot/imported/keyboard.png-ab9447781bc335ec1c4efaeea1616e65.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://utils/examples/split_screen/core_select_device/textures/joypad.png"
-dest_files=["res://.godot/imported/joypad.png-f38533065a182ddd9de2a862212c0973.ctex"]
+source_file="res://utils/examples/split_screen/select_device_scene/textures/keyboard.png"
+dest_files=["res://.godot/imported/keyboard.png-ab9447781bc335ec1c4efaeea1616e65.ctex"]
 
 [params]
 

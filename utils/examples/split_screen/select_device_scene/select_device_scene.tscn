@@ -1,13 +1,13 @@
 [gd_scene load_steps=9 format=3 uid="uid://bf685s6q3ogg3"]
 
-[ext_resource type="PackedScene" uid="uid://dylpxvlsgcb07" path="res://utils/examples/split_screen/core_select_device/prefabs/column_prefab.tscn" id="1_xqbb4"]
+[ext_resource type="PackedScene" uid="uid://dylpxvlsgcb07" path="res://utils/examples/split_screen/select_device_scene/prefabs/column_prefab.tscn" id="1_xqbb4"]
 [ext_resource type="Script" uid="uid://c1ani4ww6m83a" path="res://utils/scripts/split_screen_manager/select_device/select_device_manager.gd" id="3_70vpo"]
 [ext_resource type="Script" uid="uid://crkeoetke3856" path="res://utils/scripts/split_screen_manager/select_device/connection_devices_manager.gd" id="4_l1o71"]
-[ext_resource type="PackedScene" uid="uid://kpfkcl3ptid" path="res://utils/examples/split_screen/core_select_device/prefabs/keyboard_prefab_variant.tscn" id="4_xqbb4"]
-[ext_resource type="PackedScene" uid="uid://bia06romx6q7c" path="res://utils/examples/split_screen/core_select_device/prefabs/joypad_prefab_variant.tscn" id="5_1sfdm"]
-[ext_resource type="Script" uid="uid://ddq7geg837t1o" path="res://utils/examples/split_screen/core_select_device/scripts/select_device_ui_manager.gd" id="5_xqbb4"]
-[ext_resource type="PackedScene" uid="uid://bk147y1ii5joj" path="res://utils/examples/split_screen/core_select_device/prefabs/empty_device_prefab.tscn" id="7_l1o71"]
-[ext_resource type="Script" uid="uid://8ikwj3kw72nl" path="res://utils/examples/split_screen/core_select_device/scripts/select_device_errors_manager.gd" id="8_xqbb4"]
+[ext_resource type="PackedScene" uid="uid://kpfkcl3ptid" path="res://utils/examples/split_screen/select_device_scene/prefabs/keyboard_prefab_variant.tscn" id="4_xqbb4"]
+[ext_resource type="PackedScene" uid="uid://bia06romx6q7c" path="res://utils/examples/split_screen/select_device_scene/prefabs/joypad_prefab_variant.tscn" id="5_1sfdm"]
+[ext_resource type="Script" uid="uid://ddq7geg837t1o" path="res://utils/examples/split_screen/select_device_scene/scripts/select_device_ui_manager.gd" id="5_xqbb4"]
+[ext_resource type="PackedScene" uid="uid://bk147y1ii5joj" path="res://utils/examples/split_screen/select_device_scene/prefabs/empty_device_prefab.tscn" id="7_l1o71"]
+[ext_resource type="Script" uid="uid://8ikwj3kw72nl" path="res://utils/examples/split_screen/select_device_scene/scripts/select_device_errors_manager.gd" id="8_xqbb4"]
 
 [node name="SelectDeviceScene" type="Node"]
 

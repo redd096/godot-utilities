@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://4nds2pcusf5u"]
 
 [ext_resource type="Script" uid="uid://c0fle32pe5d0x" path="res://utils/scripts/split_screen_manager/split_screen_manager.gd" id="1_p7elm"]
-[ext_resource type="PackedScene" uid="uid://byn0rt8cp6x30" path="res://utils/examples/split_screen/core_split_screen/prefabs/player_prefab.tscn" id="2_q6q70"]
-[ext_resource type="PackedScene" uid="uid://b5g52djlb36hm" path="res://utils/examples/split_screen/core_split_screen/prefabs/wall_prefab.tscn" id="3_suwxp"]
+[ext_resource type="PackedScene" uid="uid://byn0rt8cp6x30" path="res://utils/examples/split_screen/split_screen_scene/prefabs/player_prefab.tscn" id="2_q6q70"]
+[ext_resource type="PackedScene" uid="uid://b5g52djlb36hm" path="res://utils/examples/split_screen/split_screen_scene/prefabs/wall_prefab.tscn" id="3_suwxp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_o3gx6"]
 
