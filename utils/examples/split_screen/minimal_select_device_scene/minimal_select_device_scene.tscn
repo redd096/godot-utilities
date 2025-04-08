@@ -1,3 +1,34 @@
-[gd_scene format=3 uid="uid://j80xpkn38smg"]
+[gd_scene load_steps=3 format=3 uid="uid://j80xpkn38smg"]
+
+[ext_resource type="Script" uid="uid://cdgtlv7of848j" path="res://utils/scripts/split_screen_manager/select_device/minimal_select_device_manager.gd" id="1_863u3"]
+[ext_resource type="Script" uid="uid://deqc1go7w68dp" path="res://utils/examples/split_screen/minimal_select_device_scene/scripts/minimal_select_device_scene_manager.gd" id="2_hg2ex"]
 
 [node name="MinimalSelectDeviceScene" type="Node"]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LabelsContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/LabelsContainer"]
+layout_mode = 2
+text = "Player 1 - Device: Keyboard (-1)"
+
+[node name="Label2" type="Label" parent="MarginContainer/LabelsContainer"]
+layout_mode = 2
+text = "Player 2 - Device: Gamepad 1"
+
+[node name="MinimalSelectDeviceManager" type="Node" parent="."]
+script = ExtResource("1_863u3")
+metadata/_custom_type_script = "uid://cdgtlv7of848j"
+
+[node name="MinimalSelectDeviceSceneManager" type="Node" parent="." node_paths=PackedStringArray("select_device", "labels_container")]
+script = ExtResource("2_hg2ex")
+select_device = NodePath("../MinimalSelectDeviceManager")
+labels_container = NodePath("../MarginContainer/LabelsContainer")
+metadata/_custom_type_script = "uid://deqc1go7w68dp"

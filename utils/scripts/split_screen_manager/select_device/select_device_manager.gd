@@ -1,4 +1,5 @@
-## Manage inputs and call various events
+## Manage inputs and call various events. 
+## You can move every device under a specific player and press Confirm
 class_name SelectDeviceManager extends Node
 
 enum UnusedColumnPosition {LEFT, RIGHT, NONE}
@@ -56,6 +57,9 @@ func deinitialize_manager() -> void:
 		is_initialized = false
 		process_mode = Node.PROCESS_MODE_DISABLED
 		connection_devices.on_changed_devices_connection.disconnect(on_changed_devices_connection)
+		#remove created inputs
+		for device in devices_positions:
+			remove_actions(device)
 
 func _unhandled_input(event: InputEvent) -> void:
 #func _process(_delta: float) -> void:
