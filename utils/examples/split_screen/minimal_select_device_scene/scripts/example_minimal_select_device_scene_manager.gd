@@ -2,6 +2,7 @@ class_name ExampleMinimalSelectDeviceSceneManager extends Node
 
 @export var select_device : MinimalSelectDeviceManager
 @export var labels_container : Node
+@export var label_in_scene : Label
 
 ## For every player (every array element), save the instantiated Label
 var instantiated_labels : Array[Label]
@@ -14,6 +15,8 @@ func _ready() -> void:
 	#register to events
 	select_device.on_add_player.connect(add_player_device)
 	select_device.on_remove_player.connect(remove_player_device)
+	#update label
+	label_in_scene.text = str("Press ", select_device.add_player, " to connect device\nPress ", select_device.remove_player, " to disconnect device")
 
 ## Instantiate a Label and set its text
 func add_player_device(player_index : int, device : int, is_keyboard : bool):

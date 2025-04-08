@@ -9,6 +9,7 @@
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -27,8 +28,13 @@ text = "Player 2 - Device: Gamepad 1"
 script = ExtResource("1_863u3")
 metadata/_custom_type_script = "uid://cdgtlv7of848j"
 
-[node name="ExampleMinimalSelectDeviceSceneManager" type="Node" parent="." node_paths=PackedStringArray("select_device", "labels_container")]
+[node name="ExampleMinimalSelectDeviceSceneManager" type="Node" parent="." node_paths=PackedStringArray("select_device", "labels_container", "label_in_scene")]
 script = ExtResource("2_hg2ex")
 select_device = NodePath("../MinimalSelectDeviceManager")
 labels_container = NodePath("../MarginContainer/LabelsContainer")
+label_in_scene = NodePath("../Label")
 metadata/_custom_type_script = "uid://deqc1go7w68dp"
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
