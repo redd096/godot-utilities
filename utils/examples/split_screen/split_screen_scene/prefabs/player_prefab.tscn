@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://byn0rt8cp6x30"]
 
-[ext_resource type="Script" uid="uid://dn4bh834balc0" path="res://utils/examples/split_screen/split_screen_scene/scripts/player.gd" id="1_7j7eg"]
+[ext_resource type="Script" uid="uid://dn4bh834balc0" path="res://utils/examples/split_screen/split_screen_scene/scripts/example_player_split_screen.gd" id="1_7j7eg"]
 [ext_resource type="Material" uid="uid://2urvv4mlk2wx" path="res://utils/examples/split_screen/split_screen_scene/materials/sunglasses_material.tres" id="2_fegb1"]
 [ext_resource type="Script" uid="uid://bmyntv4hbv2ur" path="res://utils/scripts/datas_and_controllers/collision_3d_data/collision_3d_data_controller.gd" id="3_4sm5p"]
 [ext_resource type="Resource" uid="uid://duolfw0vsfe0o" path="res://utils/examples/split_screen/split_screen_scene/datas/collision_3d_data.tres" id="4_cq8p4"]

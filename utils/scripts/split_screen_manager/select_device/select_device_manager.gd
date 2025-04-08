@@ -60,6 +60,7 @@ func deinitialize_manager() -> void:
 		#remove created inputs
 		for device in devices_positions:
 			remove_actions(device)
+		devices_positions.clear()
 
 func _unhandled_input(event: InputEvent) -> void:
 #func _process(_delta: float) -> void:

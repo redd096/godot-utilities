@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://kpfkcl3ptid"]
 
 [ext_resource type="PackedScene" uid="uid://bk147y1ii5joj" path="res://utils/examples/split_screen/select_device_scene/prefabs/empty_device_prefab.tscn" id="1_wnngp"]
-[ext_resource type="Script" uid="uid://dxiwqlpxsn6g2" path="res://utils/examples/split_screen/select_device_scene/scripts/device_element_ui.gd" id="2_6vfrp"]
+[ext_resource type="Script" uid="uid://dxiwqlpxsn6g2" path="res://utils/examples/split_screen/select_device_scene/scripts/example_device_element_ui.gd" id="2_6vfrp"]
 [ext_resource type="Texture2D" uid="uid://mgom5ytjfbhv" path="res://utils/examples/split_screen/select_device_scene/textures/keyboard.png" id="3_v2dwq"]
 
 [node name="KeyboardPrefab" node_paths=PackedStringArray("label") instance=ExtResource("1_wnngp")]

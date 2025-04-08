@@ -1,4 +1,4 @@
-class_name MixedSceneManager extends Node
+class_name ExampleMixedSceneManager extends Node
 
 @export_range(1, 4) var number_of_players : int = 1
 @export_category("Split Screen")
@@ -30,7 +30,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if is_in_game:
 		#if any player press "open_menu" do it
 		for i in number_of_players:
-			var player : Player = split_screen_manager.players[i]
+			var player : ExamplePlayerSplitScreen = split_screen_manager.players[i]
 			if player.player_index >= -1 and event.is_action_pressed(open_menu + player.input_suffix):
 				open_select_device_menu()
 

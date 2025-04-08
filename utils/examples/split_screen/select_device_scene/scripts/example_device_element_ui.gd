@@ -1,4 +1,4 @@
-class_name DeviceElementUI extends Node
+class_name ExampleDeviceElementUI extends Node
 
 @export var label : Label
 

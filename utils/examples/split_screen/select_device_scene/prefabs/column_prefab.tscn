@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dylpxvlsgcb07"]
 
-[ext_resource type="Script" uid="uid://b8he2e27lfs6d" path="res://utils/examples/split_screen/select_device_scene/scripts/column_ui.gd" id="1_wv2im"]
+[ext_resource type="Script" uid="uid://b8he2e27lfs6d" path="res://utils/examples/split_screen/select_device_scene/scripts/example_column_ui.gd" id="1_wv2im"]
 
 [node name="Player1" type="MarginContainer" node_paths=PackedStringArray("color_rect", "label", "elements_container")]
 anchors_preset = 9

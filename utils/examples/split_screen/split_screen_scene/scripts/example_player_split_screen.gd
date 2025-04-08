@@ -1,6 +1,4 @@
-extends Node
-
-class_name Player
+class_name ExamplePlayerSplitScreen extends Node
 
 ## -2 is null, -1 is only keyboard, from 0 to number of players is the joypad index
 @export var player_index : int

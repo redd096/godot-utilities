@@ -1,5 +1,5 @@
 ## Manage the UI: instantiate prefabs, move object from parent to parent, etc...
-class_name SelectDeviceUIManager extends Node
+class_name ExampleSelectDeviceUIManager extends Node
 
 @export var select_device_manager : SelectDeviceManager
 @export_category("Prefabs")
@@ -14,11 +14,11 @@ class_name SelectDeviceUIManager extends Node
 @export var use_empty_to_fill_row : bool = true
 
 ## Containers are in order as in scene from left to right
-var columns : Array[ColumnUI]
+var columns : Array[ExampleColumnUI]
 ## If true device_elements[0] is keyboard, else it contains only joypads
 var has_keyboard : bool
 ## Keyboard is always element 0 if available
-var device_elements : Array[DeviceElementUI]
+var device_elements : Array[ExampleDeviceElementUI]
 ## This is just a list of every Empty instantiated to fill rows
 var empty_elements : Array[Node]
 

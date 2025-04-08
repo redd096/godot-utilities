@@ -1,4 +1,4 @@
-class_name ColumnUI extends Node
+class_name ExampleColumnUI extends Node
 
 @export var color_rect : ColorRect
 @export var label : Label

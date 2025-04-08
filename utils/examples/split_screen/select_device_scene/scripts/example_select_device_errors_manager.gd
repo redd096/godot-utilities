@@ -1,7 +1,7 @@
-class_name SelectDeviceErrorsManager extends Node
+class_name ExampleSelectDeviceErrorsManager extends Node
 
 @export var select_device_manager : SelectDeviceManager
-@export var ui_manager : SelectDeviceUIManager
+@export var ui_manager : ExampleSelectDeviceUIManager
 @export var error_color : Color = Color.DARK_RED
 @export var only_one_device_per_column : bool = true
 @export var at_least_one_player_set : bool = true

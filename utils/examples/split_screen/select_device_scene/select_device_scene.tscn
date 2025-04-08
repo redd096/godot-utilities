@@ -5,9 +5,9 @@
 [ext_resource type="Script" uid="uid://crkeoetke3856" path="res://utils/scripts/split_screen_manager/select_device/connection_devices_manager.gd" id="4_l1o71"]
 [ext_resource type="PackedScene" uid="uid://kpfkcl3ptid" path="res://utils/examples/split_screen/select_device_scene/prefabs/keyboard_prefab_variant.tscn" id="4_xqbb4"]
 [ext_resource type="PackedScene" uid="uid://bia06romx6q7c" path="res://utils/examples/split_screen/select_device_scene/prefabs/joypad_prefab_variant.tscn" id="5_1sfdm"]
-[ext_resource type="Script" uid="uid://ddq7geg837t1o" path="res://utils/examples/split_screen/select_device_scene/scripts/select_device_ui_manager.gd" id="5_xqbb4"]
+[ext_resource type="Script" uid="uid://ddq7geg837t1o" path="res://utils/examples/split_screen/select_device_scene/scripts/example_select_device_ui_manager.gd" id="5_xqbb4"]
 [ext_resource type="PackedScene" uid="uid://bk147y1ii5joj" path="res://utils/examples/split_screen/select_device_scene/prefabs/empty_device_prefab.tscn" id="7_l1o71"]
-[ext_resource type="Script" uid="uid://8ikwj3kw72nl" path="res://utils/examples/split_screen/select_device_scene/scripts/select_device_errors_manager.gd" id="8_xqbb4"]
+[ext_resource type="Script" uid="uid://8ikwj3kw72nl" path="res://utils/examples/split_screen/select_device_scene/scripts/example_select_device_errors_manager.gd" id="8_xqbb4"]
 
 [node name="SelectDeviceScene" type="Node"]
 
@@ -76,7 +76,7 @@ connection_devices = NodePath("../ConnectionDevicesManager")
 number_of_players = 4
 metadata/_custom_type_script = "uid://c1ani4ww6m83a"
 
-[node name="SD_UIManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "columns_container", "cancel_button", "confirm_button")]
+[node name="Example_SD_UIManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "columns_container", "cancel_button", "confirm_button")]
 script = ExtResource("5_xqbb4")
 select_device_manager = NodePath("../SelectDeviceManager")
 column_prefab = ExtResource("1_xqbb4")
@@ -88,8 +88,8 @@ cancel_button = NodePath("../UIMarginContainer/VBoxContainer/ButtonsMarginContai
 confirm_button = NodePath("../UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer/ConfirmButton")
 metadata/_custom_type_script = "uid://ddq7geg837t1o"
 
-[node name="SD_ErrorsManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "ui_manager")]
+[node name="Example_SD_ErrorsManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "ui_manager")]
 script = ExtResource("8_xqbb4")
 select_device_manager = NodePath("../SelectDeviceManager")
-ui_manager = NodePath("../SD_UIManager")
+ui_manager = NodePath("../Example_SD_UIManager")
 metadata/_custom_type_script = "uid://8ikwj3kw72nl"
