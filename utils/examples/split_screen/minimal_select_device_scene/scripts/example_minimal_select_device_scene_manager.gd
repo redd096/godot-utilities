@@ -16,7 +16,9 @@ func _ready() -> void:
 	select_device.on_add_player.connect(add_player_device)
 	select_device.on_remove_player.connect(remove_player_device)
 	#update label
-	label_in_scene.text = str("Press ", select_device.add_player, " to connect device\nPress ", select_device.remove_player, " to disconnect device")
+	var line1 := str("Press ", select_device.add_player, " to connect device")
+	var line2 := str("\nPress ", select_device.remove_player, " to disconnect device")
+	label_in_scene.text = line1 + line2
 
 ## Instantiate a Label and set its text
 func add_player_device(player_index : int, device : int, is_keyboard : bool):
