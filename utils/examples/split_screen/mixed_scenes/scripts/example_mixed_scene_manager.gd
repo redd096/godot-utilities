@@ -37,6 +37,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			var player : ExamplePlayerSplitScreen = split_screen_manager.players[i]
 			if player.player_index >= -1 and event.is_action_pressed(open_menu + player.input_suffix):
 				open_select_device_menu()
+				break
 
 func open_select_device_menu():
 	#wait one frame to avoid same input trigger open_select_device_menu() and cancel()

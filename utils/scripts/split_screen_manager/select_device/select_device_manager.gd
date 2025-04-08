@@ -70,15 +70,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		#move device left
 		if can_navigate_with_inputs and event.is_action_pressed(move_left + suffix): #and Input.is_action_just_pressed(move_left + suffix):
 			move_device(device, false)
+			break
 		#move device right
 		elif can_navigate_with_inputs and event.is_action_pressed(move_right + suffix): #and Input.is_action_just_pressed(move_right + suffix):
 			move_device(device, true)
+			break
 		#press confirm
 		elif can_confirm_with_inputs and event.is_action_pressed(confirm + suffix): #and Input.is_action_just_pressed(confirm + suffix):
 			press_confirm()
+			break
 		#press cancel
 		elif can_cancel_with_inputs and event.is_action_pressed(cancel + suffix): #and Input.is_action_just_pressed(cancel + suffix):
 			press_cancel()
+			break
 
 func on_changed_devices_connection():
 	#remove previous inputs
