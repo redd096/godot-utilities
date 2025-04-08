@@ -27,21 +27,19 @@ func update_device(device : int) -> void:
 		if (split_screen_manager and split_screen_manager.number_of_players == 1):
 			input_suffix = ""
 
-func _physics_process(delta: float) -> void:
-	if player_index < -1:
-		return
-	
+func _physics_process(delta: float) -> void:	
 	# Add the gravity.
 	if not body.is_on_floor():
 		body.velocity += body.get_gravity() * delta
 
 	# Handle jump.
-	if Input.is_action_just_pressed("ui_select" + input_suffix) and body.is_on_floor():
+	var jump_pressed : bool = Input.is_action_just_pressed("ui_select" + input_suffix) if player_index >= -1 else false
+	if jump_pressed and body.is_on_floor():
 		body.velocity.y = JUMP_VELOCITY
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir := Input.get_vector("ui_left" + input_suffix, "ui_right" + input_suffix, "ui_up" + input_suffix, "ui_down" + input_suffix)
+	var input_dir := Input.get_vector("ui_left" + input_suffix, "ui_right" + input_suffix, "ui_up" + input_suffix, "ui_down" + input_suffix) if player_index >= -1 else Vector2.ZERO
 	var direction := (body.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		body.velocity.x = direction.x * SPEED

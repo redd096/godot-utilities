@@ -6,8 +6,11 @@
 
 [node name="MixedMinimalSelectDeviceScene" type="Node"]
 
-[node name="ExampleMixedMinimalSelectDeviceSceneManager" type="Node" parent="."]
+[node name="ExampleMixedMinimalSelectDeviceSceneManager" type="Node" parent="." node_paths=PackedStringArray("split_screen_manager", "select_device")]
 script = ExtResource("1_yxclq")
+number_of_players = 4
+split_screen_manager = NodePath("../SplitScreenScene/SplitScreenManager")
+select_device = NodePath("../MinimalSelectDeviceManager")
 metadata/_custom_type_script = "uid://cknxjk6emcejp"
 
 [node name="SplitScreenScene" parent="." instance=ExtResource("2_1dmh8")]
