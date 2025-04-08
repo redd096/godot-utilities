@@ -76,7 +76,7 @@ connection_devices = NodePath("../ConnectionDevicesManager")
 number_of_players = 4
 metadata/_custom_type_script = "uid://c1ani4ww6m83a"
 
-[node name="Example_SD_UIManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "columns_container", "cancel_button", "confirm_button")]
+[node name="Example_SD_UIManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "columns_container", "cancel_button", "confirm_button", "label_in_scene")]
 script = ExtResource("5_xqbb4")
 select_device_manager = NodePath("../SelectDeviceManager")
 column_prefab = ExtResource("1_xqbb4")
@@ -86,6 +86,7 @@ empty_device_prefab = ExtResource("7_l1o71")
 columns_container = NodePath("../UIMarginContainer/VBoxContainer/ColumnsContainer")
 cancel_button = NodePath("../UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer/CancelButton")
 confirm_button = NodePath("../UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer/ConfirmButton")
+label_in_scene = NodePath("../Label")
 metadata/_custom_type_script = "uid://ddq7geg837t1o"
 
 [node name="Example_SD_ErrorsManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "ui_manager")]
@@ -93,3 +94,11 @@ script = ExtResource("8_xqbb4")
 select_device_manager = NodePath("../SelectDeviceManager")
 ui_manager = NodePath("../Example_SD_UIManager")
 metadata/_custom_type_script = "uid://8ikwj3kw72nl"
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 40.0
+grow_vertical = 0

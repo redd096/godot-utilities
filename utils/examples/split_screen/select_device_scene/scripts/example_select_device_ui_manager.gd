@@ -11,6 +11,7 @@ class_name ExampleSelectDeviceUIManager extends Node
 @export var columns_container : Node
 @export var cancel_button : Button
 @export var confirm_button : Button
+@export var label_in_scene : Label
 @export var use_empty_to_fill_row : bool = true
 
 ## Containers are in order as in scene from left to right
@@ -30,6 +31,14 @@ func _ready() -> void:
 	#set buttons
 	cancel_button.pressed.connect(func(): if select_device_manager.is_initialized: select_device_manager.press_cancel())
 	confirm_button.pressed.connect(func(): if select_device_manager.is_initialized: select_device_manager.press_confirm())
+	#update label
+	var line1 := str("Move device with ", select_device_manager.move_right, " and ", select_device_manager.move_left)
+	var line2 := str("\nPress ", select_device_manager.confirm, " to confirm or ", select_device_manager.cancel, " to cancel")
+	label_in_scene.text = line1 + line2
+	#destroy placeholders (be sure to not remove instantiated columns)
+	for element in columns_container.get_children():
+		if columns.has(element) == false:
+			element.queue_free()
 
 ## Destroy previous instances and recreate prefabs for every device
 func recreate_prefabs(devices_positions : Dictionary[int, int], show_unused_column : SelectDeviceManager.UnusedColumnPosition) -> void:
@@ -56,7 +65,7 @@ func recreate_prefabs(devices_positions : Dictionary[int, int], show_unused_colu
 ## Destroy previous instances and recreate columns for every player (and "unused" column)
 func recreate_columns(number_of_players : int, show_unused_column : SelectDeviceManager.UnusedColumnPosition) -> void:
 	#destroy previous instances
-	for element in columns_container.get_children():
+	for element in columns:
 		element.queue_free()
 	columns.clear()
 	#instantiate "unused" and players columns
