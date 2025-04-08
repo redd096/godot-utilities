@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cknxjk6emcejp" path="res://utils/examples/split_screen/mixed_scenes/scripts/example_mixed_minimal_select_Device_scene_manager.gd" id="1_yxclq"]
 [ext_resource type="PackedScene" uid="uid://4nds2pcusf5u" path="res://utils/examples/split_screen/split_screen_scene/split_screen_scene.tscn" id="2_1dmh8"]
-[ext_resource type="Script" uid="uid://cdgtlv7of848j" path="res://utils/scripts/split_screen_manager/select_device/minimal_select_device_manager.gd" id="3_n60l7"]
+[ext_resource type="PackedScene" uid="uid://j80xpkn38smg" path="res://utils/examples/split_screen/minimal_select_device_scene/minimal_select_device_scene.tscn" id="3_yxclq"]
 
 [node name="MixedMinimalSelectDeviceScene" type="Node"]
 
@@ -10,13 +10,12 @@
 script = ExtResource("1_yxclq")
 number_of_players = 4
 split_screen_manager = NodePath("../SplitScreenScene/SplitScreenManager")
-select_device = NodePath("../MinimalSelectDeviceManager")
+select_device = NodePath("../MinimalSelectDeviceScene/MinimalSelectDeviceManager")
 metadata/_custom_type_script = "uid://cknxjk6emcejp"
 
 [node name="SplitScreenScene" parent="." instance=ExtResource("2_1dmh8")]
 
-[node name="MinimalSelectDeviceManager" type="Node" parent="."]
-script = ExtResource("3_n60l7")
-metadata/_custom_type_script = "uid://cdgtlv7of848j"
+[node name="MinimalSelectDeviceScene" parent="." instance=ExtResource("3_yxclq")]
 
 [editable path="SplitScreenScene"]
+[editable path="MinimalSelectDeviceScene"]
