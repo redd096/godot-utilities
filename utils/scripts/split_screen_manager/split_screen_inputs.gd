@@ -44,7 +44,7 @@ static func duplicate_action(base_action : String, new_action : String, device :
 			
 	return true
 
-## Remove action with this name. 
+## Remove action with this name (NB force action release to avoid InputMap errors). 
 ## Return true if the action is removed
 static func remove_action(action_name : String) -> bool:
 	#be sure this action exists
@@ -52,6 +52,7 @@ static func remove_action(action_name : String) -> bool:
 		push_error(str("Doesn't exists an action with this name: ", action_name))
 		return false
 	
-	#delete action
+	#delete action (force release to avoid InputMap errors)
+	Input.action_release(action_name)
 	InputMap.erase_action(action_name)
 	return true
