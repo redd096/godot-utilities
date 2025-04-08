@@ -1,6 +1,7 @@
 class_name ExampleMixedSceneManager extends Node
 
 @export_range(1, 4) var number_of_players : int = 1
+@export var label_in_scene : Label
 @export_category("Split Screen")
 @export var split_screen_manager : SplitScreenManager
 @export var open_menu : String = "ui_cancel"
@@ -25,6 +26,8 @@ func _ready() -> void:
 	select_device_manager.process_mode = Node.PROCESS_MODE_DISABLED #because maybe it isn't still initialized
 	#start from game
 	back_to_game()
+	#update label
+	label_in_scene.text = str("Press ", open_menu, " to change devices")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_in_game:
