@@ -6,13 +6,14 @@
 
 [node name="MixedScene" type="Node"]
 
-[node name="ExampleMixedSceneManager" type="Node" parent="." node_paths=PackedStringArray("label_in_scene", "split_screen_manager", "select_device_container", "select_device_manager")]
+[node name="ExampleMixedSceneManager" type="Node" parent="." node_paths=PackedStringArray("label_in_scene", "split_screen_manager", "select_device_container", "select_device_manager", "label_select_device")]
 script = ExtResource("1_50r60")
 number_of_players = 4
 label_in_scene = NodePath("../Label")
 split_screen_manager = NodePath("../SplitScreenScene/SplitScreenManager")
 select_device_container = NodePath("../SelectDeviceScene/UIMarginContainer")
 select_device_manager = NodePath("../SelectDeviceScene/SelectDeviceManager")
+label_select_device = NodePath("../SelectDeviceScene/Label")
 metadata/_custom_type_script = "uid://bly4qjkuw6ab7"
 
 [node name="SplitScreenScene" parent="." instance=ExtResource("4_yd7dt")]

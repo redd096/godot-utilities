@@ -8,6 +8,7 @@ class_name ExampleMixedSceneManager extends Node
 @export_category("Select Device")
 @export var select_device_container : Control
 @export var select_device_manager : SelectDeviceManager
+@export var label_select_device : Label
 
 var is_in_game : bool
 var enabled_players : Array[int]
@@ -47,6 +48,7 @@ func open_select_device_menu():
 	#and show select device menu
 	select_device_container.show()
 	select_device_manager.initialize_manager()
+	label_select_device.show()
 
 func back_to_game():
 	#re-enable players
@@ -55,6 +57,7 @@ func back_to_game():
 	#and disable select_device scene
 	select_device_container.hide()
 	select_device_manager.deinitialize_manager()
+	label_select_device.hide()
 	#wait one frame to avoid same input trigger open_select_device_menu() and cancel()
 	await get_tree().process_frame
 	is_in_game = true
