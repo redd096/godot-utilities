@@ -47,19 +47,15 @@ static func get_viewports_rects(number_of_cameras : int, prefer_vertical : bool)
 
 	return rects
 
-## Add subviewport for this camera
-static func set_camera_viewport(camera, viewport_rect : Rect2, container_name : String, keep_camera_parents : int):
-	#var screen_size : Vector2 = camera.get_viewport().size
-	#var screen_size = DisplayServer.screen_get_size()
-	var screen_size : Vector2 = camera.get_tree().root.content_scale_size
+## Add subviewport for this camera. 
+## (NB if root.content_scale_mode is CONTENT_SCALE_MODE_DISABLED, you can register to root.size_changed and call update_viewport_screen)
+static func set_camera_viewport(camera : Node, viewport_rect : Rect2, container_name : String, keep_camera_parents : int) -> SubViewportContainer:
 	#create subviewport and container
 	var viewport = SubViewport.new()
 	var viewport_container = SubViewportContainer.new()
 	viewport_container.name = container_name
 	viewport_container.stretch = true
-	#set position and size
-	viewport_container.position = screen_size * viewport_rect.position
-	viewport_container.size = screen_size * viewport_rect.size
+	update_viewport_screen(viewport_container, camera.get_tree().root, viewport_rect)
 	#set hierarchy (set subviewport parent of camera, or parent of N camera's parent)
 	#e.g. with keep_camera_parents = 2
 	# | target_node_parent - parent of 2 keep_camera_parents (camera.get_parent().get_parent().get_parent())
@@ -76,3 +72,42 @@ static func set_camera_viewport(camera, viewport_rect : Rect2, container_name : 
 	target_node_parent.add_child.call_deferred(viewport_container)
 	viewport_container.add_child.call_deferred(viewport)
 	viewport.add_child.call_deferred(target_node)
+	
+	return viewport_container
+
+## Update Viewport Position and Size
+static func update_viewport_screen(viewport_container : SubViewportContainer, root : Window, viewport_rect : Rect2) -> void:
+	#get correct screen size based on content_scale_mode
+	#print(root.size, DisplayServer.screen_get_size(), root.content_scale_size, root.get_viewport().size)
+	var screen_size : Vector2
+	if root.content_scale_mode == root.ContentScaleMode.CONTENT_SCALE_MODE_DISABLED:
+		screen_size = root.size
+	else:
+		screen_size = root.content_scale_size
+	#update viewport position and size
+	viewport_container.position = screen_size * viewport_rect.position
+	viewport_container.size = screen_size * viewport_rect.size
+
+## Call this function to remove SubViewport added with set_camera_viewport and reset Camera's parent
+static func reset_camera_viewport(camera : Node) -> void:
+	#find SubViewport
+	var target_node : Node = camera
+	var viewport : Node = camera
+	while target_node.get_parent():
+		viewport = target_node.get_parent()
+		if viewport and viewport is SubViewport:
+			break
+		target_node = viewport
+	#if found, there is also SubViewportContainer as viewport parent
+	var viewport_container : SubViewportContainer = viewport.get_parent()
+	if viewport_container:
+		#reset hierarchy
+		var target_node_parent : Node = viewport_container.get_parent()
+		target_node_parent.remove_child.call_deferred(viewport_container)
+		viewport.remove_child.call_deferred(target_node)
+		target_node_parent.add_child.call_deferred(target_node)
+		#destroy viewport and container
+		viewport_container.queue_free()
+		viewport.queue_free()
+	else:
+		push_warning("Impossible to find SubViewport and SubViewportContainer as parent of camera")
