@@ -14,20 +14,17 @@ func _ready() -> void:
 	split_screen_manager.update_split_screen()
 	#and select_device_manager
 	select_device.max_number_of_players = number_of_players
+	select_device.on_disconnect_resize_array = false
 	#by default, remove every device in scene
 	for player : ExamplePlayerSplitScreen in split_screen_manager.players:
 		player.update_device(-2)
 
 ## Find first player without device and add to it
 func add_player_device(player_index : int, device : int, _is_keyboard : bool):
-	for player : ExamplePlayerSplitScreen in split_screen_manager.players:
-		if player.player_index < -1:
-			player.update_device(device)
-			break
+	var player : ExamplePlayerSplitScreen = split_screen_manager.players[player_index]
+	player.update_device(device)
 
 ## Remove device
-func remove_player_device(_player_index : int, device : int, _is_keyboard : bool):
-	for player : ExamplePlayerSplitScreen in split_screen_manager.players:
-		if player.player_index == device:
-			player.update_device(-2)
-			break
+func remove_player_device(player_index : int, _device : int, _is_keyboard : bool):
+	var player : ExamplePlayerSplitScreen = split_screen_manager.players[player_index]
+	player.update_device(MinimalSelectDeviceManager.NULL_DEVICE)
