@@ -45,3 +45,10 @@ static func set_parent(node : Node, parent : Node) -> void:
 	if current_parent:
 		current_parent.remove_child.call_deferred(node)
 	parent.add_child.call_deferred(node)
+
+## Hide every Node3D and CanvasItem
+static func set_active(node : Node, is_active : bool) -> void:
+	var nodes : Array[Node] = get_components_in_children(node, "Node")
+	for n : Node in nodes:
+		if n is Node3D or n is CanvasItem:
+			n.hide()

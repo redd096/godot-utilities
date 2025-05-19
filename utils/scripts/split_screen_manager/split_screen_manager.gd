@@ -1,6 +1,6 @@
 class_name SplitScreenManager extends Node
 
-enum EManageExceedPlayers {HIDE, DESTROY, LEAVE_TREE, NOTHING}
+enum EManageExceedPlayers {DESTROY, LEAVE_TREE, HIDE, NOTHING}
 
 ## Split screen in _ready() function. If false, you have to call manually update_split_screen()
 @export var auto_start : bool = true
@@ -45,12 +45,12 @@ func manage_exceed_players() -> bool:
 		#turn off process mode
 		players[i].process_mode = Node.PROCESS_MODE_DISABLED
 		#and manage them
-		if when_exceed_players == EManageExceedPlayers.HIDE:
-			players[i].hide()
-		elif when_exceed_players == EManageExceedPlayers.DESTROY:
+		if when_exceed_players == EManageExceedPlayers.DESTROY:
 			players[i].queue_free()
 		elif when_exceed_players == EManageExceedPlayers.LEAVE_TREE:
 			players[i].get_parent().remove_child(players[i])
+		elif when_exceed_players == EManageExceedPlayers.HIDE:
+			players[i].hide()
 	
 	return true
 
