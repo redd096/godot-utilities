@@ -9,8 +9,8 @@
 
 class_name Singleton
 
-## If this is the instance, be sure is DontDestroyOnload and return true. 
-## If there is another instance, destroy this node and return false. 
+## If this is the instance, be sure is DontDestroyOnload and return true.
+## If there is another instance, destroy this node and return false.
 ## Normally this functions is called in _ready() for every singleton script
 static func check_instance(self_obj : Node) -> bool:
 	#get current instance or find in scene
@@ -24,8 +24,8 @@ static func check_instance(self_obj : Node) -> bool:
 		self_obj.queue_free()
 		return false
 
-## Return registered instance. If not registered, find in scene or instantiate it. 
-## NB instantiate only if scrit_type is != null. 
+## Return registered instance. If not registered, find in scene or instantiate it.
+## NB instantiate only if scrit_type is != null.
 ## e.g. Singleton.instance("Camera2D", Camera2D) to look for Camera2D in scene, else instantiate it
 ## e.g. Singleton.instance("Camera2D") to look for Camera2D in scene, else return null
 static func instance(type : String, script_type : Object = null) -> Variant:
@@ -52,9 +52,9 @@ static func instance(type : String, script_type : Object = null) -> Variant:
 
 ## Equivalent of unity FindObjectOfType<type>
 static func find_object_of_type(type : String) -> Variant:
-	var root_node : Node = Engine.get_main_loop().current_scene
+	var root_node : Node = Engine.get_main_loop().root
 	#get components in children but ignore root node
-	var components : Array = root_node.find_children("*", str(type))
+	var components : Array = root_node.find_children("*", str(type), true, false)
 	return components[0] if components.size() > 0 else null
 
 ## Equivalent of unity DontDestroyOnLoad(GameObject)
