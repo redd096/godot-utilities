@@ -9,16 +9,17 @@
 
 class_name Singleton
 
-## If this is the instance, be sure is DontDestroyOnload and return true. 
+## If this is the instance, return true (and can set DontDestroyOnLoad). 
 ## If there is another instance, destroy this node and return false. 
 ## Normally this functions is called in _ready() for every singleton script
-static func check_instance(self_obj: Node) -> bool:
+static func check_instance(self_obj: Node, set_dont_destroy_on_load: bool = true) -> bool:
 	# Get current instance or find in scene
 	var script_type = self_obj.get_script()
 	var current_instance : Object = instance(script_type)
 	# If this is the instance, set DontDestroyOnload and return true
 	if current_instance == self_obj:
-		_dont_destroy_on_load(self_obj)
+		if set_dont_destroy_on_load:
+			_dont_destroy_on_load(self_obj)
 		return true
 	# Else, destroy and return false
 	else:
