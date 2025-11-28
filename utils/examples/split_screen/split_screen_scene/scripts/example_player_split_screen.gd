@@ -23,7 +23,7 @@ func update_device(device : int) -> void:
 	#if already in gameplay scene and there is only one player, 
 	#use both mouse and keyboard set by default in project
 	if single_player_use_every_device:
-		var split_screen_manager : SplitScreenManager = Singleton.instance("SplitScreenManager")
+		var split_screen_manager : SplitScreenManager = Singleton.instance(SplitScreenManager)
 		if (split_screen_manager and split_screen_manager.number_of_players == 1):
 			input_suffix = ""
 
