@@ -6,7 +6,7 @@ var state_machine: StateMachine
 func _enter() -> void:
 	pass
 
-func _update(_delta: float) -> void:
+func _process_state(_delta: float) -> void:
 	pass
 
 func _exit() -> void:
