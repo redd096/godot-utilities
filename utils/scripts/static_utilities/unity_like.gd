@@ -1,5 +1,35 @@
 class_name UnityLike
 
+## Equivalent of unity node.GetComponent<script_type>
+static func get_component(node: Node, script_type: Object) -> Variant:
+	var type := _get_string_from_script_type(script_type)
+	if node.get_class() == type:
+		return node
+	return null
+
+## Equivalent of unity node.GetComponentsInParent<script_type>
+static func get_components_in_parent(node: Node, script_type: Object) -> Array:
+	var type := _get_string_from_script_type(script_type)
+	var components: Array
+	# check node and parents and find every component
+	var parent: Node = node
+	while parent:
+		if parent.get_class() == type:
+			components.append(parent)
+		parent = parent.get_parent()
+	return components
+
+## Equivalent of unity node.GetComponentInParent<script_type>
+static func get_component_in_parent(node: Node, script_type: Object) -> Variant:
+	var type := _get_string_from_script_type(script_type)
+	# check node and parents until find component
+	var parent: Node = node
+	while parent:
+		if parent.get_class() == type:
+			return parent
+		parent = parent.get_parent()	
+	return null
+
 ## Equivalent of unity node.GetComponentsInChildren<script_type>
 static func get_components_in_children(node: Node, script_type: Object) -> Array:
 	var type := _get_string_from_script_type(script_type)
@@ -28,7 +58,7 @@ static func find_object_of_type(script_type: Object) -> Variant:
 	var components: Array = find_objects_of_type(script_type)
 	return components[0] if components.size() > 0 else null
 
-## Equivalent of unity DontDestroyOnLoad(GameObject)
+## Equivalent of unity DontDestroyOnLoad(node)
 static func dont_destroy_on_load(node: Node) -> void:
 	# set root as parent (this isn't destroyed when change scene)
 	var root: Node = Engine.get_main_loop().root
