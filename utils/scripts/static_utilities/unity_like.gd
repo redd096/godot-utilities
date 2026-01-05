@@ -46,18 +46,32 @@ static func set_parent(node: Node, parent: Node) -> void:
 	# and set child of new parent
 	parent.add_child.call_deferred(node)
 
-## Equivalent of unity Physics.Raycast
-static func raycast3D(owner: Node3D, from: Vector3, to: Vector3, mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
-	var space_state = owner.get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(from, to, mask, exclude)
+## Equivalent of unity Physics.Raycast (can use node Raycast3D)
+static func raycast3D(owner: Node3D, from: Vector3, to: Vector3, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
+	var space_state := owner.get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(from, to, collision_mask, exclude)
 	return space_state.intersect_ray(query)
 
-## Equivalent of unity Physics2D.Raycast
-static func raycast2D(owner: Node2D, from: Vector2, to: Vector2, mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
-	var space_state = owner.get_world_2d().direct_space_state
-	var query = PhysicsRayQueryParameters2D.create(from, to, mask, exclude)
+## Equivalent of unity Physics2D.Raycast (can use node Raycast2D)
+static func raycast2D(owner: Node2D, from: Vector2, to: Vector2, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
+	var space_state := owner.get_world_2d().direct_space_state
+	var query := PhysicsRayQueryParameters2D.create(from, to, collision_mask, exclude)
 	return space_state.intersect_ray(query)
 
+## Equivalent of unity Physics.Spherecast (can use node ShapeCast3D)
+static func spherecast3D(owner: Node3D, from: Vector3, to: Vector3, radius: float, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Array[Dictionary]:
+	var space := owner.get_world_3d().direct_space_state
+	# create shape
+	var shape = SphereShape3D.new()
+	shape.radius = radius
+	# create query
+	var query = PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = Transform3D(Basis(), from)
+	query.motion = to
+	query.collision_mask = collision_mask
+	query.exclude = exclude
+	return space.intersect_shape(query)
 
 ## Return class name or filename
 static func _get_string_from_script_type(script_type: Object) -> String:
