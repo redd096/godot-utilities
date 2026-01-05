@@ -46,6 +46,19 @@ static func set_parent(node: Node, parent: Node) -> void:
 	# and set child of new parent
 	parent.add_child.call_deferred(node)
 
+## Equivalent of unity Physics.Raycast
+static func raycast3D(owner: Node3D, from: Vector3, to: Vector3, mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
+	var space_state = owner.get_world_3d().direct_space_state
+	var query = PhysicsRayQueryParameters3D.create(from, to, mask, exclude)
+	return space_state.intersect_ray(query)
+
+## Equivalent of unity Physics2D.Raycast
+static func raycast2D(owner: Node2D, from: Vector2, to: Vector2, mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
+	var space_state = owner.get_world_2d().direct_space_state
+	var query = PhysicsRayQueryParameters2D.create(from, to, mask, exclude)
+	return space_state.intersect_ray(query)
+
+
 ## Return class name or filename
 static func _get_string_from_script_type(script_type: Object) -> String:
 	var type: String = ""
