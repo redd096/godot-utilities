@@ -5,7 +5,8 @@ var current_state: State
 signal on_set_state(new_state: State)
 
 func _process(delta: float) -> void:
-	current_state._process_state(delta)
+	if current_state:
+		current_state._process_state(delta)
 
 ## Exit from current state and enter new state
 func set_state(new_state: State) -> void:
