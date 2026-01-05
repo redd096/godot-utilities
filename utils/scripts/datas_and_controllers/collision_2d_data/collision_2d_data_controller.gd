@@ -10,22 +10,19 @@ class_name Collision2DDataController
 @export var collision_data : Collision2DDataResource
 	
 func _ready() -> void:
-	#set layer to 3 
-	#(-1 because the parameter is an index but in inspector start from 1)
-	#collision_object.collision_layer = 1 << (3-1)
+	# set layer to 3 
+	# (-1 because the parameter is an index but in inspector start from 1)
+	# collision_object.collision_layer = 1 << (3-1)
 
 	if collision_object == null || collision_data == null:
 		push_error("Be sure to set the variables in inspector")
 		return
-
-	#find data by name
-	for model_data in collision_data.data:
-		if model_data.name == collision_name:
-			#set collision and mask
-			set_collision(collision_object, model_data)
-			return
-
-	push_error("Impossible to find this name in the list: " + collision_name)
+	
+	# find data by name
+	var model_data := collision_data.get_model_by_name(collision_name)
+	# set collision and mask
+	if model_data:
+		set_collision(collision_object, model_data)
 
 ## Set collision layer and mask for this collider
 func set_collision(collider, model_data : Collision2DModelData):
