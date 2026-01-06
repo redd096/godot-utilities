@@ -129,9 +129,13 @@ static func _find_children_components_recursive(node: Node, script_type: Object,
 ## Find first child with component recursively
 static func _find_first_children_component_recursive(node: Node, script_type: Object) -> Variant:
 	for child in node.get_children():
+		# check child
 		if _has_component(child, script_type):
 			return child
-		_find_first_children_component_recursive(child, script_type)
+		# check child childrens
+		var child_component = _find_first_children_component_recursive(child, script_type)
+		if child_component:
+			return child_component
 	return null
 
 ## Return class name or filename
