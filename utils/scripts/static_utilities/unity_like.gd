@@ -1,5 +1,25 @@
 class_name UnityLike
 
+## Equivalent of unity DontDestroyOnLoad(node)
+static func dont_destroy_on_load(node: Node) -> void:
+	# set root as parent (this isn't destroyed when change scene)
+	var root: Node = Engine.get_main_loop().root
+	set_parent(node, root)
+
+## Equivalent of unity node.SetParent(parent)
+static func set_parent(node: Node, parent: Node) -> void:
+	# check if this is already child of this parent
+	var current_parent = node.get_parent()
+	if current_parent and current_parent == parent:
+		return
+	# else remove from current parent
+	if current_parent:
+		current_parent.remove_child.call_deferred(node)
+	# and set child of new parent
+	parent.add_child.call_deferred(node)
+
+#region get component
+
 ## Equivalent of unity node.GetComponent<script_type>
 static func get_component(node: Node, script_type: Object) -> Variant:
 	if _has_component(node, script_type):
@@ -46,6 +66,10 @@ static func get_component_in_children(node: Node, script_type: Object) -> Varian
 		return node
 	return _find_first_children_component_recursive(node, script_type)
 
+#endregion
+
+#region find object of type
+
 ## Equivalent of unity FindObjectsOfType<script_type>
 static func find_objects_of_type(script_type: Object) -> Array:
 	var root_node: Node = Engine.get_main_loop().root
@@ -60,25 +84,22 @@ static func find_object_of_type(script_type: Object) -> Variant:
 	var root_node: Node = Engine.get_main_loop().root
 	return _find_first_children_component_recursive(root_node, script_type)
 
-## Equivalent of unity DontDestroyOnLoad(node)
-static func dont_destroy_on_load(node: Node) -> void:
-	# set root as parent (this isn't destroyed when change scene)
-	var root: Node = Engine.get_main_loop().root
-	set_parent(node, root)
-
-## Equivalent of unity node.SetParent(parent)
-static func set_parent(node: Node, parent: Node) -> void:
-	# check if this is already child of this parent
-	var current_parent = node.get_parent()
-	if current_parent and current_parent == parent:
-		return
-	# else remove from current parent
-	if current_parent:
-		current_parent.remove_child.call_deferred(node)
-	# and set child of new parent
-	parent.add_child.call_deferred(node)
+#endregion
 
 #region raycast
+
+# https://docs.godotengine.org/en/stable/tutorials/physics/ray-casting.html
+
+# every dicitonary contains:
+# {
+#    position: Vector2 # point in world space for collision
+#    normal: Vector2 # normal in world space for collision
+#    collider: Object # Object collided or null (if unassociated)
+#    collider_id: ObjectID # Object it collided against
+#    rid: RID # RID it collided against
+#    shape: int # shape index of collider
+#    metadata: Variant() # metadata of collider
+# }
 
 ## Equivalent of unity Physics.Raycast (can use node Raycast3D)
 static func raycast3D(owner: Node3D, from: Vector3, to: Vector3, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
