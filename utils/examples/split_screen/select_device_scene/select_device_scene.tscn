@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bf685s6q3ogg3"]
+[gd_scene format=3 uid="uid://bf685s6q3ogg3"]
 
 [ext_resource type="PackedScene" uid="uid://dylpxvlsgcb07" path="res://utils/examples/split_screen/select_device_scene/prefabs/column_prefab.tscn" id="1_xqbb4"]
 [ext_resource type="Script" uid="uid://c1ani4ww6m83a" path="res://utils/scripts/split_screen_manager/select_device/select_device_manager.gd" id="3_70vpo"]
@@ -9,74 +9,74 @@
 [ext_resource type="PackedScene" uid="uid://bk147y1ii5joj" path="res://utils/examples/split_screen/select_device_scene/prefabs/empty_device_prefab.tscn" id="7_l1o71"]
 [ext_resource type="Script" uid="uid://8ikwj3kw72nl" path="res://utils/examples/split_screen/select_device_scene/scripts/example_select_device_errors_manager.gd" id="8_xqbb4"]
 
-[node name="SelectDeviceScene" type="Node"]
+[node name="SelectDeviceScene" type="Node" unique_id=532467300]
 
-[node name="UIMarginContainer" type="MarginContainer" parent="."]
+[node name="UIMarginContainer" type="MarginContainer" parent="." unique_id=1314888615]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackgroundColorRect" type="ColorRect" parent="UIMarginContainer"]
+[node name="BackgroundColorRect" type="ColorRect" parent="UIMarginContainer" unique_id=1235092078]
 layout_mode = 2
 color = Color(0.190762, 0.190762, 0.190762, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UIMarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UIMarginContainer" unique_id=1823518866]
 layout_mode = 2
 
-[node name="ColumnsContainer" type="HBoxContainer" parent="UIMarginContainer/VBoxContainer"]
+[node name="ColumnsContainer" type="HBoxContainer" parent="UIMarginContainer/VBoxContainer" unique_id=1840173965]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="Unused" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" instance=ExtResource("1_xqbb4")]
+[node name="Unused" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" unique_id=1139136474 instance=ExtResource("1_xqbb4")]
 layout_mode = 2
 
-[node name="Player1" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" instance=ExtResource("1_xqbb4")]
+[node name="Player1" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" unique_id=1959332845 instance=ExtResource("1_xqbb4")]
 layout_mode = 2
 
-[node name="Player2" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" instance=ExtResource("1_xqbb4")]
+[node name="Player2" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" unique_id=379898440 instance=ExtResource("1_xqbb4")]
 layout_mode = 2
 
-[node name="Player3" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" instance=ExtResource("1_xqbb4")]
+[node name="Player3" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" unique_id=991324243 instance=ExtResource("1_xqbb4")]
 layout_mode = 2
 
-[node name="Player4" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" instance=ExtResource("1_xqbb4")]
+[node name="Player4" parent="UIMarginContainer/VBoxContainer/ColumnsContainer" unique_id=580056630 instance=ExtResource("1_xqbb4")]
 layout_mode = 2
 
-[node name="ButtonsMarginContainer" type="MarginContainer" parent="UIMarginContainer/VBoxContainer"]
+[node name="ButtonsMarginContainer" type="MarginContainer" parent="UIMarginContainer/VBoxContainer" unique_id=1228944185]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UIMarginContainer/VBoxContainer/ButtonsMarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UIMarginContainer/VBoxContainer/ButtonsMarginContainer" unique_id=56371365]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 2
 
-[node name="CancelButton" type="Button" parent="UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer"]
+[node name="CancelButton" type="Button" parent="UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer" unique_id=514832166]
 layout_mode = 2
 text = "Cancel"
 
-[node name="ConfirmButton" type="Button" parent="UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer"]
+[node name="ConfirmButton" type="Button" parent="UIMarginContainer/VBoxContainer/ButtonsMarginContainer/HBoxContainer" unique_id=1733096770]
 layout_mode = 2
 text = "Confirm"
 
-[node name="ConnectionDevicesManager" type="Node" parent="."]
+[node name="ConnectionDevicesManager" type="Node" parent="." unique_id=1052386706]
 script = ExtResource("4_l1o71")
 metadata/_custom_type_script = "uid://crkeoetke3856"
 
-[node name="SelectDeviceManager" type="Node" parent="." node_paths=PackedStringArray("connection_devices")]
+[node name="SelectDeviceManager" type="Node" parent="." unique_id=1190381003 node_paths=PackedStringArray("connection_devices")]
 script = ExtResource("3_70vpo")
 connection_devices = NodePath("../ConnectionDevicesManager")
 number_of_players = 4
 metadata/_custom_type_script = "uid://c1ani4ww6m83a"
 
-[node name="Example_SD_UIManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "columns_container", "cancel_button", "confirm_button", "label_in_scene")]
+[node name="Example_SD_UIManager" type="Node" parent="." unique_id=360644029 node_paths=PackedStringArray("select_device_manager", "columns_container", "cancel_button", "confirm_button", "label_in_scene")]
 script = ExtResource("5_xqbb4")
 select_device_manager = NodePath("../SelectDeviceManager")
 column_prefab = ExtResource("1_xqbb4")
@@ -89,13 +89,13 @@ confirm_button = NodePath("../UIMarginContainer/VBoxContainer/ButtonsMarginConta
 label_in_scene = NodePath("../Label")
 metadata/_custom_type_script = "uid://ddq7geg837t1o"
 
-[node name="Example_SD_ErrorsManager" type="Node" parent="." node_paths=PackedStringArray("select_device_manager", "ui_manager")]
+[node name="Example_SD_ErrorsManager" type="Node" parent="." unique_id=1872017618 node_paths=PackedStringArray("select_device_manager", "ui_manager")]
 script = ExtResource("8_xqbb4")
 select_device_manager = NodePath("../SelectDeviceManager")
 ui_manager = NodePath("../Example_SD_UIManager")
 metadata/_custom_type_script = "uid://8ikwj3kw72nl"
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1667112985]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0

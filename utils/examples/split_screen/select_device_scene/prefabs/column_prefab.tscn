@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dylpxvlsgcb07"]
+[gd_scene format=3 uid="uid://dylpxvlsgcb07"]
 
 [ext_resource type="Script" uid="uid://b8he2e27lfs6d" path="res://utils/examples/split_screen/select_device_scene/scripts/example_column_ui.gd" id="1_wv2im"]
 
-[node name="Player1" type="MarginContainer" node_paths=PackedStringArray("color_rect", "label", "elements_container")]
+[node name="Player1" type="MarginContainer" unique_id=535017942 node_paths=PackedStringArray("color_rect", "label", "elements_container")]
 anchors_preset = 9
 anchor_bottom = 1.0
 offset_right = 62.0
@@ -13,22 +13,22 @@ color_rect = NodePath("BackgroundColorRect")
 label = NodePath("VBoxContainer/Label")
 elements_container = NodePath("VBoxContainer/ElementsContainer")
 
-[node name="BackgroundColorRect" type="ColorRect" parent="."]
+[node name="BackgroundColorRect" type="ColorRect" parent="." unique_id=624412065]
 layout_mode = 2
 color = Color(0.190762, 0.190762, 0.190762, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=595016180]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=501285332]
 layout_mode = 2
 text = "Player 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1054570563]
 layout_mode = 2
 
-[node name="ElementsContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="ElementsContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=128876813]
 layout_mode = 2

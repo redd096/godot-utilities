@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://byn0rt8cp6x30"]
+[gd_scene format=3 uid="uid://byn0rt8cp6x30"]
 
 [ext_resource type="Script" uid="uid://dn4bh834balc0" path="res://utils/examples/split_screen/split_screen_scene/scripts/example_player_split_screen.gd" id="1_7j7eg"]
 [ext_resource type="Material" uid="uid://2urvv4mlk2wx" path="res://utils/examples/split_screen/split_screen_scene/materials/sunglasses_material.tres" id="2_fegb1"]
@@ -16,41 +16,41 @@ font_size = 40
 outline_size = 3
 outline_color = Color(0, 0, 0, 1)
 
-[node name="Player" type="Node3D" node_paths=PackedStringArray("body", "camera")]
+[node name="Player" type="Node3D" unique_id=2122543145 node_paths=PackedStringArray("body", "camera")]
 script = ExtResource("1_7j7eg")
 body = NodePath("CharacterBody3D")
 camera = NodePath("Camera3D")
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1824997112]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=1478266895]
 shape = SubResource("CapsuleShape3D_4kjla")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=1905382394]
 mesh = SubResource("CapsuleMesh_skkhd")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D" unique_id=2130573801]
 transform = Transform3D(0.781847, 0, 0, 0, 0.152923, 0, 0, 0, 0.373253, 0, 0.526818, -0.320278)
 material_override = ExtResource("2_fegb1")
 mesh = SubResource("BoxMesh_d1322")
 
-[node name="Collision3DDataController" type="Node" parent="CharacterBody3D" node_paths=PackedStringArray("collision_object")]
+[node name="Collision3DDataController" type="Node" parent="CharacterBody3D" unique_id=106500637 node_paths=PackedStringArray("collision_object")]
 script = ExtResource("3_4sm5p")
 collision_object = NodePath("..")
 collision_name = &"Player"
 collision_data = ExtResource("4_cq8p4")
 
-[node name="RemoteTransform3D" type="RemoteTransform3D" parent="CharacterBody3D"]
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="CharacterBody3D" unique_id=1311741799]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46162, -0.338215)
 remote_path = NodePath("../../Camera3D")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=961046599]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46162, -0.338215)
 current = true
 
-[node name="Crosshair CanvasLayer" type="CanvasLayer" parent="Camera3D"]
+[node name="Crosshair CanvasLayer" type="CanvasLayer" parent="Camera3D" unique_id=1003662424]
 
-[node name="Label" type="Label" parent="Camera3D/Crosshair CanvasLayer"]
+[node name="Label" type="Label" parent="Camera3D/Crosshair CanvasLayer" unique_id=1476794827]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

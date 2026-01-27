@@ -24,7 +24,7 @@ func update_device(device : int) -> void:
 	#use both mouse and keyboard set by default in project
 	if single_player_use_every_device:
 		var split_screen_manager : SplitScreenManager = Singleton.instance(SplitScreenManager)
-		if (split_screen_manager and split_screen_manager.number_of_players == 1):
+		if (split_screen_manager == null or split_screen_manager.number_of_players == 1):
 			input_suffix = ""
 
 func _physics_process(delta: float) -> void:	
