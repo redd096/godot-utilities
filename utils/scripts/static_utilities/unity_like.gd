@@ -18,6 +18,13 @@ static func set_parent(node: Node, parent: Node) -> void:
 	# and set child of new parent
 	parent.add_child.call_deferred(node)
 
+static func random_point_in_circle_3d(pos: Vector3, dist: float) -> Vector3:
+	var angle := randf() * TAU
+	return Vector3(
+		pos.x + cos(angle) * dist, 
+		pos.y, 
+		pos.z + sin(angle) * dist)
+
 #region get component
 
 ## Equivalent of unity node.GetComponent<script_type>
@@ -102,29 +109,29 @@ static func find_object_of_type(script_type: Object) -> Variant:
 # }
 
 ## Equivalent of unity Physics.Raycast (can use node Raycast3D)
-static func raycast3D(owner: Node3D, from: Vector3, to: Vector3, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
+static func raycast_3d(owner: Node3D, from: Vector3, to: Vector3, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
 	var space_state := owner.get_world_3d().direct_space_state
 	var query := PhysicsRayQueryParameters3D.create(from, to, collision_mask, exclude)
 	return space_state.intersect_ray(query)
 
 ## Equivalent of unity Physics.Raycast (can use node Raycast3D)
-static func raycast3D_with_query(owner: Node3D, query: PhysicsRayQueryParameters3D) -> Dictionary:
+static func raycast_3d_with_query(owner: Node3D, query: PhysicsRayQueryParameters3D) -> Dictionary:
 	var space_state := owner.get_world_3d().direct_space_state
 	return space_state.intersect_ray(query)
 
 ## Equivalent of unity Physics2D.Raycast (can use node Raycast2D)
-static func raycast2D(owner: Node2D, from: Vector2, to: Vector2, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
+static func raycast_2d(owner: Node2D, from: Vector2, to: Vector2, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
 	var space_state := owner.get_world_2d().direct_space_state
 	var query := PhysicsRayQueryParameters2D.create(from, to, collision_mask, exclude)
 	return space_state.intersect_ray(query)
 
 ## Equivalent of unity Physics2D.Raycast (can use node Raycast2D)
-static func raycast2D_with_query(owner: Node2D, query: PhysicsRayQueryParameters2D) -> Dictionary:
+static func raycast_2d_with_query(owner: Node2D, query: PhysicsRayQueryParameters2D) -> Dictionary:
 	var space_state := owner.get_world_2d().direct_space_state
 	return space_state.intersect_ray(query)
 
 ## Equivalent of unity Physics.Spherecast (can use node ShapeCast3D)
-static func spherecast3D(owner: Node3D, from: Vector3, to: Vector3, radius: float, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Array[Dictionary]:
+static func spherecast_3d(owner: Node3D, from: Vector3, to: Vector3, radius: float, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Array[Dictionary]:
 	var space := owner.get_world_3d().direct_space_state
 	# create shape
 	var shape = SphereShape3D.new()
@@ -139,12 +146,12 @@ static func spherecast3D(owner: Node3D, from: Vector3, to: Vector3, radius: floa
 	return space.intersect_shape(query)
 
 ## Equivalent of unity Physics.Spherecast (can use node ShapeCast3D) - this can have different shapes
-static func shapecast3D_with_query(owner: Node3D, query: PhysicsShapeQueryParameters3D) -> Array[Dictionary]:
+static func shapecast_3d_with_query(owner: Node3D, query: PhysicsShapeQueryParameters3D) -> Array[Dictionary]:
 	var space := owner.get_world_3d().direct_space_state
 	return space.intersect_shape(query)
 
 ## Equivalent of unity Physics.Spherecast (can use node ShapeCast3D)
-static func circlecast2D(owner: Node2D, from: Vector2, to: Vector2, radius: float, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Array[Dictionary]:
+static func circlecast_2d(owner: Node2D, from: Vector2, to: Vector2, radius: float, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Array[Dictionary]:
 	var space := owner.get_world_2d().direct_space_state
 	# create shape
 	var shape = CircleShape2D.new()
@@ -159,7 +166,7 @@ static func circlecast2D(owner: Node2D, from: Vector2, to: Vector2, radius: floa
 	return space.intersect_shape(query)
 
 ## Equivalent of unity Physics.Spherecast (can use node ShapeCast3D) - this can have different shapes
-static func shapecast2D_with_query(owner: Node2D, query: PhysicsShapeQueryParameters2D) -> Array[Dictionary]:
+static func shapecast_2D_with_query(owner: Node2D, query: PhysicsShapeQueryParameters2D) -> Array[Dictionary]:
 	var space := owner.get_world_2d().direct_space_state
 	return space.intersect_shape(query)
 
