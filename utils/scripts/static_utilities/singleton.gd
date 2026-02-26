@@ -11,7 +11,7 @@
 class_name Singleton
 
 ## If this is the instance (or there aren't instances and this is set now as instance), return true (and can set DontDestroyOnLoad). 
-## If there is already another instance, destroy this object if destroyCopies is true. 
+## If there is already another instance, destroy this object if DestroyCopies is true. 
 ## Normally this function is called in _ready() for every singleton script
 static func check_instance(obj: Node, set_dont_destroy_on_load: bool = true, destroy_copies: bool = true) -> bool:
 	# get current instance or find in scene
@@ -52,6 +52,20 @@ static func instance(script_type: Object, auto_instantiate: bool = false) -> Var
 
 #region copy-paste from unity_like
 
+## Equivalent of unity DontDestroyOnLoad(node)
+static func _dont_destroy_on_load(node: Node) -> void:
+	# set root as parent (this isn't destroyed when change scene)
+	var root: Node = Engine.get_main_loop().root
+	# check if this is already child of this parent
+	var current_parent = node.get_parent()
+	if current_parent and current_parent == root:
+		return
+	# else remove from current parent
+	if current_parent:
+		current_parent.remove_child.call_deferred(node)
+	# and set child of new parent
+	root.add_child.call_deferred(node)
+
 ## Return class name or filename
 static func _get_string_from_script_type(script_type: Object) -> String:
 	var type: String = ""
@@ -67,26 +81,21 @@ static func _get_string_from_script_type(script_type: Object) -> String:
 		type = script_type.get_class()
 	return type
 
-## Equivalent of unity FindObjectOfType<type>
+## Equivalent of unity FindObjectOfType<script_type>
 static func _find_object_of_type(script_type: Object) -> Variant:
-	var type := _get_string_from_script_type(script_type)
 	var root_node: Node = Engine.get_main_loop().root
-	# get components in children but ignore root node
-	var components: Array = root_node.find_children("*", str(type), true, false)
-	return components[0] if components.size() > 0 else null
+	return _find_first_children_component_recursive(root_node, script_type)
 
-## Equivalent of unity DontDestroyOnLoad(GameObject)
-static func _dont_destroy_on_load(node: Node) -> void:
-	# set root as parent (this isn't destroyed when change scene)
-	var root: Node = Engine.get_main_loop().root
-	# check if this is already child of this parent
-	var current_parent = node.get_parent()
-	if current_parent and current_parent == root:
-		return
-	# else remove from current parent
-	if current_parent:
-		current_parent.remove_child.call_deferred(node)
-	# and set child of new parent
-	root.add_child.call_deferred(node)
+## Find first child with component recursively
+static func _find_first_children_component_recursive(node: Node, script_type: Object) -> Variant:
+	for child in node.get_children():
+		# check child
+		if is_instance_of(child, script_type):
+			return child
+		# check child childrens
+		var child_component = _find_first_children_component_recursive(child, script_type)
+		if child_component:
+			return child_component
+	return null
 
 #endregion
