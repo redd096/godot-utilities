@@ -21,4 +21,4 @@ func set_state(new_state: State) -> void:
 		current_state._enter_state()
 	
 	# call event
-	emit_signal("on_set_state", current_state)
+	on_set_state.emit(current_state)
