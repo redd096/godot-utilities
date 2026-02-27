@@ -18,12 +18,25 @@ static func set_parent(node: Node, parent: Node) -> void:
 	# and set child of new parent
 	parent.add_child.call_deferred(node)
 
-static func random_point_in_circle_3d(pos: Vector3, pos_y: float, dist: float) -> Vector3:
+## Return a random point in circle (XZ plane) with Y height
+static func random_point_in_circle_3d(position: Vector3, distance: float, pos_y: float) -> Vector3:
 	var angle := randf() * TAU
 	return Vector3(
-		pos.x + cos(angle) * dist, 
+		position.x + cos(angle) * distance, 
 		pos_y, 
-		pos.z + sin(angle) * dist)
+		position.z + sin(angle) * distance)
+
+## Returns a random point inside a rectangle (XZ plane)
+static func random_point_in_rect(bottom_left: Vector2, top_right: Vector2, pos_y: float) -> Vector3:
+	return Vector3(
+		randf_range(bottom_left.x, top_right.x),
+		pos_y,
+		randf_range(bottom_left.y, top_right.y)
+	)
+
+## Checks if a point is inside a rectangle on XZ plane
+static func is_in_rect(point: Vector3, bottom_left: Vector2, top_right: Vector2) -> bool:
+	return point.x >= bottom_left.x and point.x <= top_right.x and point.z >= bottom_left.y and point.z <= top_right.y
 
 #region get component
 
