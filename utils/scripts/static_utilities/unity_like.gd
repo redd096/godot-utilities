@@ -18,11 +18,11 @@ static func set_parent(node: Node, parent: Node) -> void:
 	# and set child of new parent
 	parent.add_child.call_deferred(node)
 
-static func random_point_in_circle_3d(pos: Vector3, dist: float) -> Vector3:
+static func random_point_in_circle_3d(pos: Vector3, pos_y: float, dist: float) -> Vector3:
 	var angle := randf() * TAU
 	return Vector3(
 		pos.x + cos(angle) * dist, 
-		pos.y, 
+		pos_y, 
 		pos.z + sin(angle) * dist)
 
 #region get component
