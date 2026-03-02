@@ -8,6 +8,10 @@ func _process(delta: float) -> void:
 	if current_state:
 		current_state._process_state(delta)
 
+func _physics_process(delta: float) -> void:
+	if current_state:
+		current_state._physics_process_state(delta)
+
 ## Exit from current state and enter new state
 func set_state(new_state: State) -> void:
 	if current_state:
