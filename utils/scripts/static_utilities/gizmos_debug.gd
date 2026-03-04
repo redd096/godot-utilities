@@ -56,9 +56,9 @@ static func create_circle(parent_node: Node, position: Vector3, radius: float, c
 		immediate.surface_add_vertex(Vector3(cos(angle) * radius, 0, sin(angle) * radius))
 	immediate.surface_end()
 
-	# set position
-	mesh_instance.global_position = position
-
 	# add to scene
 	parent_node.add_child(mesh_instance)
+
+	# set position
+	mesh_instance.global_position = position
 	return mesh_instance

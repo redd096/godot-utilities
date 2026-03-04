@@ -106,8 +106,6 @@ static func find_object_of_type(script_type: Object) -> Variant:
 
 #endregion
 
-#region raycast
-
 # https://docs.godotengine.org/en/stable/tutorials/physics/ray-casting.html
 
 # every dicitonary contains:
@@ -120,6 +118,8 @@ static func find_object_of_type(script_type: Object) -> Variant:
 #    shape: int # shape index of collider
 #    metadata: Variant() # metadata of collider
 # }
+
+#region raycast
 
 ## Equivalent of unity Physics.Raycast (can use node Raycast3D)
 static func raycast_3d(owner: Node3D, from: Vector3, to: Vector3, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
@@ -152,8 +152,8 @@ static func spherecast_3d(owner: Node3D, from: Vector3, to: Vector3, radius: flo
 	# create query
 	var query = PhysicsShapeQueryParameters3D.new()
 	query.shape = shape
-	query.transform = Transform3D(Basis(), from)
-	query.motion = to
+	query.transform = Transform3D(Basis.IDENTITY, from)
+	query.motion = to - from
 	query.collision_mask = collision_mask
 	query.exclude = exclude
 	return space.intersect_shape(query)
@@ -173,7 +173,7 @@ static func circlecast_2d(owner: Node2D, from: Vector2, to: Vector2, radius: flo
 	var query = PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
 	query.transform = Transform2D(0, from)
-	query.motion = to
+	query.motion = to - from
 	query.collision_mask = collision_mask
 	query.exclude = exclude
 	return space.intersect_shape(query)
@@ -182,6 +182,14 @@ static func circlecast_2d(owner: Node2D, from: Vector2, to: Vector2, radius: flo
 static func shapecast_2D_with_query(owner: Node2D, query: PhysicsShapeQueryParameters2D) -> Array[Dictionary]:
 	var space := owner.get_world_2d().direct_space_state
 	return space.intersect_shape(query)
+
+#endregion
+
+#region overlap
+
+## Equivalent of unity Physics.OverlapSphere (can use node ShapeCast3D)
+static func overlap_sphere_3d(owner: Node3D, from: Vector3, radius: float, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Array[Dictionary]:
+	return spherecast_3d(owner, from, Vector3.ZERO, radius, collision_mask, exclude)
 
 #endregion
 
