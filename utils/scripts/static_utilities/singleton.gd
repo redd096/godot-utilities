@@ -10,6 +10,9 @@
 ## Call Singleton.instance(Camera2D) to get Camera2D as it has a static instance variable
 class_name Singleton
 
+## key: String, value: singleton instance
+static var _instances: Dictionary = {}
+
 ## If this is the instance (or there aren't instances and this is set now as instance), return true (and can set DontDestroyOnLoad). 
 ## If there is already another instance, destroy this object if DestroyCopies is true. 
 ## Normally this function is called in _ready() for every singleton script
@@ -35,8 +38,8 @@ static func check_instance(obj: Node, set_dont_destroy_on_load: bool = true, des
 static func instance(script_type: Object, auto_instantiate: bool = false) -> Variant:
 	# if there is an instance and it's still valid, return it
 	var type := _get_string_from_script_type(script_type)
-	if Engine.has_singleton(type):
-		var current_instance = Engine.get_singleton(type)
+	if _instances.has(type):#Engine.has_singleton(type):
+		var current_instance = _instances[type]#Engine.get_singleton(type)
 		if current_instance:
 			return current_instance
 	# if there isn't an instance ot it's not valid, try find in scene
@@ -47,7 +50,7 @@ static func instance(script_type: Object, auto_instantiate: bool = false) -> Var
 		obj_instance.name = str(type, " (Auto Instantiated)")
 	# then register it
 	if obj_instance:
-		Engine.register_singleton(type, obj_instance)
+		_instances[type] = obj_instance#Engine.register_singleton(type, obj_instance)
 	return obj_instance
 
 #region copy-paste from unity_like

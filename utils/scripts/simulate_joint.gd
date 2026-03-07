@@ -1,7 +1,7 @@
-class_name SimulateJoint
 ## Replicates Jolt's spring behavior: damped harmonic oscillator.
 ## Use frequency and damping like Jolt joints.
-##
+class_name SimulateJoint
+
 ## frequency: how fast the spring reaches its target.
 ##   - 20 = very stiff (reaches target in ~0.0125s)
 ##   - 10 = stiff (good for dragging)
