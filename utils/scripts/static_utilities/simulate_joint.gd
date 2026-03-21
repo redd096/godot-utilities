@@ -14,7 +14,7 @@ class_name SimulateJoint
 ##   For dragging, 1.0 is ideal.
 
 ## Applies the linear spring force to the rigidbody
-static func apply_linear_spring_force(pivot: PhysicsBody3D, target: RigidBody3D, local_anchor_point: Vector3 = Vector3.ZERO, frequency: float = 3.0, damping: float = 1.0, max_force: float = 80.0) -> void:
+static func apply_linear_spring_force(pivot: Node3D, target: RigidBody3D, local_anchor_point: Vector3 = Vector3.ZERO, frequency: float = 3.0, damping: float = 1.0, max_force: float = 80.0) -> void:
 	# instead of have a simple (pivot.global_position - target.global_position)
 	# we use the anchor point as target position
 	var world_anchor_point := target.to_global(local_anchor_point)
@@ -35,7 +35,7 @@ static func apply_linear_spring_force(pivot: PhysicsBody3D, target: RigidBody3D,
 	# target.apply_impulse(force * delta) # alternative but seems the same
 
 ## Applies the angular spring torque to the rigidbody
-static func apply_angular_spring_torque(pivot: PhysicsBody3D, target: RigidBody3D, frequency: float = 3.0, damping: float = 1.0, max_torque: float = 0.0) -> void:
+static func apply_angular_spring_torque(pivot: Node3D, target: RigidBody3D, frequency: float = 3.0, damping: float = 1.0, max_torque: float = 0.0) -> void:
 	# calculate necessary rotation
 	var rot_diff := get_rotation_difference(
 		target.global_transform.basis,
@@ -55,7 +55,7 @@ static func apply_angular_spring_torque(pivot: PhysicsBody3D, target: RigidBody3
 	target.apply_torque(torque)
 
 ## Sets the angular velocity of the rigidbody
-static func apply_angular_spring_velocity(pivot: PhysicsBody3D, target: RigidBody3D, delta: float, frequency: float = 10.0, damping: float = 1.0, rotation_speed: float = 10.0) -> void:
+static func apply_angular_spring_velocity(pivot: Node3D, target: RigidBody3D, delta: float, frequency: float = 10.0, damping: float = 1.0, rotation_speed: float = 10.0) -> void:
 	# calculate necessary rotation
 	var rot_diff := get_rotation_difference(
 		target.global_transform.basis,
