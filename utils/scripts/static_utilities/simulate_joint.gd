@@ -32,6 +32,27 @@ static func apply_linear_spring_force(pivot: PhysicsBody3D, target: RigidBody3D,
 	# var force_position := world_anchor_point - target.global_position
 	# target.apply_force(force, force_position)
 	target.apply_central_force(force)
+	# target.apply_impulse(force * delta) # alternative but seems the same
+
+## Applies the angular spring torque to the rigidbody
+static func apply_angular_spring_torque(pivot: PhysicsBody3D, target: RigidBody3D, frequency: float = 3.0, damping: float = 1.0, max_torque: float = 0.0) -> void:
+	# calculate necessary rotation
+	var rot_diff := get_rotation_difference(
+		target.global_transform.basis,
+		pivot.global_transform.basis
+	)
+	# calculate torque
+	var torque := compute_angular_torque(
+		rot_diff,
+		# target.global_transform.basis,
+		target.angular_velocity,
+		target.get_inverse_inertia_tensor().inverse(),
+		frequency,
+		damping,
+		max_torque
+	)
+	# and apply
+	target.apply_torque(torque)
 
 ## Sets the angular velocity of the rigidbody
 static func apply_angular_spring_velocity(pivot: PhysicsBody3D, target: RigidBody3D, delta: float, frequency: float = 10.0, damping: float = 1.0, rotation_speed: float = 10.0) -> void:
@@ -82,18 +103,46 @@ static func compute_linear_force(
 
 #region angular
 
+# ## Calculates the spring torque for angular correction.
+# ## rotation_diff: the rotation needed to go from current to target (as a vector of axis * angle) (see get_rotation_difference())
+# ## target_global_basis: global basis of the target (target.global_transform.basis)
+# ## angular_velocity: current angular velocity of the rigidbody (target.angular_velocity)
+# ## inertia: local rigidbody's inertia (target.get_inverse_inertia_tensor().inverse())
+# ## frequency: spring frequency (Hz), same as Jolt's PARAM_ANGULAR_SPRING_FREQUENCY
+# ## damping: damping ratio, same as Jolt's PARAM_ANGULAR_SPRING_DAMPING
+# ## max_torque: maximum torque magnitude (0 = unlimited), same as Jolt's PARAM_ANGULAR_SPRING_MAX_FORCE
+# static func compute_angular_torque(
+# 	rotation_diff: Vector3,
+# 	target_global_basis: Basis,
+# 	angular_velocity: Vector3,
+# 	inertia: Basis,
+# 	frequency: float,
+# 	damping: float,
+# 	max_torque: float
+# ) -> Vector3:
+# 	var omega := TAU * frequency
+# 	# convert inertia from local to global
+# 	inertia = target_global_basis * inertia * target_global_basis.transposed()
+# 	# F = m * ((2π * f)² * angle - 2 * d * (2π * f) * velocity)
+# 	var torque := inertia * (omega * omega * rotation_diff - 2.0 * damping * omega * angular_velocity)
+# 	if max_torque > 0.0 and torque.length() > max_torque:
+# 		torque = torque.normalized() * max_torque
+# 	return torque
+
 ## Calculates the spring torque for angular correction.
 ## rotation_diff: the rotation needed to go from current to target (as a vector of axis * angle) (see get_rotation_difference())
 ## angular_velocity: current angular velocity of the rigidbody (target.angular_velocity)
-## inertia: approximation of the rigidbody's inertia (can use target.mass * some_factor)
+## inertia: local rigidbody's inertia (target.get_inverse_inertia_tensor().inverse())
 ## frequency: spring frequency (Hz), same as Jolt's PARAM_ANGULAR_SPRING_FREQUENCY
 ## damping: damping ratio, same as Jolt's PARAM_ANGULAR_SPRING_DAMPING
+## max_torque: maximum torque magnitude (0 = unlimited), same as Jolt's PARAM_ANGULAR_SPRING_MAX_FORCE
 static func compute_angular_torque(
 	rotation_diff: Vector3,
 	angular_velocity: Vector3,
-	inertia: float,
+	inertia: Basis,
 	frequency: float,
-	damping: float
+	damping: float,
+	max_torque: float
 ) -> Vector3:
 	# k = m * (2π * f)²
 	var omega := TAU * frequency
@@ -102,7 +151,13 @@ static func compute_angular_torque(
 	var c := inertia * 2.0 * damping * omega
 
 	# F = k * displacement - c * velocity
-	return k * rotation_diff - c * angular_velocity
+	var torque := k * rotation_diff - c * angular_velocity
+
+	# clamp to max torque
+	if max_torque > 0.0 and torque.length() > max_torque:
+		torque = torque.normalized() * max_torque
+	
+	return torque
 
 ## Helper: get the rotation difference as axis * angle (shortest path).
 ## Returns a Vector3 where direction = axis, length = angle in radians.
