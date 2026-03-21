@@ -62,8 +62,8 @@ func _update_drag_to_scroll(event: InputEvent) -> void:
 		# then update scroll
 		if event is InputEventMouseMotion and _dragging:
 			var delta: Vector2 = event.position - _drag_start
-			scroll_container.scroll_horizontal = _scroll_start.x - int(delta.x)
-			scroll_container.scroll_vertical = _scroll_start.y - int(delta.y)
+			scroll_container.scroll_horizontal = (_scroll_start.x - delta.x) as int
+			scroll_container.scroll_vertical = (_scroll_start.y - delta.y) as int
 
 func _get_content_global_rect() -> Rect2:
 	# scrollContainer rect minus the scrollbars
