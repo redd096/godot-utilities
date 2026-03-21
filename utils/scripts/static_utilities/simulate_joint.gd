@@ -14,9 +14,12 @@ class_name SimulateJoint
 ##   For dragging, 1.0 is ideal.
 
 ## Applies the linear spring force to the rigidbody
-static func apply_linear_spring_force(pivot: PhysicsBody3D, target: RigidBody3D, frequency: float = 3.0, damping: float = 1.0, max_force: float = 80.0) -> void:
+static func apply_linear_spring_force(pivot: PhysicsBody3D, target: RigidBody3D, local_anchor_point: Vector3 = Vector3.ZERO, frequency: float = 3.0, damping: float = 1.0, max_force: float = 80.0) -> void:
+	# instead of have a simple (pivot.global_position - target.global_position)
+	# we use the anchor point as target position
+	var world_anchor_point := target.to_global(local_anchor_point)
 	# calculate force
-	var displacement := pivot.global_position - target.global_position
+	var displacement := pivot.global_position - world_anchor_point
 	var force := compute_linear_force(
 		displacement,
 		target.linear_velocity,
@@ -25,7 +28,9 @@ static func apply_linear_spring_force(pivot: PhysicsBody3D, target: RigidBody3D,
 		damping,
 		max_force
 	)
-	# and apply
+	# and apply (calculate position from the center of the target)
+	# var force_position := world_anchor_point - target.global_position
+	# target.apply_force(force, force_position)
 	target.apply_central_force(force)
 
 ## Sets the angular velocity of the rigidbody
