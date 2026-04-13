@@ -1,14 +1,19 @@
 @tool
 extends EditorPlugin
 
-const FinderPanelScript := preload("res://addons/asset_usage_detector/finder_panel.gd")
+# main dock panel script
+const FINDER_PANEL_SCRIPT := preload("res://addons/asset_usage_detector/finder_panel.gd")
 
+# plugin ui
 var _panel: Control
 var _panel_button: Button
+
+# context menu hooks
 var _scene_context_menu: EditorContextMenuPlugin
 var _filesystem_context_menu: EditorContextMenuPlugin
 
 
+# adds actions to the Scene tree context menu
 class SceneContextMenuPluginImpl:
 	extends EditorContextMenuPlugin
 
@@ -31,6 +36,7 @@ class SceneContextMenuPluginImpl:
 		)
 
 
+# adds actions to the FileSystem context menu
 class FilesystemContextMenuPluginImpl:
 	extends EditorContextMenuPlugin
 
@@ -50,10 +56,12 @@ class FilesystemContextMenuPluginImpl:
 
 
 func _enter_tree() -> void:
-	_panel = FinderPanelScript.new()
+	# create the dock panel
+	_panel = FINDER_PANEL_SCRIPT.new()
 	_panel.setup(self)
 	_panel_button = add_control_to_bottom_panel(_panel, "References")
 
+	# register editor context menu entries
 	_scene_context_menu = SceneContextMenuPluginImpl.new(self)
 	add_context_menu_plugin(EditorContextMenuPlugin.CONTEXT_SLOT_SCENE_TREE, _scene_context_menu)
 
@@ -62,6 +70,7 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
+	# remove context menu entries first
 	if _scene_context_menu != null:
 		remove_context_menu_plugin(_scene_context_menu)
 		_scene_context_menu = null
@@ -70,6 +79,7 @@ func _exit_tree() -> void:
 		remove_context_menu_plugin(_filesystem_context_menu)
 		_filesystem_context_menu = null
 
+	# then remove and free the dock panel
 	if _panel != null:
 		remove_control_from_bottom_panel(_panel)
 		_panel.queue_free()
@@ -94,6 +104,7 @@ func _on_filesystem_context_find(paths: PackedStringArray) -> void:
 
 
 func focus_current_scene_node(node_path: String) -> void:
+	# focus a node in the currently edited scene
 	var scene_root: Node = get_editor_interface().get_edited_scene_root()
 	if scene_root == null:
 		return
@@ -109,6 +120,7 @@ func focus_current_scene_node(node_path: String) -> void:
 
 
 func focus_scene_node(scene_path: String, node_path: String) -> void:
+	# if the target belongs to the current scene, use the faster path
 	if scene_path.is_empty():
 		focus_current_scene_node(node_path)
 		return
@@ -125,6 +137,7 @@ func focus_scene_file(scene_path: String) -> void:
 
 
 func _focus_scene_node_deferred(scene_path: String, node_path: String, attempt: int) -> void:
+	# wait a few frames until Godot has the scene fully opened
 	var roots: Array[Node] = get_editor_interface().get_open_scene_roots()
 	for root in roots:
 		if root != null and root.scene_file_path == scene_path:
@@ -142,6 +155,7 @@ func _focus_scene_node_deferred(scene_path: String, node_path: String, attempt: 
 	if attempt < 8:
 		call_deferred("_focus_scene_node_deferred", scene_path, node_path, attempt + 1)
 	else:
+		# fallback to the file if the node could not be resolved
 		get_editor_interface().select_file(scene_path)
 
 
@@ -151,6 +165,7 @@ func focus_file(path: String) -> void:
 
 	get_editor_interface().select_file(path)
 
+	# open the resource too when possible so the user jumps directly to it
 	var resource: Resource = ResourceLoader.load(path)
 	if resource != null:
 		get_editor_interface().edit_resource(resource)

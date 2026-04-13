@@ -1,18 +1,17 @@
 @tool
 extends VBoxContainer
 
+# file types scanned when searching the whole project
 const PROJECT_SCAN_SCENE_EXTENSIONS := {
 	"tscn": true,
 	"scn": true,
 }
-
 const PROJECT_SCAN_RESOURCE_EXTENSIONS := {
 	"tres": true,
 	"res": true,
 	"material": true,
 	"theme": true,
 }
-
 const TEXT_SEARCH_EXTENSIONS := {
 	"gd": true,
 	"cs": true,
@@ -23,7 +22,6 @@ const TEXT_SEARCH_EXTENSIONS := {
 	"json": true,
 	"txt": true,
 }
-
 const STRUCTURED_TEXT_REFERENCE_EXTENSIONS := {
 	"tscn": true,
 	"scn": true,
@@ -33,11 +31,13 @@ const STRUCTURED_TEXT_REFERENCE_EXTENSIONS := {
 	"theme": true,
 }
 
+# context menu popup actions
 const POPUP_COPY_CELL := 1
 const POPUP_COPY_ROW := 2
 
 var _plugin: EditorPlugin
 
+# ui references
 var _title_label: Label
 var _status_label: Label
 var _tree: Tree
@@ -47,8 +47,11 @@ var _clear_button: Button
 var _copy_button: Button
 var _cell_popup: PopupMenu
 
+# cached search state
 var _last_request: Dictionary = {}
 var _last_results: Array[Dictionary] = []
+
+# current popup target
 var _popup_item: TreeItem = null
 var _popup_column: int = -1
 
@@ -111,8 +114,9 @@ func start_project_search(paths: PackedStringArray) -> void:
 
 
 func _build_ui() -> void:
+	# keep editor text untouched by translation
 	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-	
+
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 
 	var toolbar := HBoxContainer.new()
@@ -222,7 +226,7 @@ func _show_results(results: Array[Dictionary]) -> void:
 		item.set_tooltip_text(1, result.get("kind", ""))
 		item.set_tooltip_text(2, result.get("details", ""))
 		item.set_tooltip_text(3, result.get("target", ""))
-		
+
 		for column in range(4):
 			item.set_auto_translate_mode(column, Node.AUTO_TRANSLATE_MODE_DISABLED)
 
@@ -253,6 +257,7 @@ func _on_tree_item_activated() -> void:
 
 
 func _open_result_for_column(result: Dictionary, column: int) -> void:
+	# clicking the target column opens the target, otherwise open the place where it was found
 	if column == 3:
 		_open_target(result)
 		return
@@ -302,26 +307,31 @@ func _on_rescan_pressed() -> void:
 
 	var mode := String(_last_request.get("mode", ""))
 	if mode == "scene":
-		var scene_root: Node = _plugin.get_editor_interface().get_edited_scene_root()
-		if scene_root == null:
-			_set_status("No scene is currently open.")
-			return
-
-		var target_paths: PackedStringArray = _last_request.get("target_paths", PackedStringArray())
-		var include_children := bool(_last_request.get("include_children", false))
-		var target_nodes: Array[Node] = []
-		for target_path in target_paths:
-			var node := _get_node_from_scene_root(scene_root, String(target_path))
-			if node != null:
-				target_nodes.append(node)
-
-		if target_nodes.is_empty():
-			_set_status("The originally selected node(s) are no longer available in the open scene.")
-			return
-
-		start_scene_search(target_nodes, include_children)
+		_rescan_scene_request()
 	elif mode == "project":
 		start_project_search(PackedStringArray([String(_last_request.get("target_path", ""))]))
+
+
+func _rescan_scene_request() -> void:
+	var scene_root: Node = _plugin.get_editor_interface().get_edited_scene_root()
+	if scene_root == null:
+		_set_status("No scene is currently open.")
+		return
+
+	var target_paths: PackedStringArray = _last_request.get("target_paths", PackedStringArray())
+	var include_children := bool(_last_request.get("include_children", false))
+	var target_nodes: Array[Node] = []
+
+	for target_path in target_paths:
+		var node := _get_node_from_scene_root(scene_root, String(target_path))
+		if node != null:
+			target_nodes.append(node)
+
+	if target_nodes.is_empty():
+		_set_status("The originally selected node(s) are no longer available in the open scene.")
+		return
+
+	start_scene_search(target_nodes, include_children)
 
 
 func _on_copy_summary_pressed() -> void:
@@ -374,8 +384,10 @@ func _on_tree_gui_input(event: InputEvent) -> void:
 	_popup_item = item
 	_popup_column = column
 	_tree.set_selected(item, column)
+
 	var result: Dictionary = item.get_metadata(0)
 	_preview_text.text = _format_result_text(result)
+
 	_cell_popup.position = get_screen_position() + mouse_event.position
 	_cell_popup.popup()
 
@@ -398,6 +410,8 @@ func _on_cell_popup_id_pressed(id: int) -> void:
 func _scan_current_scene(scene_root: Node, target_nodes: Array[Node], include_children: bool) -> Array[Dictionary]:
 	var results: Array[Dictionary] = []
 	var target_path_set := _build_target_path_set(scene_root, target_nodes, include_children)
+
+	# pack the open scene so we can inspect stored node data and connections
 	var packed := PackedScene.new()
 	var pack_error := packed.pack(scene_root)
 	if pack_error != OK:
@@ -431,13 +445,14 @@ func _scan_current_scene(scene_root: Node, target_nodes: Array[Node], include_ch
 	for connection_idx in range(state.get_connection_count()):
 		var source_path := _normalize_node_path_string(state.get_connection_source(connection_idx))
 		var target_path := _normalize_node_path_string(state.get_connection_target(connection_idx))
+
 		if target_path_set.has(target_path):
 			_add_unique_result(results, {
 				"location": source_path,
 				"kind": "Signal",
 				"details": "%s -> %s()" % [
 					String(state.get_connection_signal(connection_idx)),
-					String(state.get_connection_method(connection_idx))
+					String(state.get_connection_method(connection_idx)),
 				],
 				"target": target_path,
 				"location_action": "scene_current",
@@ -449,13 +464,12 @@ func _scan_current_scene(scene_root: Node, target_nodes: Array[Node], include_ch
 		var source_node := _get_node_from_scene_root(scene_root, source_path)
 		var bind_values: Array = state.get_connection_binds(connection_idx)
 		for bind_idx in range(bind_values.size()):
-			var bind_value: Variant = bind_values[bind_idx]
 			_scan_variant_for_scene_node_reference(
 				results,
 				target_path_set,
 				scene_root,
 				source_node,
-				bind_value,
+				bind_values[bind_idx],
 				source_path,
 				"Signal Bind",
 				"bind[%d]" % bind_idx,
@@ -498,6 +512,7 @@ func _scan_scene_file_for_resource_path(results: Array[Dictionary], scene_path: 
 	if state == null:
 		return
 
+	# check inherited scene links
 	var base_state := state.get_base_scene_state()
 	if base_state != null and base_state.get_path() == target_path:
 		_add_unique_result(results, {
@@ -602,6 +617,7 @@ func _extract_script_path_from_node_property(state: SceneState, node_idx: int) -
 			return (property_value as Script).resource_path
 		if property_value is Resource:
 			return (property_value as Resource).resource_path
+
 	return ""
 
 
@@ -630,13 +646,13 @@ func _scan_resource_file_for_resource_path(results: Array[Dictionary], resource_
 
 
 func _scan_structured_text_reference_file(results: Array[Dictionary], file_path: String, target_path: String) -> void:
+	# skip simple text matches if we already found a more specific structured resource hit
 	if _file_already_has_resource_result(results, file_path, target_path):
 		return
 
 	var text := _read_small_text_file(file_path)
 	if text.is_empty():
 		return
-
 	if text.find(target_path) == -1:
 		return
 
@@ -661,7 +677,6 @@ func _scan_text_file_for_target_path(results: Array[Dictionary], file_path: Stri
 	var text := _read_small_text_file(file_path)
 	if text.is_empty():
 		return
-
 	if text.find(target_path) == -1:
 		return
 
@@ -688,7 +703,7 @@ func _scan_variant_for_scene_node_reference(
 	reference_kind: String,
 	detail_path: String,
 	visited: Dictionary,
-	depth: int
+	depth: int,
 ) -> void:
 	if depth > 16:
 		return
@@ -794,7 +809,7 @@ func _scan_object_storage_properties_for_scene_reference(
 	reference_kind: String,
 	base_detail_path: String,
 	visited: Dictionary,
-	depth: int
+	depth: int,
 ) -> void:
 	for property_info in object.get_property_list():
 		var usage := int(property_info.get("usage", 0))
@@ -830,7 +845,7 @@ func _scan_variant_for_resource_path(
 	action_data: Dictionary,
 	visited: Dictionary,
 	depth: int,
-	owner_file_path: String
+	owner_file_path: String,
 ) -> void:
 	if depth > 20:
 		return
@@ -850,6 +865,7 @@ func _scan_variant_for_resource_path(
 			}, true)
 			_add_unique_result(results, result)
 
+		# mesh surface materials are not always reached through generic property traversal
 		if resource is Mesh:
 			_scan_mesh_surface_materials_for_resource_path(
 				results,
@@ -933,7 +949,7 @@ func _scan_mesh_surface_materials_for_resource_path(
 	location: String,
 	kind: String,
 	detail_path: String,
-	action_data: Dictionary
+	action_data: Dictionary,
 ) -> void:
 	for surface_index in range(mesh.get_surface_count()):
 		var material := mesh.surface_get_material(surface_index)
@@ -956,10 +972,10 @@ func _should_skip_resource_recursion(resource: Resource, owner_file_path: String
 	var resource_path := resource.resource_path
 	if resource_path.is_empty():
 		return false
-
 	if resource_path == owner_file_path:
 		return false
 
+	# external resources are only checked as direct references to avoid huge scans
 	return true
 
 
@@ -986,6 +1002,7 @@ func _collect_scene_target_paths(scene_root: Node, target_nodes: Array[Node], in
 
 func _build_target_path_set(scene_root: Node, target_nodes: Array[Node], include_children: bool) -> Dictionary:
 	var target_path_set: Dictionary = {}
+
 	for node in target_nodes:
 		if node == null:
 			continue
@@ -1013,6 +1030,7 @@ func _collect_descendants(root: Node) -> Array[Node]:
 
 
 func _resolve_node_path_reference(scene_root: Node, owner_node: Node, node_path_value: NodePath) -> Node:
+	# try the owner first because many exported NodePaths are relative
 	if owner_node != null:
 		var relative_candidate := owner_node.get_node_or_null(node_path_value)
 		if relative_candidate != null:
@@ -1036,7 +1054,6 @@ func _collect_project_files(directory_path: String, output: PackedStringArray) -
 		var name := dir.get_next()
 		if name.is_empty():
 			break
-
 		if name.begins_with("."):
 			continue
 
@@ -1059,6 +1076,7 @@ func _read_small_text_file(file_path: String) -> String:
 	if file == null:
 		return ""
 
+	# avoid reading very large files in the editor thread
 	if file.get_length() > 2 * 1024 * 1024:
 		file.close()
 		return ""
