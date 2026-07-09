@@ -1,6 +1,8 @@
 class_name  CsvReader
 
-## Return a dictionary with the contents of a CSV file [key: String (header), value: Array (every cell in column)]
+## Return a dictionary with the contents of a CSV file 
+## key: String (header, the strings inside the first row of the csv), 
+## value: Array (every cell in column)
 static func read_csv(csv_path: String) -> Dictionary[String, Array]:
 	# be sure file exists
 	if not FileAccess.file_exists(csv_path):
@@ -44,7 +46,30 @@ static func read_csv(csv_path: String) -> Dictionary[String, Array]:
 					dictionary[headers[i]].append(field)			# string
 	
 	# for key in dictionary.keys():
-	# 	var s: String = str("key: \t", key, ", \t\t\tvalue: \t", dictionary[key])
-	# 	print(s)
+	# 	print("key: \t", key, "\nvalue: \t", dictionary[key])
 
 	return dictionary
+
+
+## Return an array with every row of CSV file 
+## e.g. result[0][0] is the first cell on top left, 
+## result[0][1] in the first row is the second cell (column 1), 
+## result [1][0] in the second row is the first cell (column 0)
+static func read_csv_array_rows(csv_path: String) -> Array[PackedStringArray]:
+	# be sure file exists
+	if not FileAccess.file_exists(csv_path):
+		print("File does not exist: ", csv_path)
+		return []
+	
+	var array: Array[PackedStringArray]
+
+	# add every row to array
+	var file: FileAccess = FileAccess.open(csv_path, FileAccess.READ)
+	while not file.eof_reached():
+		var line: PackedStringArray = file.get_csv_line()
+		array.append(line)
+	
+	# for row in array:
+	# 	print(row)
+	
+	return array
