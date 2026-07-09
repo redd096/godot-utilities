@@ -28,22 +28,23 @@ static func read_csv(csv_path: String) -> Dictionary[String, Array]:
 		else:
 			for i in range(line.size()):
 				var field: String = line[i]
+				# for numbers remove commas and %
+				var field_for_numbers: String = field.replace(",", ".").replace("%", "")
 				# add value
-				if field.contains("%"):
+				if field.contains("%") and field_for_numbers.is_valid_float():	# percentage as float
 					# from 50% to 0.5
-					field = field.replace("%", "")
-					var f: float = field.to_float() / 100
-					dictionary[headers[i]].append(f)				# percentage as float
-				elif field.is_valid_float():
-					dictionary[headers[i]].append(field.to_float())	# float
-				elif field.is_valid_int():
-					dictionary[headers[i]].append(field.to_int())	# int
-				elif field.nocasecmp_to("true") == 0:
-					dictionary[headers[i]].append(true)				# true
-				elif field.nocasecmp_to("false") == 0:
-					dictionary[headers[i]].append(false)			# false
-				else:
-					dictionary[headers[i]].append(field)			# string
+					var f: float = field_for_numbers.to_float() / 100
+					dictionary[headers[i]].append(f)
+				elif field_for_numbers.is_valid_float():						# float
+					dictionary[headers[i]].append(field_for_numbers.to_float())
+				elif field_for_numbers.is_valid_int():							# int
+					dictionary[headers[i]].append(field_for_numbers.to_int())
+				elif field.nocasecmp_to("true") == 0:							# true
+					dictionary[headers[i]].append(true)
+				elif field.nocasecmp_to("false") == 0:							# false
+					dictionary[headers[i]].append(false)
+				else:															# string
+					dictionary[headers[i]].append(field)
 	
 	# for key in dictionary.keys():
 	# 	print("key: \t", key, "\nvalue: \t", dictionary[key])
