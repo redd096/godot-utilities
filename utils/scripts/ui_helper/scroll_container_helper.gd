@@ -5,7 +5,7 @@ class_name ScrollContainerHelper extends Node
 ## Can user drag with mouse or touch to scroll?
 @export var enabled_drag_to_scroll: bool = true
 ## If true, ignore MOUSE_FILTER_STOP of other Control nodes
-@export var ignore_mouse_filter_stop: bool = true
+@export var ignore_mouse_filter_stop: bool = false
 @export_group("Scroll Vertical")
 ## User can scroll with inputs (e.g. right analog stick or keyboard arrows)
 @export var enabled_scroll_vertical: bool = true
@@ -33,6 +33,7 @@ func _input(event: InputEvent) -> void:
 	_on_input_update_drag_to_scroll(event)
 
 func _process(delta: float) -> void:
+	# used to scroll with keyboard or gamepad inputs
 	_scroll_by_input(delta)
 
 #region drag to scroll
@@ -62,8 +63,8 @@ func _update_drag_to_scroll(event: InputEvent) -> void:
 		# then update scroll
 		if event is InputEventMouseMotion and _dragging:
 			var delta: Vector2 = event.position - _drag_start
-			scroll_container.scroll_horizontal = (_scroll_start.x - delta.x) as int
-			scroll_container.scroll_vertical = (_scroll_start.y - delta.y) as int
+			scroll_container.scroll_horizontal = _scroll_start.x - int(delta.x)
+			scroll_container.scroll_vertical = _scroll_start.y - int(delta.y)
 
 func _get_content_global_rect() -> Rect2:
 	# scrollContainer rect minus the scrollbars
