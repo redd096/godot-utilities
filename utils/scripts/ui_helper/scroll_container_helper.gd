@@ -5,7 +5,7 @@ class_name ScrollContainerHelper extends Node
 ## Can user drag with mouse or touch to scroll?
 @export var enabled_drag_to_scroll: bool = true
 ## If true, ignore MOUSE_FILTER_STOP of other Control nodes
-@export var ignore_mouse_filter_stop: bool = false
+@export var ignore_mouse_filter_stop: bool = true
 @export_group("Scroll Vertical")
 ## User can scroll with inputs (e.g. right analog stick or keyboard arrows)
 @export var enabled_scroll_vertical: bool = true
@@ -43,11 +43,11 @@ func _on_gui_input(event: InputEvent) -> void:
 		_update_drag_to_scroll(event)
 
 func _on_input_update_drag_to_scroll(event: InputEvent) -> void:
-	if enabled_drag_to_scroll and ignore_mouse_filter_stop and event is InputEventMouse:
+	if enabled_drag_to_scroll and ignore_mouse_filter_stop and _is_necessary_input(event):
 		# if it is left button pressed, be sure it is only inside scroll container
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if _is_left_click(event) and event.pressed:
 			var rect := _get_content_global_rect()
-			var mouse_pos := scroll_container.get_global_mouse_position()
+			var mouse_pos := _get_global_point_position(event.position)
 			if not rect.has_point(mouse_pos):
 				return
 		_update_drag_to_scroll(event)
@@ -55,13 +55,13 @@ func _on_input_update_drag_to_scroll(event: InputEvent) -> void:
 ## Used to scroll with mouse drag
 func _update_drag_to_scroll(event: InputEvent) -> void:
 		# check left mouse button to start/stop drag
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if _is_left_click(event):
 			_dragging = event.pressed	# start/stop drag on left click/release
 			_drag_start = event.position
 			_scroll_start = Vector2(scroll_container.scroll_horizontal, scroll_container.scroll_vertical)
 
 		# then update scroll
-		if event is InputEventMouseMotion and _dragging:
+		if _is_drag_input(event) and _dragging:
 			var delta: Vector2 = event.position - _drag_start
 			scroll_container.scroll_horizontal = (_scroll_start.x - delta.x) as int
 			scroll_container.scroll_vertical = (_scroll_start.y - delta.y) as int
@@ -76,6 +76,22 @@ func _get_content_global_rect() -> Rect2:
 	if h_scrollbar.visible:
 		rect.size.y -= h_scrollbar.size.y
 	return rect
+
+func _get_global_point_position(pos: Vector2) -> Vector2:
+	# the same as get_global_mouse_position() but works with every position (e.g. for touch)
+	return scroll_container.get_viewport().canvas_transform.affine_inverse() * pos
+
+func _is_necessary_input(event: InputEvent) -> bool:
+	return event is InputEventMouse \
+		or event is InputEventScreenTouch or event is InputEventScreenDrag
+
+func _is_left_click(event: InputEvent) -> bool:
+	return (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT) \
+		or (event is InputEventScreenTouch and event.index == 0)
+
+func _is_drag_input(event: InputEvent) -> bool:
+	return event is InputEventMouseMotion \
+		or event is InputEventScreenDrag
 
 #endregion
 
