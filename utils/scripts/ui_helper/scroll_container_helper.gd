@@ -5,7 +5,9 @@ class_name ScrollContainerHelper extends Node
 ## Can user drag with mouse or touch to scroll?
 @export var enabled_drag_to_scroll: bool = true
 ## If true, ignore MOUSE_FILTER_STOP of other Control nodes
-@export var ignore_mouse_filter_stop: bool = true
+@export var ignore_mouse_filter_stop: bool = false
+## If emulate_mouse_from_touch is true in project settings, this should be off
+@export var check_also_touch_events: bool = false
 @export_group("Scroll Vertical")
 ## User can scroll with inputs (e.g. right analog stick or keyboard arrows)
 @export var enabled_scroll_vertical: bool = true
@@ -83,15 +85,15 @@ func _get_global_point_position(pos: Vector2) -> Vector2:
 
 func _is_necessary_input(event: InputEvent) -> bool:
 	return event is InputEventMouse \
-		or event is InputEventScreenTouch or event is InputEventScreenDrag
+		or (check_also_touch_events and (event is InputEventScreenTouch or event is InputEventScreenDrag))
 
 func _is_left_click(event: InputEvent) -> bool:
 	return (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT) \
-		or (event is InputEventScreenTouch and event.index == 0)
+		or (check_also_touch_events and event is InputEventScreenTouch and event.index == 0)
 
 func _is_drag_input(event: InputEvent) -> bool:
 	return event is InputEventMouseMotion \
-		or event is InputEventScreenDrag
+		or (check_also_touch_events and event is InputEventScreenDrag)
 
 #endregion
 
