@@ -4,10 +4,12 @@ class_name ScrollContainerHelper extends Node
 @export_group("Drag to Scroll")
 ## Can user drag with mouse or touch to scroll?
 @export var enabled_drag_to_scroll: bool = true
-## If true, ignore MOUSE_FILTER_STOP of other Control nodes
+## If true, ignore MOUSE_FILTER_STOP of other Control nodes. If false, use ScrollContainer's gui_input event
 @export var ignore_mouse_filter_stop: bool = false
-## If emulate_mouse_from_touch is true in project settings, this should be off
+## If emulate_mouse_from_touch is true in project settings, this should be off to avoid double events (both touch and mouse)
 @export var check_also_touch_events: bool = false
+## On ready, checks in Project Settings and set check_also_touch_events true or false based on emulate_mouse_from_touch
+@export var automatically_set_touch_events: bool = true
 @export_group("Scroll Vertical")
 ## User can scroll with inputs (e.g. right analog stick or keyboard arrows)
 @export var enabled_scroll_vertical: bool = true
@@ -27,6 +29,10 @@ var _drag_start := Vector2.ZERO
 var _scroll_start := Vector2.ZERO
 
 func _ready() -> void:
+	# check touch events only if emulate_mouse_from_touch is false
+	if automatically_set_touch_events:
+		check_also_touch_events = not ProjectSettings.get_setting("input_devices/pointing/emulate_mouse_from_touch", true)
+
 	# used to drag to scroll, this could be disabled by MOUSE_FILTER_STOP of other Control nodes
 	scroll_container.gui_input.connect(_on_gui_input)
 
