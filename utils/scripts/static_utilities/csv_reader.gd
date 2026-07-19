@@ -28,7 +28,7 @@ static func read_csv(csv_path: String) -> Dictionary[String, Array]:
 		else:
 			for i in range(line.size()):
 				var field: String = line[i]
-				# for numbers remove commas and %
+				# for numbers: replace commas with dots; and remove %
 				var field_for_numbers: String = field.replace(",", ".").replace("%", "")
 				# add value
 				if field.contains("%") and field_for_numbers.is_valid_float():	# percentage as float
