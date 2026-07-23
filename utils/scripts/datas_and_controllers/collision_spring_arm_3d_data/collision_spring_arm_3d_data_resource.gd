@@ -1,12 +1,10 @@
-extends Resource
-
-class_name CollisionSpringArm3DDataResource
+class_name CollisionSpringArm3DDataResource extends Resource
 
 ## List of model data
-@export var data : Array[CollisionSpringArm3DModelData]
+@export var data: Array[CollisionSpringArm3DModelData]
 
 ## Find model in the list by name
-func get_model_by_name(name : StringName) -> CollisionSpringArm3DModelData:
+func get_model_by_name(name: StringName) -> CollisionSpringArm3DModelData:
 	for model_data in data:
 		if model_data.name == name:
 			return model_data

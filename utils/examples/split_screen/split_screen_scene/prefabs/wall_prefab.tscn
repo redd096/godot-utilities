@@ -22,8 +22,9 @@ surface_material_override/0 = SubResource("StandardMaterial3D_vfqq3")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=305358071]
 shape = SubResource("BoxShape3D_320ow")
 
-[node name="Collision3DDataController" type="Node" parent="." unique_id=10638672 node_paths=PackedStringArray("collision_object")]
+[node name="Collision3DDataController" type="Node" parent="." unique_id=10638672 node_paths=PackedStringArray("obj")]
 script = ExtResource("1_e1pry")
-collision_object = NodePath("..")
-collision_name = &"Wall"
-collision_data = ExtResource("2_u31cs")
+obj_is_self = false
+obj = NodePath("..")
+model_data_name = &"Wall"
+data_resource = ExtResource("2_u31cs")

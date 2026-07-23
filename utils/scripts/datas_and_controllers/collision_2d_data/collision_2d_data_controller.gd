@@ -13,6 +13,7 @@ class_name Collision2DDataController extends Node
 # (-1 because the parameter is an index but in inspector start from 1)
 # obj.collision_layer = 1 << (3-1)
 	
+	
 func _ready() -> void:
 	# set obj
 	if obj_is_self:

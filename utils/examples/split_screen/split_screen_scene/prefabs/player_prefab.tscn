@@ -34,11 +34,12 @@ transform = Transform3D(0.781847, 0, 0, 0, 0.152923, 0, 0, 0, 0.373253, 0, 0.526
 material_override = ExtResource("2_fegb1")
 mesh = SubResource("BoxMesh_d1322")
 
-[node name="Collision3DDataController" type="Node" parent="CharacterBody3D" unique_id=106500637 node_paths=PackedStringArray("collision_object")]
+[node name="Collision3DDataController" type="Node" parent="CharacterBody3D" unique_id=106500637 node_paths=PackedStringArray("obj")]
 script = ExtResource("3_4sm5p")
-collision_object = NodePath("..")
-collision_name = &"Player"
-collision_data = ExtResource("4_cq8p4")
+obj_is_self = false
+obj = NodePath("..")
+model_data_name = &"Player"
+data_resource = ExtResource("4_cq8p4")
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="CharacterBody3D" unique_id=1311741799]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46162, -0.338215)

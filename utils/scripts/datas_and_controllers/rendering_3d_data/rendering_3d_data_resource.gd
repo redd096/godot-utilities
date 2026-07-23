@@ -1,12 +1,10 @@
-extends Resource
-
-class_name Rendering3DDataResource
+class_name Rendering3DDataResource extends Resource
 
 ## List of model data
-@export var data : Array[Rendering3DModelData]
+@export var data: Array[Rendering3DModelData]
 
 ## Find model in the list by name
-func get_model_by_name(name : StringName) -> Rendering3DModelData:
+func get_model_by_name(name: StringName) -> Rendering3DModelData:
 	for model_data in data:
 		if model_data.name == name:
 			return model_data

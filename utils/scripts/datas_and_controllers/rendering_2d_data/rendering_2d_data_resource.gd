@@ -1,12 +1,10 @@
-extends Resource
-
-class_name Rendering2DDataResource
+class_name Rendering2DDataResource extends Resource
 
 ## List of model data
-@export var data : Array[Rendering2DModelData]
+@export var data: Array[Rendering2DModelData]
 
 ## Find model in the list by name
-func get_model_by_name(name : StringName) -> Rendering2DModelData:
+func get_model_by_name(name: StringName) -> Rendering2DModelData:
 	for model_data in data:
 		if model_data.name == name:
 			return model_data

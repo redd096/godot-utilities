@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://j80xpkn38smg"]
+[gd_scene format=3 uid="uid://j80xpkn38smg"]
 
 [ext_resource type="Script" uid="uid://cdgtlv7of848j" path="res://utils/scripts/split_screen_manager/select_device/minimal_select_device_manager.gd" id="1_863u3"]
 [ext_resource type="Script" uid="uid://deqc1go7w68dp" path="res://utils/examples/split_screen/minimal_select_device_scene/scripts/example_minimal_select_device_scene_manager.gd" id="2_hg2ex"]
 
-[node name="MinimalSelectDeviceScene" type="Node"]
+[node name="MinimalSelectDeviceScene" type="Node" unique_id=560741391]
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=368570827]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,28 +13,28 @@ offset_top = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LabelsContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="LabelsContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1373722560]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/LabelsContainer"]
+[node name="Label" type="Label" parent="MarginContainer/LabelsContainer" unique_id=2090223649]
 layout_mode = 2
 text = "Player 1 - Device: Keyboard (-1)"
 
-[node name="Label2" type="Label" parent="MarginContainer/LabelsContainer"]
+[node name="Label2" type="Label" parent="MarginContainer/LabelsContainer" unique_id=1913748906]
 layout_mode = 2
 text = "Player 2 - Device: Gamepad 1"
 
-[node name="MinimalSelectDeviceManager" type="Node" parent="."]
+[node name="MinimalSelectDeviceManager" type="Node" parent="." unique_id=703434840]
 script = ExtResource("1_863u3")
 metadata/_custom_type_script = "uid://cdgtlv7of848j"
 
-[node name="ExampleMinimalSelectDeviceSceneManager" type="Node" parent="." node_paths=PackedStringArray("select_device", "labels_container", "label_in_scene")]
+[node name="ExampleMinimalSelectDeviceSceneManager" type="Node" parent="." unique_id=404648202 node_paths=PackedStringArray("select_device", "labels_container", "label_in_scene")]
 script = ExtResource("2_hg2ex")
 select_device = NodePath("../MinimalSelectDeviceManager")
 labels_container = NodePath("../MarginContainer/LabelsContainer")
 label_in_scene = NodePath("../Label")
 metadata/_custom_type_script = "uid://deqc1go7w68dp"
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=2073832166]
 offset_right = 40.0
 offset_bottom = 23.0
