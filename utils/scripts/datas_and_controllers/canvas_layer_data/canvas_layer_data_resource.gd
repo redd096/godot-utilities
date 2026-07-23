@@ -1,12 +1,10 @@
-extends Resource
-
-class_name CanvasLayerDataResource
+class_name CanvasLayerDataResource extends Resource
 
 ## List of model data
-@export var data : Array[CanvasLayerModelData]
+@export var data: Array[CanvasLayerModelData]
 
 ## Find model in the list by name
-func get_model_by_name(name : StringName) -> CanvasLayerModelData:
+func get_model_by_name(name: StringName) -> CanvasLayerModelData:
 	for model_data in data:
 		if model_data.name == name:
 			return model_data

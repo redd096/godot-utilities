@@ -1,10 +1,10 @@
-class_name Collision2DDataResource extends Resource
+class_name ControlThemeDataResource extends Resource
 
 ## List of model data
-@export var data: Array[Collision2DModelData]
+@export var data: Array[ControlThemeModelData]
 
 ## Find model in the list by name
-func get_model_by_name(name: StringName) -> Collision2DModelData:
+func get_model_by_name(name: StringName) -> ControlThemeModelData:
 	for model_data in data:
 		if model_data.name == name:
 			return model_data

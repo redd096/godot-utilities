@@ -1,31 +1,35 @@
-extends Node
+class_name Collision2DDataController extends Node
 
-class_name Collision2DDataController
-
+## If true, obj will be set to self
+@export var obj_is_self: bool = true
 ## Set layer and mask to this collision object
-@export var collision_object : CollisionObject2D
+@export var obj: CollisionObject2D
 ## Find data inside Resource by Name
-@export var collision_name : StringName
-## Find data inside a Resource in your project by Name
-@export var collision_data : Collision2DDataResource
+@export var model_data_name: StringName
+## Resource used to find model data by Name
+@export var data_resource: Collision2DDataResource
+
+# how to set layer to 3 
+# (-1 because the parameter is an index but in inspector start from 1)
+# obj.collision_layer = 1 << (3-1)
 	
 func _ready() -> void:
-	# set layer to 3 
-	# (-1 because the parameter is an index but in inspector start from 1)
-	# collision_object.collision_layer = 1 << (3-1)
+	# set obj
+	if obj_is_self:
+		obj = self as Variant
 
-	if collision_object == null || collision_data == null:
+	if obj == null || data_resource == null:
 		push_error("Be sure to set the variables in inspector")
 		return
 	
 	# find data by name
-	var model_data := collision_data.get_model_by_name(collision_name)
-	# set collision and mask
+	var model_data := data_resource.get_model_by_name(model_data_name)
+	
+	# apply
 	if model_data:
-		set_collision(collision_object, model_data)
+		apply(model_data)
 
-## Set collision layer and mask for this collider
-func set_collision(collider, model_data : Collision2DModelData):
-	if collider:
-		collider.collision_layer = model_data.collision_layer
-		collider.collision_mask = model_data.collision_mask
+
+func apply(model_data: Collision2DModelData):
+	obj.collision_layer = model_data.collision_layer
+	obj.collision_mask = model_data.collision_mask
