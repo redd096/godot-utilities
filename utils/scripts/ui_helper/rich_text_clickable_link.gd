@@ -22,7 +22,7 @@ func _ready():
 
 
 func _on_meta_clicked(meta: Variant):
-	# `meta` is of Variant type, so convert it to a String to avoid script errors at run-time. 
+	# `meta` is of Variant type, so convert it to a String to avoid script errors at runtime. 
 	# (copy-paste from meta_clicked documentation)
 	OS.shell_open(str(meta))
 
