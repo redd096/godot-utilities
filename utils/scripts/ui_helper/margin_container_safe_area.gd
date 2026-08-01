@@ -1,5 +1,6 @@
-## In _ready, add display_safe_area to current margins
+## In _ready, add display_safe_area to current margins [br]
 ## PROBLEM: it gave me wrong values on WebGL build !
+## @experimental: PROBLEM: it gave me wrong values on WebGL build !
 class_name MarginContainerSafeArea extends MarginContainer
 
 func _ready() -> void:

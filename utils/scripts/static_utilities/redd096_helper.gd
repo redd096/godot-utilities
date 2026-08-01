@@ -1,6 +1,6 @@
 class_name Redd096Helper
 
-## Create a parent for this node. 
+## Create a parent for this node. [br]
 ## e.g. create Camera parent to do CameraShake on it and avoid conflict with camera movements
 static func create_parent(node: Node3D) -> Node:
 	var new_parent: Node3D = Node3D.new()
@@ -14,28 +14,36 @@ static func create_parent(node: Node3D) -> Node:
 	return new_parent
 
 
-## How I manage menus in pause, like pause menu or shops that stop game
-static func pause_for_ui(ui_node: Control) -> void:
-	# make ui works also when paused
-	ui_node.process_mode = Node.PROCESS_MODE_ALWAYS
-	# pause game
-	ui_node.get_tree().paused = true
-	# Engine.time_scale = 0
+## How I manage menus in pause, like pause menu or shops that stop game [br]
+## pause_tree: if true, pause tree, if false set time_scale to 0
+static func pause_for_ui(ui_node: Control, pause_tree: bool = true, mouse_mode := Input.MOUSE_MODE_VISIBLE) -> void:
+	if pause_tree:
+		# make ui works also when paused
+		ui_node.process_mode = Node.PROCESS_MODE_ALWAYS
+		# pause game
+		ui_node.get_tree().paused = true
+	else:
+		# or set time_scale to 0
+		Engine.time_scale = 0
 	# show mouse
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	Input.mouse_mode = mouse_mode
 	# and select first item in ui
 	try_focus(ui_node)
 
 
-## How I resume menus after pause_for_ui
-static func resume_for_ui(ui_node: Node) -> void:
-	# reset process mode
-	ui_node.process_mode = Node.PROCESS_MODE_INHERIT
-	# resume game
-	ui_node.get_tree().paused = false
-	# Engine.time_scale = 1
+## How I resume menus after pause_for_ui [br]
+## pause_tree: if true, resume tree, if false set time_scale to 1
+static func resume_for_ui(ui_node: Node, pause_tree: bool = true, mouse_mode := Input.MOUSE_MODE_CAPTURED) -> void:
+	if pause_tree:
+		# reset process mode
+		ui_node.process_mode = Node.PROCESS_MODE_INHERIT
+		# resume game
+		ui_node.get_tree().paused = false
+	else:
+		# or set time_scale to 1
+		Engine.time_scale = 1
 	# hide mouse
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	Input.mouse_mode = mouse_mode
 
 
 ## Try focus on this node, or first focusable child

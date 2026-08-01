@@ -13,8 +13,8 @@ class_name Singleton
 ## key: String, value: singleton instance
 static var _instances: Dictionary = {}
 
-## If this is the instance (or there aren't instances and this is set now as instance), return true (and can set DontDestroyOnLoad). 
-## If there is already another instance, destroy this object if DestroyCopies is true. 
+## If this is the instance (or there aren't instances and this is set now as instance), return true (and can set DontDestroyOnLoad). [br]
+## If there is already another instance, destroy this object if DestroyCopies is true. [br]
 ## Normally this function is called in _ready() for every singleton script
 static func check_instance(obj: Node, set_dont_destroy_on_load: bool = true, destroy_copies: bool = true) -> bool:
 	# get current instance or find in scene
@@ -32,8 +32,8 @@ static func check_instance(obj: Node, set_dont_destroy_on_load: bool = true, des
 			obj.queue_free()
 		return false
 
-## Return instance for this type. If there isn't, find in scene or instantiate it
-## e.g. Singleton.instance(Camera2D, true) to look for Camera2D in scene, else instantiate it
+## Return instance for this type. If there isn't, find in scene or instantiate it [br]
+## e.g. Singleton.instance(Camera2D, true) to look for Camera2D in scene, else instantiate it [br]
 ## e.g. Singleton.instance(Camera2D, false) to look for Camera2D in scene, else return null
 static func instance(script_type: Object, auto_instantiate: bool = false) -> Variant:
 	# if there is an instance and it's still valid, return it
