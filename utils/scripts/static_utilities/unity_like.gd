@@ -14,9 +14,9 @@ static func set_parent(node: Node, parent: Node) -> void:
 		return
 	# else remove from current parent
 	if current_parent:
-		current_parent.remove_child.call_deferred(node)
+		current_parent.remove_child(node)
 	# and set child of new parent
-	parent.add_child.call_deferred(node)
+	parent.add_child(node)
 
 ## Return a random point in circle (XZ plane) with Y height
 static func random_point_in_circle_3d(position: Vector3, distance: float, pos_y: float) -> Vector3:

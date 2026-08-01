@@ -65,9 +65,9 @@ static func _dont_destroy_on_load(node: Node) -> void:
 		return
 	# else remove from current parent
 	if current_parent:
-		current_parent.remove_child.call_deferred(node)
+		current_parent.remove_child(node)
 	# and set child of new parent
-	root.add_child.call_deferred(node)
+	root.add_child(node)
 
 ## Return class name or filename
 static func _get_string_from_script_type(script_type: Object) -> String:

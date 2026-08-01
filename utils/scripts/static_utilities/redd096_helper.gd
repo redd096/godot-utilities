@@ -7,10 +7,10 @@ static func create_parent(node: Node3D) -> Node:
 	var old_parent: Node3D = node.get_parent()
 	# add new parent as child of old parent, and remove node from old parent
 	if old_parent:
-		old_parent.add_child.call_deferred(new_parent)
-		old_parent.remove_child.call_deferred(node)
+		old_parent.add_child(new_parent)
+		old_parent.remove_child(node)
 	# add node as child of new parent
-	new_parent.add_child.call_deferred(node)
+	new_parent.add_child(node)
 	return new_parent
 
 
