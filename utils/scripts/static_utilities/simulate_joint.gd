@@ -18,7 +18,21 @@ class_name SimulateJoint
 
 
 ## Applies the linear spring force to the rigidbody [br]
-## local_anchor_point: where is anchor between pivot and target (e.g. target.to_local(pivot.global_position))
+## local_anchor_point: where is the anchor between pivot and target, in target local coordinates [br]
+## [codeblock lang=gdscript]
+##    _on_begin_drag(ray: RayCast3D) -> void:
+##        # move pivot to target position
+##        pivot.global_position = _ray.get_collision_point()
+##        # and rotation (probably pivot.global_rotation = target.global_rotation is the same)
+##        pivot.global_transform.basis = target.global_transform.basis
+##        # set anchor, so the target keep its position untile player moves
+##        _local_anchor_point = target.to_local(pivot.global_position)
+##
+##    _on_begin_drag() -> void:
+##        # in this case, the target will move to pivot position and rotation
+##        # so pivot could be a child of player, to decide where keep dragged objects
+##        _local_anchor_point = Vector3.ZERO
+## [/codeblock]
 static func apply_linear_spring_force(pivot: Node3D, target: RigidBody3D, local_anchor_point: Vector3 = Vector3.ZERO, frequency: float = 3.0, damping: float = 1.0, max_force: float = 80.0) -> void:
 	# instead of have a simple (pivot.global_position - target.global_position)
 	# we use the anchor point as target position
