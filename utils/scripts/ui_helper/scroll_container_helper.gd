@@ -1,6 +1,5 @@
-class_name ScrollContainerHelper extends Node
-
-@export var scroll_container: ScrollContainer
+## ScrollContainer + drag with mouse or touch to scroll + scroll with keyboard or gamepad
+class_name ScrollContainerHelper extends ScrollContainer
 
 @export_group("Drag to Scroll")
 ## Can user drag with mouse or touch to scroll?
@@ -9,6 +8,7 @@ class_name ScrollContainerHelper extends Node
 @export var check_also_touch_events: bool = false
 ## On ready, checks in ProjectSettings and set check_also_touch_events true or false based on emulate_mouse_from_touch
 @export var automatically_set_touch_events: bool = true
+
 @export_subgroup("Ignore Mouse Filter")
 ## If true, ignore MOUSE_FILTER of other Control nodes and use _input event. If false, use ScrollContainer's gui_input event
 @export var ignore_mouse_filter: bool = true
@@ -17,12 +17,6 @@ class_name ScrollContainerHelper extends Node
 ## Consume input only when start drag. Drag is considered started when mouse move more than this threshold
 @export var ignore_mouse_filter_consume_threshold: Vector2 = Vector2(3, 3)
 
-@export_group("Scroll Vertical")
-## User can scroll with inputs (e.g. right analog stick or keyboard arrows), also without focus buttons
-@export var enabled_scroll_vertical: bool = true
-@export var up_input_action: String = "ui_up"
-@export var down_input_action: String = "ui_down"
-@export var scroll_vertical_sensitivity: float = 600
 
 @export_group("Scroll Horizontal")
 ## User can scroll with inputs (e.g. right analog stick or keyboard arrows), also without focus buttons
@@ -30,6 +24,14 @@ class_name ScrollContainerHelper extends Node
 @export var left_input_action: String = "ui_left"
 @export var right_input_action: String = "ui_right"
 @export var scroll_horizontal_sensitivity: float = 600
+
+
+@export_group("Scroll Vertical")
+## User can scroll with inputs (e.g. right analog stick or keyboard arrows), also without focus buttons
+@export var enabled_scroll_vertical: bool = true
+@export var up_input_action: String = "ui_up"
+@export var down_input_action: String = "ui_down"
+@export var scroll_vertical_sensitivity: float = 600
 
 
 # "Drag to Scroll" drag with mouse or touch
@@ -44,15 +46,19 @@ func _ready() -> void:
 	if automatically_set_touch_events:
 		check_also_touch_events = not ProjectSettings.get_setting("input_devices/pointing/emulate_mouse_from_touch", true)
 
+
+func _gui_input(event: InputEvent) -> void:
 	# used to "Drag to Scroll", this could be affected by MOUSE_FILTER of other Control nodes
-	scroll_container.gui_input.connect(_on_gui_input)
+	_on_gui_input_update_drag_to_scroll(event)
+
 
 func _input(event: InputEvent) -> void:
 	# used to "Drag to Scroll", this is NEVER affected by MOUSE_FILTER of other Control nodes
 	_on_input_update_drag_to_scroll(event)
 
+
 func _process(delta: float) -> void:
-	# used to "Scroll Vertical or Horizontal" with keyboard or gamepad inputs, also without focus buttons
+	# used to "Scroll Horizontal or Vertical" with keyboard or gamepad inputs, also without focus buttons
 	_scroll_by_input(delta)
 
 
@@ -60,7 +66,7 @@ func _process(delta: float) -> void:
 
 
 ## Used to "Drag to Scroll", this could be affected by MOUSE_FILTER of other Control nodes
-func _on_gui_input(event: InputEvent) -> void:
+func _on_gui_input_update_drag_to_scroll(event: InputEvent) -> void:
 	if enabled_drag_to_scroll and not ignore_mouse_filter:
 		_update_drag_to_scroll(event)
 
@@ -83,21 +89,22 @@ func _update_drag_to_scroll(event: InputEvent) -> void:
 	if _is_left_click(event):
 		_dragging = event.pressed	# start/stop drag on left click/release
 		_drag_start = event.position
-		_scroll_start = Vector2i(scroll_container.scroll_horizontal, scroll_container.scroll_vertical)
+		_scroll_start = Vector2i(scroll_horizontal, scroll_vertical)
 		
 		# consume release if necessary
 		if not event.pressed and ignore_mouse_filter and ignore_mouse_filter_consume_input and _scrolled_enough_to_consume_input:
-			scroll_container.accept_event()
+			accept_event()
 		_scrolled_enough_to_consume_input = false
 
 	# then update scroll
 	if _is_drag_input(event) and _dragging:
 		var delta: Vector2 = event.position - _drag_start
-		scroll_container.scroll_horizontal = (_scroll_start.x - delta.x) as int
-		scroll_container.scroll_vertical = (_scroll_start.y - delta.y) as int
+		scroll_horizontal = (_scroll_start.x - delta.x) as int
+		scroll_vertical = (_scroll_start.y - delta.y) as int
 
 		if absf(delta.x) > ignore_mouse_filter_consume_threshold.x or absf(delta.y) > ignore_mouse_filter_consume_threshold.y:
 			_scrolled_enough_to_consume_input = true
+
 
 
 func _is_necessary_input(event: InputEvent) -> bool:
@@ -115,38 +122,39 @@ func _is_drag_input(event: InputEvent) -> bool:
 
 func _get_content_global_rect() -> Rect2:
 	# scrollContainer rect minus the scrollbars
-	var rect := scroll_container.get_global_rect()
-	var v_scrollbar := scroll_container.get_v_scroll_bar()
-	var h_scrollbar := scroll_container.get_h_scroll_bar()
-	if v_scrollbar.visible:
-		rect.size.x -= v_scrollbar.size.x
-	if h_scrollbar.visible:
-		rect.size.y -= h_scrollbar.size.y
+	var rect := get_global_rect()
+	var horizontal_scrollbar := get_h_scroll_bar()
+	var vertical_scrollbar := get_v_scroll_bar()
+	if horizontal_scrollbar.visible:
+		rect.size.y -= horizontal_scrollbar.size.y
+	if vertical_scrollbar.visible:
+		rect.size.x -= vertical_scrollbar.size.x
 	return rect
 
 func _get_global_point_position(pos: Vector2) -> Vector2:
 	# the same as get_global_mouse_position() but works with every position (e.g. for touch)
-	return scroll_container.get_viewport().canvas_transform.affine_inverse() * pos
+	return get_viewport().canvas_transform.affine_inverse() * pos
 
 #endregion
 
 
-#region scroll vertical or horizontal
+#region scroll horizontal or vertical
 
 
-## Used to "Scroll Vertical or Horizontal" with keyboard or gamepad inputs, also without focus buttons
+## Used to "Scroll Horizontal or Vertical" with keyboard or gamepad inputs, also without focus buttons
 func _scroll_by_input(delta: float) -> void:
-	# scroll by input vertical
-	if enabled_scroll_vertical:
-		var axis := Input.get_axis(up_input_action, down_input_action)
-		if axis != 0.0:
-			scroll_container.scroll_vertical += int(axis * scroll_vertical_sensitivity * delta)
 
 	# scroll by input horizontal
 	if enabled_scroll_horizontal:
 		var axis := Input.get_axis(left_input_action, right_input_action)
 		if axis != 0.0:
-			scroll_container.scroll_horizontal += int(axis * scroll_horizontal_sensitivity * delta)
+			scroll_horizontal += int(axis * scroll_horizontal_sensitivity * delta)
+
+	# scroll by input vertical
+	if enabled_scroll_vertical:
+		var axis := Input.get_axis(up_input_action, down_input_action)
+		if axis != 0.0:
+			scroll_vertical += int(axis * scroll_vertical_sensitivity * delta)
 
 
 #endregion

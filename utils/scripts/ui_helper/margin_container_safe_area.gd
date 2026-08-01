@@ -1,13 +1,13 @@
-class_name MarginContainerSafeArea extends Node
-
-@export var margin_container: MarginContainer
+## In _ready, add display_safe_area to current margins
+## PROBLEM: it gave me wrong values on WebGL build !
+class_name MarginContainerSafeArea extends MarginContainer
 
 func _ready() -> void:
 	# current margins
-	var left: int = margin_container.get_theme_constant("margin_left")
-	var top: int = margin_container.get_theme_constant("margin_top")
-	var right: int = margin_container.get_theme_constant("margin_right")
-	var bottom: int = margin_container.get_theme_constant("margin_bottom")
+	var left: int = get_theme_constant("margin_left")
+	var top: int = get_theme_constant("margin_top")
+	var right: int = get_theme_constant("margin_right")
+	var bottom: int = get_theme_constant("margin_bottom")
 	
 	# safe area
 	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
@@ -18,7 +18,7 @@ func _ready() -> void:
 	var safe_bottom = screen_size.y - safe_area.end.y
 
 	# current margins + safe margins
-	margin_container.add_theme_constant_override("margin_left", left + safe_left)
-	margin_container.add_theme_constant_override("margin_top", top + safe_top)
-	margin_container.add_theme_constant_override("margin_right", right + safe_right)
-	margin_container.add_theme_constant_override("margin_bottom", bottom + safe_bottom)
+	add_theme_constant_override("margin_left", left + safe_left)
+	add_theme_constant_override("margin_top", top + safe_top)
+	add_theme_constant_override("margin_right", right + safe_right)
+	add_theme_constant_override("margin_bottom", bottom + safe_bottom)

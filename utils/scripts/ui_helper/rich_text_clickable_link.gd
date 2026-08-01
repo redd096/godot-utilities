@@ -1,12 +1,13 @@
-class_name RichTextClickableLink extends Node
+## RichTextLabel + open browser when click a link
+class_name RichTextClickableLink extends RichTextLabel
 
-@export var richtextlabel: RichTextLabel
-## If emulate_mouse_from_touch is true in project settings, this should be off to avoid double events (both touch and mouse)
+## If emulate_mouse_from_touch is true in ProjectSettings, this should be off to avoid double events (both touch and mouse)
 @export var check_also_touch_events: bool = false
-## On ready, checks in Project Settings and set check_also_touch_events true or false based on emulate_mouse_from_touch
+## On ready, checks in ProjectSettings and set check_also_touch_events true or false based on emulate_mouse_from_touch
 @export var automatically_set_touch_events: bool = true
 
-# workaround to avoid infinite loop when emulate_touch_from_mouse is true
+
+# workaround to avoid infinite loop when emulate_touch_from_mouse is true (the opposite of emulate_mouse_from_touch)
 var _avoid_error_with_emulate_touch_from_mouse: bool
 
 
@@ -15,9 +16,9 @@ func _ready():
 	if automatically_set_touch_events:
 		check_also_touch_events = not ProjectSettings.get_setting("input_devices/pointing/emulate_mouse_from_touch", true)
 
-	# register events (meta_clicked already is called when click a link, but works only with mouse)
-	richtextlabel.meta_clicked.connect(_on_meta_clicked)
-	richtextlabel.gui_input.connect(_on_gui_input)
+	# register events
+	meta_clicked.connect(_on_meta_clicked)
+
 
 
 func _on_meta_clicked(meta: Variant):
@@ -26,8 +27,9 @@ func _on_meta_clicked(meta: Variant):
 	OS.shell_open(str(meta))
 
 
-func _on_gui_input(event: InputEvent) -> void:
-	# use gui_input to manage also touch events
+
+func _gui_input(event: InputEvent) -> void:
+	# use gui_input to manage also touch events, because meta_clicked is called only with mouse
 	if not check_also_touch_events:
 		return
 	
@@ -40,7 +42,7 @@ func _on_gui_input(event: InputEvent) -> void:
 			return
 
 		# from local to global position, because we need to send raw input
-		var global_pos: Vector2 = richtextlabel.get_global_transform() * touch.position
+		var global_pos: Vector2 = get_global_transform() * touch.position
 
 		# create a mouse click event, to try execute meta_cliked
 		var mouse_pressed := InputEventMouseButton.new()
@@ -54,7 +56,7 @@ func _on_gui_input(event: InputEvent) -> void:
 		mouse_released.pressed = false
 		mouse_released.button_mask = 0
 
-		# emit event
+		# emit event (with workaround to avoid infinite loop)
 		_avoid_error_with_emulate_touch_from_mouse = true
 
 		Input.parse_input_event(mouse_pressed)
