@@ -6,9 +6,9 @@ extends Resource
 ## Preset name shown in the inspector
 @export var name: String = ""
 
-## Stable internal identifier. Hidden from the normal inspector, 
-## so renaming a preset does not break nodes that already reference it
+## Unique identifier, so renaming a preset does not break nodes that already reference it
 @export_storage var id: String = ""
+#export_storage is like @export but hidden in inspector
 
 ## Optional note about what the preset is for or where it is used
 @export_multiline var description: String = ""
