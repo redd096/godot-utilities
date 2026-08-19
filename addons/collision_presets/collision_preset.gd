@@ -1,9 +1,9 @@
 @tool
 class_name CollisionPreset 
 extends Resource
-## A reusable collision layer/mask preset for CollisionObject3D, CSGShape and CollisionObject2D
+## Single preset for collisions
 
-## Preset name shown in the CollisionObject inspector
+## Preset name shown in the inspector
 @export var name: String = ""
 
 ## Stable internal identifier. Hidden from the normal inspector, 

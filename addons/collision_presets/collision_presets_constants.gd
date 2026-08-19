@@ -4,6 +4,7 @@ extends RefCounted
 
 
 const AUTOLOAD_NAME: String = "CollisionPresetRuntime"
+const DATABASE_NAME: String = "CollisionPresetsDatabase"
 
 
 ## Database Resource stored in node's meta
@@ -28,6 +29,11 @@ static var AUTOLOAD_PATH: String:
 static var INSPECTOR_SCRIPT_PATH: String:
 	get:
 		return _get_base_dir().path_join("collision_presets_inspector.gd")
+
+
+static var EDITOR_SCRIPT_PATH: String:
+	get:
+		return _get_base_dir().path_join("collision_presets_editor.gd")
 
 
 static func _get_base_dir() -> String:
