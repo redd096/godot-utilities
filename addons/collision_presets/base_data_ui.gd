@@ -1,8 +1,8 @@
-@abstract
 @tool
+@abstract
 class_name BaseDataUI
 extends VBoxContainer
-## Inspector UI instantiated from custom inspector.
+## Inspector UI instantiated from custom inspector
 
 
 ## target that implement this ui

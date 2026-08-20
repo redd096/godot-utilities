@@ -1,12 +1,17 @@
 @tool
 class_name Collision3DCustomInspector
-extends EditorInspectorPlugin
+extends BaseDataCustomInspector
 ## This add custom inspector (editor ui)
 
 
-func _can_handle(object: Object) -> bool:
-	# these are the nodes that can be used by this plugin
+func _is_supported_type(object: Object) -> bool:
 	return object is CollisionObject3D or object is CSGShape3D
+
+func _get_category() -> String:
+	return "collisionobject3d"
+
+func _get_ui_script_path() -> String:
+	return DataPresetsConstants.COLLISION_3D_UI_PATH
 
 
 func _parse_category(object: Object, category: String) -> void:
@@ -14,12 +19,7 @@ func _parse_category(object: Object, category: String) -> void:
 	if object is CSGShape3D:
 		return
 
-	# add editor ui in inspector, in Collision category
-	var lower := category.to_lower()
-	if lower != "collisionobject3d":
-		return
-
-	_add_preset_editor(object)
+	super._parse_category(object, category)
 
 
 func _parse_property(
@@ -37,13 +37,3 @@ func _parse_property(
 		_add_preset_editor(object)
 
 	return false
-
-
-func _add_preset_editor(object: Object) -> void:
-	# instantiate editor ui
-	var ui_script: Script = load(DataPresetsConstants.COLLISION_3D_UI_PATH)
-	var ui: Collision3DUI = ui_script.new()
-
-	# initialize and add to inspector
-	ui.set_target(object as Node)
-	add_custom_control(ui)

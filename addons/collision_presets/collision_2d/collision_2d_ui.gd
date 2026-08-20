@@ -1,7 +1,7 @@
 @tool
 class_name Collision2DUI
 extends BaseDataUI
-## Inspector UI instantiated from custom inspector.
+## Inspector UI instantiated from custom inspector
 
 
 func get_database_name() -> String:
