@@ -3,38 +3,7 @@ extends RefCounted
 ## Shared API used by both the editor UI and the runtime autoload
 
 
-## Applies values from preset. [br]
-## Return true if apply at least one value
-static func apply_preset_values(node: Object, preset: Collision3DPreset) -> bool:
-	if node == null or preset == null:
-		return false
-		
-	# If the name was changed, the preset is found by id, so save updated name
-	node.set_meta(DataPresetsConstants.META_PRESET_NAME_KEY, preset.name)
-
-	var applied := false
-
-	# apply values in scene
-	if DataPresetsConstants.COLLISION_2D_PROP_LAYER in node:
-		node.collision_layer = preset.layer
-		applied = true
-
-	if DataPresetsConstants.COLLISION_2D_PROP_MASK in node:
-		node.collision_mask = preset.mask
-		applied = true
-
-	if DataPresetsConstants.COLLISION_3D_PROP_LAYER in node:
-		node.collision_layer = preset.layer
-		applied = true
-
-	if DataPresetsConstants.COLLISION_3D_PROP_MASK in node:
-		node.collision_mask = preset.mask
-		applied = true
-
-	return applied
-
-
-#region get
+#region get preset from database
 
 
 ## Returns the preset by ID from this database
@@ -61,6 +30,12 @@ static func get_preset_by_name(database: BaseDataPresetsDatabase, preset_name: S
 			return preset
 
 	return null
+
+
+#endregion
+
+
+#region get from node
 
 
 ## Returns the database referenced by a node
@@ -146,6 +121,7 @@ static func set_node_database(node: Object, database: BaseDataPresetsDatabase) -
 
 	return true
 
+
 ## Save database and preset in node's meta. Then apply its values. [br]
 ## Return true if everything works
 static func set_node_preset(node: Object, database: BaseDataPresetsDatabase, preset: BaseDataPreset) -> bool:
@@ -164,6 +140,9 @@ static func set_node_preset(node: Object, database: BaseDataPresetsDatabase, pre
 #endregion
 
 
+#region apply
+
+
 ## Applies the preset already stored on a node
 static func apply_node_preset(node: Object) -> bool:
 	# get preset in node
@@ -173,3 +152,19 @@ static func apply_node_preset(node: Object) -> bool:
 
 	# and apply in scene
 	return apply_preset_values(node, preset)
+
+
+## Applies values from preset. [br]
+## Return true if apply at least one value
+static func apply_preset_values(node: Object, preset: BaseDataPreset) -> bool:
+	if node == null or preset == null:
+		return false
+		
+	# If the name was changed, the preset is found by id, so save updated name
+	node.set_meta(DataPresetsConstants.META_PRESET_NAME_KEY, preset.name)
+
+	# apply values in scene
+	return preset.apply_values(node)
+
+
+#endregion

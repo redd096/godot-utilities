@@ -4,8 +4,8 @@ extends BaseDataUI
 ## Inspector UI instantiated from custom inspector
 
 
-func get_database_name() -> String:
-	return DataPresetsConstants.COLLISION_3D_DATABASE_NAME
+func _get_database_name() -> String:
+	return "Collision3DPresetsDatabase"
 
 
 func set_target(object: Object) -> void:

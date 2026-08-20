@@ -36,7 +36,7 @@ func set_target(object: Object) -> void:
 
 
 @abstract
-func get_database_name() -> String
+func _get_database_name() -> String
 
 
 func _build_ui() -> void:
@@ -55,7 +55,7 @@ func _build_ui() -> void:
 
 	# database row - resource picker to select database
 	database_picker = EditorResourcePicker.new()
-	database_picker.base_type = get_database_name()
+	database_picker.base_type = _get_database_name()
 	database_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	database_picker.tooltip_text = "Database resource used by this object."
 	database_picker.resource_changed.connect(_on_database_selected)

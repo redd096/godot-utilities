@@ -8,8 +8,9 @@ var custom_inspectors: Array[EditorInspectorPlugin]
 
 func _enter_tree() -> void:
 	# add custom inspectors
-	_add_custom_inspector(DataPresetsConstants.COLLISION_2D_INSPECTOR_PATH)
-	_add_custom_inspector(DataPresetsConstants.COLLISION_3D_INSPECTOR_PATH)
+	_add_custom_inspector(Collision2DCustomInspector.get_script_path())
+	_add_custom_inspector(Collision3DCustomInspector.get_script_path())
+	_add_custom_inspector(Rendering3DCustomInspector.get_script_path())
 
 	# add autoload (runtime)
 	if not ProjectSettings.has_setting("autoload/%s" % DataPresetsConstants.AUTOLOAD_NAME):

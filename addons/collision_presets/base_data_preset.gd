@@ -13,3 +13,9 @@ extends Resource
 
 ## Optional note about what the preset is for or where it is used
 @export_multiline var description: String = ""
+
+
+## Apply values to node. [br]
+## Return true if some variable is changed after apply
+@abstract
+func apply_values(node: Object) -> bool
