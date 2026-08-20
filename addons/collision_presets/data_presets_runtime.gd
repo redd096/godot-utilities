@@ -1,6 +1,5 @@
-class_name CollisionPresetsRuntime
 extends Node
-## Applies collision presets at runtime to every CollisionObject3D, CSGShape and CollisionObject2D
+## Autoload - Applies presets at runtime to supported nodes
 
 
 func _ready() -> void:
@@ -20,8 +19,8 @@ func _on_node_added(node: Node) -> void:
 
 func _apply_preset_recursively(node: Node) -> void:
 	# apply preset to node
-	if node is CollisionObject3D or node is CSGShape3D or node is CollisionObject2D:
-		CollisionPresetsAPI.apply_node_preset(node)
+	# if DataPresetsAPI.can_handle_this_object(node): # not necessary, because if not handled can't have metas set
+	DataPresetsAPI.apply_node_preset(node)
 
 	# and every child
 	for child: Node in node.get_children():

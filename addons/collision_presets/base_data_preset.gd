@@ -1,7 +1,8 @@
-@tool
-class_name CollisionPreset 
+@abstract
+class_name BaseDataPreset 
 extends Resource
-## Single preset for collisions
+## Single preset to add in database resource
+
 
 ## Preset name shown in the inspector
 @export var name: String = ""
@@ -12,9 +13,3 @@ extends Resource
 
 ## Optional note about what the preset is for or where it is used
 @export_multiline var description: String = ""
-
-## Collision layer
-@export_flags_3d_physics var layer: int = 1
-
-## Collision mask
-@export_flags_3d_physics var mask: int = 1
