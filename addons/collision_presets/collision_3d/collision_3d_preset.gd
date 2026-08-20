@@ -1,3 +1,4 @@
+@tool
 class_name Collision3DPreset 
 extends BaseDataPreset
 ## Single preset to add in database resource
