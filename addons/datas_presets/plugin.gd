@@ -11,6 +11,7 @@ func _enter_tree() -> void:
 	_add_custom_inspector(Collision2DCustomInspector.get_script_path())
 	_add_custom_inspector(Collision3DCustomInspector.get_script_path())
 	_add_custom_inspector(Rendering3DCustomInspector.get_script_path())
+	_add_custom_inspector(Rendering2DCustomInspector.get_script_path())
 
 	# add autoload (runtime)
 	if not ProjectSettings.has_setting("autoload/%s" % DataPresetsConstants.AUTOLOAD_NAME):
