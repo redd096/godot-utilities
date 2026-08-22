@@ -6,7 +6,7 @@ class_name  CsvReader
 static func read_csv(csv_path: String) -> Dictionary[String, Array]:
 	# be sure file exists
 	if not FileAccess.file_exists(csv_path):
-		print("File does not exist: ", csv_path)
+		push_warning("File does not exist: ", csv_path)
 		return {}
 	
 	# key: String (header), value: Array (every cell in column)
@@ -59,7 +59,7 @@ static func read_csv(csv_path: String) -> Dictionary[String, Array]:
 static func read_csv_array_rows(csv_path: String) -> Array[PackedStringArray]:
 	# be sure file exists
 	if not FileAccess.file_exists(csv_path):
-		print("File does not exist: ", csv_path)
+		push_warning("File does not exist: ", csv_path)
 		return []
 	
 	var array: Array[PackedStringArray]
