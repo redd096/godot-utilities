@@ -8,8 +8,11 @@ extends EditorInspectorPlugin
 @abstract
 func _is_supported_type(object: Object) -> bool
 
+# @abstract
+# func _get_category() -> String
+
 @abstract
-func _get_category() -> String
+func _get_property() -> String
 
 @abstract
 func _get_ui_script_path() -> String
@@ -20,13 +23,26 @@ func _can_handle(object: Object) -> bool:
 	return _is_supported_type(object)
 
 
-func _parse_category(object: Object, category: String) -> void:
-	# add editor ui in inspector, in selected category
-	var lower := category.to_lower()
-	if lower != _get_category():
-		return
+# func _parse_category(object: Object, category: String) -> void:
+# 	# add editor ui in inspector, in selected category
+# 	if category == _get_category():
+# 		_add_preset_editor(object)
 
-	_add_preset_editor(object)
+
+func _parse_property(
+	object: Object,
+	type: Variant.Type,
+	name: String,
+	hint_type: PropertyHint,
+	hint_string: String,
+	usage_flags: int,
+	wide: bool
+) -> bool:
+	# add editor ui in inspector, before the variable to set
+	if name == _get_property():
+		_add_preset_editor(object)
+
+	return false
 
 
 func _add_preset_editor(object: Object) -> void:
