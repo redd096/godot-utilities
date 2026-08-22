@@ -165,7 +165,7 @@ func _on_preset_selected(index: int) -> void:
 	
 	# index 0 is None Preset, not present in sorted_presets
 	index = index - 1
-
+	
 	# set preset metas and show description in ui
 	if index >= 0 and index < sorted_presets.size():
 		var preset: BaseDataPreset = sorted_presets[index]
