@@ -33,10 +33,10 @@ func set_target(object: Object) -> void:
 	# set target, and update ui from it
 	target = object
 	_sync_from_target()
-
+	
 
 @abstract
-func _get_database_name() -> String
+func _get_database_type() -> String
 
 
 func _build_ui() -> void:
@@ -55,7 +55,7 @@ func _build_ui() -> void:
 
 	# database row - resource picker to select database
 	database_picker = EditorResourcePicker.new()
-	database_picker.base_type = _get_database_name()
+	database_picker.base_type = _get_database_type()
 	database_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	database_picker.tooltip_text = "Database resource used by this object."
 	database_picker.resource_changed.connect(_on_database_selected)
@@ -95,12 +95,12 @@ func _sync_from_target() -> void:
 	_syncing_ui = true
 
 	# update database
-	_set_database(DataPresetsAPI.get_node_database(target))
+	_set_database(DataPresetsAPI.get_node_database_by_type(target, _get_database_type()))
 	database_picker.edited_resource = database
 	_refresh_dropdown()
 
 	# update preset
-	var preset: BaseDataPreset = DataPresetsAPI.get_node_preset(target)
+	var preset: BaseDataPreset = DataPresetsAPI.get_node_preset_from_database(target, database)
 	if preset != null:
 		# if preset is in dropdown, select it
 		var index: int = _find_dropdown_index_by_id(preset.id)
@@ -108,6 +108,7 @@ func _sync_from_target() -> void:
 			preset_dropdown.select(index)
 			_show_description(preset)
 			DataPresetsAPI.apply_preset_values(target, preset)
+			DataPresetsAPI.update_saved_struct_from_database_preset(target, database, preset)
 			_syncing_ui = false
 			return
 
@@ -146,12 +147,13 @@ func _on_database_selected(resource: Resource) -> void:
 	_set_database(new_database)
 	
 	# clear presets meta, set only database meta
-	DataPresetsAPI.clear_node_preset_and_database(target)
+	DataPresetsAPI.clear_node_preset_and_database(target, _get_database_type())
 	if new_database != null:
 		DataPresetsAPI.set_node_database(target, new_database)
 
 	# reset presets dropdown and description
 	_refresh_dropdown()
+	preset_dropdown.select(0)
 	_show_description(null)
 
 	# and mark scene to save
@@ -169,11 +171,11 @@ func _on_preset_selected(index: int) -> void:
 	# set preset metas and show description in ui
 	if index >= 0 and index < sorted_presets.size():
 		var preset: BaseDataPreset = sorted_presets[index]
-		DataPresetsAPI.set_node_preset(target, database, preset)
+		DataPresetsAPI.set_node_and_apply(target, database, preset)
 		_show_description(preset)
 	# if wrong preset, clear presets meta and hide description
 	else:
-		DataPresetsAPI.clear_node_preset(target)
+		DataPresetsAPI.clear_node_preset(target, _get_database_type())
 		_show_description(null)
 		
 	# and mark scene to save
@@ -193,13 +195,14 @@ func _on_database_contents_changed() -> void:
 		return
 
 	# try update preset (e.g. preset was renamed inside database)
-	var preset: BaseDataPreset = DataPresetsAPI.get_node_preset(target)
+	var preset: BaseDataPreset = DataPresetsAPI.get_node_preset_from_database(target, database)
 	if preset != null:
 		var index: int = _find_dropdown_index_by_id(preset.id)
 		if index >= 0:
 			preset_dropdown.select(index)
-			DataPresetsAPI.apply_preset_values(target, preset)
 			_show_description(preset)
+			DataPresetsAPI.apply_preset_values(target, preset)
+			DataPresetsAPI.update_saved_struct_from_database_preset(target, database, preset)
 			EditorInterface.mark_scene_as_unsaved()
 			return
 

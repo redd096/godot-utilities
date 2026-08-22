@@ -4,5 +4,5 @@ extends BaseDataUI
 ## Inspector UI instantiated from custom inspector
 
 
-func _get_database_name() -> String:
+func _get_database_type() -> String:
 	return "Rendering2DPresetsDatabase"

@@ -10,9 +10,10 @@ static var AUTOLOAD_PATH: String:
 	get: return (DataPresetsConstants as Script).resource_path.get_base_dir().path_join("data_presets_runtime.gd")
 
 
-## Database Resource stored in node's meta
-const META_DATABASE_REF_KEY: StringName = &"data_preset_database"
-## Preset ID stored in node's meta
-const META_PRESET_ID_KEY: StringName = &"data_preset_id"
-## Preset name stored in node's meta. The ID remains the authoritative reference.
-const META_PRESET_NAME_KEY: StringName = &"data_preset_name"
+## Dictionary[String, BaseDataPresetsDatabase]
+## key: Database type, value: reference to database of that type
+const META_DATABASES_REF_KEY: StringName = &"data_preset_databases"
+
+## Dictionary[String, DataPresetStruct]
+## key: Database type, value: preset id and preset name
+const META_PRESETS_KEY: StringName = &"data_presets"
