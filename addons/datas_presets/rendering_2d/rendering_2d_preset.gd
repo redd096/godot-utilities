@@ -4,9 +4,18 @@ extends BaseDataPreset
 ## Single preset to add in database resource
 
 ## Layer this object is affected by Light2D
-@export_flags_2d_render var light_mask: int = 1
+@export_flags_2d_render var light_mask: int = 1:
+    set(new_value):
+        if light_mask != new_value:
+            light_mask = new_value
+            emit_changed()
+
 ## Rendering layer
-@export_flags_2d_render var visibility_layer: int = 1
+@export_flags_2d_render var visibility_layer: int = 1:
+    set(new_value):
+        if visibility_layer != new_value:
+            visibility_layer = new_value
+            emit_changed()
 
 
 func apply_values(node: Object) -> bool:

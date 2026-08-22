@@ -128,7 +128,7 @@ func _set_database(value: BaseDataPresetsDatabase) -> void:
 
 	# disconnect previous database
 	if database != null and database.changed.is_connected(_on_database_contents_changed):
-		database.changed.disconnect(_on_database_contents_changed)
+			database.changed.disconnect(_on_database_contents_changed)
 
 	database = value
 
@@ -137,6 +137,9 @@ func _set_database(value: BaseDataPresetsDatabase) -> void:
 		if not database.changed.is_connected(_on_database_contents_changed):
 			database.changed.connect(_on_database_contents_changed)
 		_ensure_preset_ids(database)
+
+
+#region events
 
 
 ## database selected by picker in ui
@@ -212,6 +215,9 @@ func _on_database_contents_changed() -> void:
 	_show_description(null)
 
 
+#endregion
+
+
 func _refresh_dropdown() -> void:
 	# first item in dropdown "No Preset"
 	preset_dropdown.clear()
@@ -267,7 +273,7 @@ func _show_description(preset: BaseDataPreset) -> void:
 ## Ensures every preset in a database has a unique stable ID.
 ## This also repairs duplicated IDs if a preset resource was duplicated manually.
 func _ensure_preset_ids(db: BaseDataPresetsDatabase) -> void:
-	var used_ids: Dictionary = {}
+	var used_ids: Array[String] = []
 	var changed: bool = false
 
 	for preset: BaseDataPreset in db.presets:
@@ -279,13 +285,10 @@ func _ensure_preset_ids(db: BaseDataPresetsDatabase) -> void:
 			preset.id = str(ResourceUID.create_id())
 			changed = true
 
-		used_ids[preset.id] = true
+		used_ids.append(preset.id)
 
 	if not changed:
 		return
-
-	# call event on changed database content
-	db.emit_changed()
 
 	# External database resources are saved immediately so generated IDs survive
 	# even before the scene itself is saved.

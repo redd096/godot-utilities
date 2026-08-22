@@ -4,9 +4,18 @@ extends BaseDataPreset
 ## Single preset to add in database resource
 
 ## Override control theme. If null, keep default project theme
-@export var theme: Theme
+@export var theme: Theme:
+    set(new_value):
+        if theme != new_value:
+            theme = new_value
+            emit_changed()
+
 ## Override theme type
-@export var theme_type_variation: String
+@export var theme_type_variation: String:
+    set(new_value):
+        if theme_type_variation != new_value:
+            theme_type_variation = new_value
+            emit_changed()
 
 
 func apply_values(node: Object) -> bool:
