@@ -11,6 +11,7 @@ func _enter_tree() -> void:
 	_add_custom_inspector(CanvasLayerCustomInspector.get_script_path())
 	_add_custom_inspector(Collision2DCustomInspector.get_script_path())
 	_add_custom_inspector(Collision3DCustomInspector.get_script_path())
+	_add_custom_inspector(CollisionSpringArm3DCustomInspector.get_script_path())
 	_add_custom_inspector(Rendering2DCustomInspector.get_script_path())
 	_add_custom_inspector(Rendering3DCustomInspector.get_script_path())
 	_add_custom_inspector(ThemeVariationCustomInspector.get_script_path())
