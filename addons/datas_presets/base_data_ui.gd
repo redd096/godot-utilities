@@ -13,7 +13,7 @@ var database: BaseDataPresetsDatabase
 var sorted_presets: Array[BaseDataPreset] = []
 
 ## ui picker to select database
-var database_picker: EditorResourcePicker
+var database_editor: EditorProperty
 ## ui dropdown to select preset
 var preset_dropdown: OptionButton
 ## ui label for description of the preset
@@ -43,23 +43,25 @@ func _build_ui() -> void:
 	custom_minimum_size = Vector2(0, 54)
 
 	# add database row
-	var database_row := HBoxContainer.new()
-	database_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_child(database_row)
+	database_editor = EditorInspector.instantiate_property_editor(
+		self,
+		TYPE_OBJECT,
+		&"database",
+		PROPERTY_HINT_RESOURCE_TYPE,
+		_get_database_type(),
+		PROPERTY_USAGE_DEFAULT,
+		false
+	)
 
-	# database row - label
-	var database_label := Label.new()
-	database_label.text = "Preset Database"
-	database_label.custom_minimum_size.x = 110
-	database_row.add_child(database_label)
+	database_editor.label = "Preset Database"
+	database_editor.use_folding = true
+	database_editor.tooltip_text = "Database resource used by this object."
 
-	# database row - resource picker to select database
-	database_picker = EditorResourcePicker.new()
-	database_picker.base_type = _get_database_type()
-	database_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	database_picker.tooltip_text = "Database resource used by this object."
-	database_picker.resource_changed.connect(_on_database_selected)
-	database_row.add_child(database_picker)
+	database_editor.set_object_and_property(self, &"database")
+	database_editor.property_changed.connect(_on_database_selected)
+	database_editor.update_property()
+
+	add_child(database_editor)
 
 	# add preset row
 	var preset_row := HBoxContainer.new()
@@ -96,7 +98,7 @@ func _sync_from_target() -> void:
 
 	# update database
 	_set_database(DataPresetsAPI.get_node_database_by_type(target, _get_database_type()))
-	database_picker.edited_resource = database
+	database_editor.update_property()
 	_refresh_dropdown()
 
 	# update preset
@@ -138,12 +140,12 @@ func _set_database(value: BaseDataPresetsDatabase) -> void:
 
 
 ## database selected by picker in ui
-func _on_database_selected(resource: Resource) -> void:
-	if _syncing_ui or not is_instance_valid(target):
+func _on_database_selected(property: StringName, value: Variant, _field: StringName, _changing: bool) -> void:
+	if _syncing_ui or property != &"database" or not is_instance_valid(target):
 		return
 
 	# when selected from UI Picker, set database in node
-	var new_database := resource as BaseDataPresetsDatabase
+	var new_database := value as BaseDataPresetsDatabase
 	_set_database(new_database)
 	
 	# clear presets meta, set only database meta
