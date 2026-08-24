@@ -8,6 +8,7 @@ var custom_inspectors: Array[EditorInspectorPlugin]
 
 func _enter_tree() -> void:
 	# add custom inspectors
+	_add_custom_inspector(AudioStreamPlayerCustomInspector.get_script_path())
 	_add_custom_inspector(CanvasLayerCustomInspector.get_script_path())
 	_add_custom_inspector(Collision2DCustomInspector.get_script_path())
 	_add_custom_inspector(Collision3DCustomInspector.get_script_path())
