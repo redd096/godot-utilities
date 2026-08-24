@@ -9,7 +9,7 @@ extends EditorInspectorPlugin
 func _is_supported_type(object: Object) -> bool
 
 # @abstract
-# func _get_category() -> String
+# func _is_correct_category(category: String) -> bool
 
 @abstract
 func _get_property() -> String
@@ -25,7 +25,7 @@ func _can_handle(object: Object) -> bool:
 
 # func _parse_category(object: Object, category: String) -> void:
 # 	# add editor ui in inspector, in selected category
-# 	if category == _get_category():
+# 	if _is_correct_category(category):
 # 		_add_preset_editor(object)
 
 

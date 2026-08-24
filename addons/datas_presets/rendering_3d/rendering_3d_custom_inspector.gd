@@ -11,8 +11,8 @@ static func get_script_path() -> String:
 func _is_supported_type(object: Object) -> bool:
 	return object is VisualInstance3D
 
-# func _get_category() -> String:
-# 	return "VisualInstance3D"
+# func _is_correct_category(category: String) -> bool:
+# 	return category == "VisualInstance3D"
 
 func _get_property() -> String:
 	return "layers"

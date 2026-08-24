@@ -11,8 +11,8 @@ static func get_script_path() -> String:
 func _is_supported_type(object: Object) -> bool:
 	return object is CollisionObject2D
 
-# func _get_category() -> String:
-# 	return "CollisionObject2D"
+# func _is_correct_category(category: String) -> bool:
+# 	return category == "CollisionObject2D"
 
 func _get_property() -> String:
 	return "collision_layer"

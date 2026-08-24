@@ -11,8 +11,8 @@ static func get_script_path() -> String:
 func _is_supported_type(object: Object) -> bool:
 	return object is CanvasLayer
 
-# func _get_category() -> String:
-# 	return "CanvasLayer"
+# func _is_correct_category(category: String) -> bool:
+# 	return category == "CanvasLayer"
 
 func _get_property() -> String:
 	return "layer"

@@ -11,8 +11,8 @@ static func get_script_path() -> String:
 func _is_supported_type(object: Object) -> bool:
 	return object is Control
 
-# func _get_category() -> String:
-# 	return "Control"
+# func _is_correct_category(category: String) -> bool:
+# 	return category == "Control"
 
 func _get_property() -> String:
 	return "theme"
