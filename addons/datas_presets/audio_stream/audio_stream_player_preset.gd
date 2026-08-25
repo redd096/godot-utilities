@@ -4,7 +4,8 @@ extends BaseDataPreset
 ## Single preset to add in database resource
 
 enum EType { AudioStreamPlayer, AudioStreamPlayer3D, AudioStreamPlayer2D }
-## For now this is used only to show correctly volume_db range
+
+## For now this is used only to show correctly [member volume_db] range
 @export var type: EType:
     set(new_value):
         if type != new_value:
@@ -27,30 +28,11 @@ enum EType { AudioStreamPlayer, AudioStreamPlayer3D, AudioStreamPlayer2D }
             emit_changed()
 
 ## See [member AudioStreamPlayer.bus]
-@export var bus: StringName = "Master":
+@export var bus: StringName = &"Master":
     set(new_value):
         if bus != new_value:
             bus = new_value
             emit_changed()
-
-
-func _validate_property(property: Dictionary) -> void:    
-    # for "volume_db" show range from -80 to "80 if 3D, else 24" like it works in godot inspector
-    if property.name == &"volume_db":
-        var max_volume_db: float = 80.0 if type == EType.AudioStreamPlayer3D else 24.0
-        volume_db = minf(volume_db, max_volume_db)  # update also variable value, not only inspector ui
-
-        property.hint = PROPERTY_HINT_RANGE
-        property.hint_string = "-80.0, %s, 0.001, suffix:dB" % max_volume_db
-
-    # for property "bus", show dropdown of every Audio Bus in godot
-    elif property.name == &"bus":
-        var audio_buses := PackedStringArray()
-        for bus_index in range(AudioServer.get_bus_count()):
-            audio_buses.append(AudioServer.get_bus_name(bus_index))
-            
-        property.hint = PROPERTY_HINT_ENUM
-        property.hint_string = ",".join(audio_buses)
 
 
 func apply_values(node: Object) -> bool:
@@ -69,6 +51,31 @@ func apply_values(node: Object) -> bool:
         applied = true
 
     return applied
+
+
+#region custom properties inspector
+
+
+func _validate_property(property: Dictionary) -> void:    
+    # property "volume_db" show range from -80 to "80 if 3D, else 24" like it works in godot inspector
+    if property.name == &"volume_db":
+        var max_volume_db: float = 80.0 if type == EType.AudioStreamPlayer3D else 24.0
+        volume_db = minf(volume_db, max_volume_db)  # update also variable value, not only inspector ui
+
+        property.hint = PROPERTY_HINT_RANGE
+        property.hint_string = "-80.0, %s, 0.001, suffix:dB" % max_volume_db
+
+    # property "bus", show dropdown of every Audio Bus in godot
+    elif property.name == &"bus":
+        var audio_buses := PackedStringArray()
+        for bus_index in range(AudioServer.get_bus_count()):
+            audio_buses.append(AudioServer.get_bus_name(bus_index))
+            
+        property.hint = PROPERTY_HINT_ENUM
+        property.hint_string = ",".join(audio_buses)
+
+
+#endregion
 
 
 # tutte le variabili
