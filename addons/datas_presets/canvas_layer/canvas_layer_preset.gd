@@ -3,7 +3,7 @@ class_name CanvasLayerPreset
 extends BaseDataPreset
 ## Single preset to add in database resource
 
-## Canvas layer
+## See [member CanvasLayer.layer]
 @export var layer: int = 1:
     set(new_value):
         if layer != new_value:

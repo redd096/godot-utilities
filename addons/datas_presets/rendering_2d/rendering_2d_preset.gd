@@ -3,14 +3,14 @@ class_name Rendering2DPreset
 extends BaseDataPreset
 ## Single preset to add in database resource
 
-## Layer this object is affected by Light2D
+## See [member CanvasItem.light_mask]
 @export_flags_2d_render var light_mask: int = 1:
     set(new_value):
         if light_mask != new_value:
             light_mask = new_value
             emit_changed()
 
-## Rendering layer
+## See [member CanvasItem.visibility_layer]
 @export_flags_2d_render var visibility_layer: int = 1:
     set(new_value):
         if visibility_layer != new_value:

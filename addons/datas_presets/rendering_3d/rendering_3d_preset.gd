@@ -3,7 +3,7 @@ class_name Rendering3DPreset
 extends BaseDataPreset
 ## Single preset to add in database resource
 
-## Rendering layer
+## See [member VisualInstance3D.layers]
 @export_flags_3d_render var layers: int = 1:
     set(new_value):
         if layers != new_value:

@@ -3,14 +3,14 @@ class_name Collision3DPreset
 extends BaseDataPreset
 ## Single preset to add in database resource
 
-## Collision layer
+## See [member CollisionObject3D.collision_layer]
 @export_flags_3d_physics var collision_layer: int = 1:
     set(new_value):
         if collision_layer != new_value:
             collision_layer = new_value
             emit_changed()
 
-## Collision mask
+## See [member CollisionObject3D.collision_mask]
 @export_flags_3d_physics var collision_mask: int = 1:
     set(new_value):
         if collision_mask != new_value:
