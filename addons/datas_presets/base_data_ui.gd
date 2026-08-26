@@ -228,14 +228,15 @@ func _refresh_dropdown() -> void:
 		preset_dropdown.disabled = true
 		return
 
-	# then copy database presets and sort by name
+	# then copy database presets
 	for preset: BaseDataPreset in database.presets:
 		if preset != null:
 			sorted_presets.append(preset)
 
-	sorted_presets.sort_custom(func(a: BaseDataPreset, b: BaseDataPreset) -> bool:
-		return a.name.to_lower() < b.name.to_lower()
-	)
+	# # and sort by name
+	# sorted_presets.sort_custom(func(a: BaseDataPreset, b: BaseDataPreset) -> bool:
+	# 	return a.name.to_lower() < b.name.to_lower()
+	# )
 
 	# add every preset to the dropdown (if no name, show "Unnamed Preset")
 	for preset: BaseDataPreset in sorted_presets:
