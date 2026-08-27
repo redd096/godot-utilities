@@ -1,8 +1,8 @@
 @tool
-class_name CollisionSpringArm3DUI
+class_name Casts2DUI
 extends BaseDataUI
 ## Inspector UI instantiated from custom inspector
 
 
 func _get_database_type() -> StringName:
-	return &"CollisionSpringArm3DPresetsDatabase"
+	return &"Casts2DPresetsDatabase"

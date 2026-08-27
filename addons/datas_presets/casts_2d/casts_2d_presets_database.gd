@@ -1,14 +1,14 @@
 @tool
-class_name CollisionSpringArm3DPresetsDatabase 
+class_name Casts2DPresetsDatabase 
 extends BaseDataPresetsDatabase
-## A collection of presets for SpringArm3D
+## A collection of presets for RayCast2D, ShapeCast2D
 
 
 func get_database_type() -> StringName:
-    return &"CollisionSpringArm3DPresetsDatabase"
+    return &"Casts2DPresetsDatabase"
     
 
-@export var presets: Array[CollisionSpringArm3DPreset] = []:
+@export var presets: Array[Casts2DPreset] = []:
     set(new_value):
         if presets != new_value:
             update_presets_signals(presets, new_value)

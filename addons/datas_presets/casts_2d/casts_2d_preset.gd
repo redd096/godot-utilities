@@ -1,10 +1,10 @@
 @tool
-class_name CollisionSpringArm3DPreset 
+class_name Casts2DPreset 
 extends BaseDataPreset
-## Single preset to add in database resource. Use this for SpringArm3D
+## Single preset to add in database resource. Use this for Raycast2D and ShapeCast2D
 
-## See [member SpringArm3D.collision_mask]
-@export_flags_3d_physics var collision_mask: int = 1:
+## See [member Raycast2D.collision_mask], [member ShapeCast2D.collision_mask]
+@export_flags_2d_physics var collision_mask: int = 1:
     set(new_value):
         if collision_mask != new_value:
             collision_mask = new_value

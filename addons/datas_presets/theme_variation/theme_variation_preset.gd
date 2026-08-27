@@ -9,7 +9,7 @@ extends BaseDataPreset
     set(new_value):
         if theme != new_value:
             theme = new_value
-            notify_property_list_changed()
+            notify_property_list_changed()  # call _validate_property function
             emit_changed()
 
 ## Control type used to filter compatible [member theme type variations]. [br]
@@ -18,7 +18,7 @@ extends BaseDataPreset
     set(new_value):
         if control_type != new_value:
             control_type = new_value
-            notify_property_list_changed()
+            notify_property_list_changed()  # call _validate_property function
             emit_changed()
 
 ## Override theme type. If empty, use default values in theme. [br]
