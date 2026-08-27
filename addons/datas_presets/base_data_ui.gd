@@ -48,7 +48,7 @@ func _build_ui() -> void:
 		TYPE_OBJECT,
 		&"database",
 		PROPERTY_HINT_RESOURCE_TYPE,
-		String(_get_database_type()),
+		_get_database_type(),
 		PROPERTY_USAGE_DEFAULT,
 		false
 	)
