@@ -4,8 +4,8 @@ extends BaseDataPresetsDatabase
 ## A collection of presets. Create as many database resources as needed
 
 
-func get_database_type() -> String:
-    return "Collision2DPresetsDatabase"
+func get_database_type() -> StringName:
+    return &"Collision2DPresetsDatabase"
 
 
 @export var presets: Array[Collision2DPreset] = []:

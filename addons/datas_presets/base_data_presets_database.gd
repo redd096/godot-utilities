@@ -6,7 +6,7 @@ extends Resource
 
 
 @abstract
-func get_database_type() -> String
+func get_database_type() -> StringName
 
 
 # @export var presets: Array[BaseDataPreset] = []:

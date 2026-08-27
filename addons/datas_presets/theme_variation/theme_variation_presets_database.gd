@@ -4,8 +4,8 @@ extends BaseDataPresetsDatabase
 ## A collection of presets. Create as many database resources as needed
 
 
-func get_database_type() -> String:
-    return "ThemeVariationPresetsDatabase"
+func get_database_type() -> StringName:
+    return &"ThemeVariationPresetsDatabase"
 
 
 @export var presets: Array[ThemeVariationPreset] = []:

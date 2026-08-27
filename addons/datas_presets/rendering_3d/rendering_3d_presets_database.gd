@@ -4,8 +4,8 @@ extends BaseDataPresetsDatabase
 ## A collection of presets. Create as many database resources as needed
 
 
-func get_database_type() -> String:
-    return "Rendering3DPresetsDatabase"
+func get_database_type() -> StringName:
+    return &"Rendering3DPresetsDatabase"
 
 
 @export var presets: Array[Rendering3DPreset] = []:

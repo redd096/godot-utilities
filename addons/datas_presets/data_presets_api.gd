@@ -7,8 +7,8 @@ extends RefCounted
 
 
 ## Returns the preset by ID from this database
-static func get_preset_by_id(database: BaseDataPresetsDatabase, preset_id: String) -> BaseDataPreset:
-	if database == null or preset_id.is_empty():
+static func get_preset_by_id(database: BaseDataPresetsDatabase, preset_id: int) -> BaseDataPreset:
+	if database == null or preset_id == ResourceUID.INVALID_ID:
 		return null
 
 	# find in array by id
@@ -62,33 +62,33 @@ static func get_node_preset_from_database(node: Object, database: BaseDataPreset
 
 
 ## Return every database referenced by this node
-static func get_node_databases(node: Object) -> Dictionary[String, BaseDataPresetsDatabase]:
+static func get_node_databases(node: Object) -> Dictionary[StringName, BaseDataPresetsDatabase]:
 	if node == null or not node.has_meta(DataPresetsConstants.META_DATABASES_REF_KEY):
 		return {}
 
 	# get array of databases by meta
-	return node.get_meta(DataPresetsConstants.META_DATABASES_REF_KEY) as Dictionary[String, BaseDataPresetsDatabase]
+	return node.get_meta(DataPresetsConstants.META_DATABASES_REF_KEY) as Dictionary[StringName, BaseDataPresetsDatabase]
 
 
 ## Return every preset struct referenced by this node (key: DatabaseType, value: Preset id and name)
-static func get_node_presets_structs(node: Object) -> Dictionary[String, DataPresetStruct]:
+static func get_node_presets_structs(node: Object) -> Dictionary[StringName, DataPresetStruct]:
 	if node == null or not node.has_meta(DataPresetsConstants.META_PRESETS_KEY):
 		return {}
 
 	# get dictionary of presets by meta
-	return node.get_meta(DataPresetsConstants.META_PRESETS_KEY) as Dictionary[String, DataPresetStruct]
+	return node.get_meta(DataPresetsConstants.META_PRESETS_KEY) as Dictionary[StringName, DataPresetStruct]
 
 
 ## Return every preset referenced by this node (key: DatabaseType, value: Preset)
-static func get_node_presets(node: Object) -> Dictionary[String, BaseDataPreset]:
+static func get_node_presets(node: Object) -> Dictionary[StringName, BaseDataPreset]:
 	# get all databases and presets structs
-	var databases: Dictionary[String, BaseDataPresetsDatabase] = get_node_databases(node)
-	var presets_structs: Dictionary[String, DataPresetStruct] = get_node_presets_structs(node)
+	var databases: Dictionary[StringName, BaseDataPresetsDatabase] = get_node_databases(node)
+	var presets_structs: Dictionary[StringName, DataPresetStruct] = get_node_presets_structs(node)
 
-	var presets: Dictionary[String, BaseDataPreset] = {}
+	var presets: Dictionary[StringName, BaseDataPreset] = {}
 
 	# cycle every database type
-	for database_type: String in databases:
+	for database_type: StringName in databases:
 		if not databases.has(database_type) or not presets_structs.has(database_type):
 			continue
 		
@@ -112,9 +112,9 @@ static func get_node_presets(node: Object) -> Dictionary[String, BaseDataPreset]
 
 
 ## Returns a specific database referenced by this node
-static func get_node_database_by_type(node: Object, database_type: String) -> BaseDataPresetsDatabase:
+static func get_node_database_by_type(node: Object, database_type: StringName) -> BaseDataPresetsDatabase:
 	# get all databases
-	var databases: Dictionary[String, BaseDataPresetsDatabase] = get_node_databases(node)
+	var databases: Dictionary[StringName, BaseDataPresetsDatabase] = get_node_databases(node)
 	
 	# and find the specific one by type
 	if databases.has(database_type):
@@ -124,9 +124,9 @@ static func get_node_database_by_type(node: Object, database_type: String) -> Ba
 
 
 ## Returns a specific preset struct referenced by this node
-static func get_node_preset_struct_by_type(node: Object, database_type: String) -> DataPresetStruct:
+static func get_node_preset_struct_by_type(node: Object, database_type: StringName) -> DataPresetStruct:
 	# get all presets structs
-	var presets_structs: Dictionary[String, DataPresetStruct] = get_node_presets_structs(node)
+	var presets_structs: Dictionary[StringName, DataPresetStruct] = get_node_presets_structs(node)
 	
 	# and find the specific one by type
 	if presets_structs.has(database_type):
@@ -136,7 +136,7 @@ static func get_node_preset_struct_by_type(node: Object, database_type: String) 
 
 
 ## Returns a specific preset referenced by a node
-static func get_node_preset_by_type(node: Object, database_type: String) -> BaseDataPreset:
+static func get_node_preset_by_type(node: Object, database_type: StringName) -> BaseDataPreset:
 	# get database by type
 	var database: BaseDataPresetsDatabase = get_node_database_by_type(node, database_type)
 		
@@ -152,12 +152,12 @@ static func get_node_preset_by_type(node: Object, database_type: String) -> Base
 
 ## Removes the plugin's database/preset reference from a node. [br]
 ## Changed node values are left unchanged (e.g. layer and mask with collision 3d preset)
-static func clear_node_preset_and_database(node: Object, database_type: String) -> void:
+static func clear_node_preset_and_database(node: Object, database_type: StringName) -> void:
 	if node == null:
 		return
 	
 	# remove database from dictionary
-	var databases: Dictionary[String, BaseDataPresetsDatabase] = get_node_databases(node)
+	var databases: Dictionary[StringName, BaseDataPresetsDatabase] = get_node_databases(node)
 	if databases.has(database_type):
 		databases.erase(database_type)
 	
@@ -173,12 +173,12 @@ static func clear_node_preset_and_database(node: Object, database_type: String) 
 
 ## Removes the plugin's preset reference from a node. [br]
 ## Changed node values are left unchanged (e.g. layer and mask with collision 3d preset)
-static func clear_node_preset(node: Object, database_type: String) -> void:
+static func clear_node_preset(node: Object, database_type: StringName) -> void:
 	if node == null:
 		return
 	
 	# remove preset struct from dictionary
-	var presets_structs: Dictionary[String, DataPresetStruct] = get_node_presets_structs(node)
+	var presets_structs: Dictionary[StringName, DataPresetStruct] = get_node_presets_structs(node)
 	if presets_structs.has(database_type):
 		presets_structs.erase(database_type)
 	
@@ -202,7 +202,7 @@ static func set_node_database(node: Object, database: BaseDataPresetsDatabase) -
 		return false
 	
 	# add to dictionary
-	var databases: Dictionary[String, BaseDataPresetsDatabase] = get_node_databases(node)
+	var databases: Dictionary[StringName, BaseDataPresetsDatabase] = get_node_databases(node)
 	databases[database.get_database_type()] = database
 
 	# save in node's meta
@@ -218,7 +218,7 @@ static func set_node_preset(node: Object, database: BaseDataPresetsDatabase, pre
 		return false
 	
 	# add to dictionary
-	var presets_structs: Dictionary[String, DataPresetStruct] = get_node_presets_structs(node)
+	var presets_structs: Dictionary[StringName, DataPresetStruct] = get_node_presets_structs(node)
 	var new_struct: DataPresetStruct = DataPresetStruct.new()
 	presets_structs[database.get_database_type()] = new_struct.setup(preset)
 
@@ -246,10 +246,10 @@ static func update_saved_struct_from_database_preset(node: Object, database: Bas
 	if node == null or database == null or preset == null:
 		return false
 	
-	var database_type: String = database.get_database_type()
+	var database_type: StringName = database.get_database_type()
 	
 	# if preset still isn't saved, add it
-	var presets_structs: Dictionary[String, DataPresetStruct] = get_node_presets_structs(node)
+	var presets_structs: Dictionary[StringName, DataPresetStruct] = get_node_presets_structs(node)
 	if not presets_structs.has(database_type):
 		var new_struct: DataPresetStruct = DataPresetStruct.new()
 		presets_structs.get_or_add(database_type, new_struct.setup(preset))
@@ -276,7 +276,7 @@ static func update_saved_struct_from_database_preset(node: Object, database: Bas
 ## Applies the presets already stored on a node
 static func apply_node_preset(node: Object) -> bool:	
 	# get all presets
-	var presets: Dictionary[String, BaseDataPreset] = get_node_presets(node)
+	var presets: Dictionary[StringName, BaseDataPreset] = get_node_presets(node)
 
 	# and apply in scene
 	var applied: bool

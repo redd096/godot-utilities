@@ -4,8 +4,8 @@ extends BaseDataPresetsDatabase
 ## A collection of presets. Create as many database resources as needed
 
 
-func get_database_type() -> String:
-    return "AudioStreamPlayerPresetsDatabase"
+func get_database_type() -> StringName:
+    return &"AudioStreamPlayerPresetsDatabase"
 
 
 @export var presets: Array[AudioStreamPlayerPreset] = []:
