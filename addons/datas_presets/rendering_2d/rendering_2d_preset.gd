@@ -1,7 +1,7 @@
 @tool
 class_name Rendering2DPreset 
 extends BaseDataPreset
-## Single preset to add in database resource
+## Single preset to add in database resource. Use this for CanvasItem
 
 ## See [member CanvasItem.light_mask]
 @export_flags_2d_render var light_mask: int = 1:

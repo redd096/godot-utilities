@@ -1,7 +1,7 @@
 @tool
 class_name Collision2DPreset 
 extends BaseDataPreset
-## Single preset to add in database resource
+## Single preset to add in database resource. Use this for CollisionObject2D
 
 ## See [member CollisionObject2D.collision_layer]
 @export_flags_2d_physics var collision_layer: int = 1:

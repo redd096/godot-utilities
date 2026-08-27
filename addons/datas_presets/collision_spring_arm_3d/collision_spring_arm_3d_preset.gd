@@ -1,7 +1,7 @@
 @tool
 class_name CollisionSpringArm3DPreset 
 extends BaseDataPreset
-## Single preset to add in database resource
+## Single preset to add in database resource. Use this for SpringArm3D
 
 ## See [member SpringArm3D.collision_mask]
 @export_flags_3d_physics var collision_mask: int = 1:

@@ -1,7 +1,7 @@
 @tool
 class_name ThemeVariationPreset 
 extends BaseDataPreset
-## Single preset to add in database resource
+## Single preset to add in database resource. Use this for Control
 
 ## Override control theme. If null, use project theme. [br]
 ## See [member Control.theme]

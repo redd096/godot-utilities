@@ -1,7 +1,7 @@
 @tool
 class_name Collision3DPreset 
 extends BaseDataPreset
-## Single preset to add in database resource
+## Single preset to add in database resource. Use this for CollisionObject3D and CSGShape3D
 
 ## See [member CollisionObject3D.collision_layer]
 @export_flags_3d_physics var collision_layer: int = 1:

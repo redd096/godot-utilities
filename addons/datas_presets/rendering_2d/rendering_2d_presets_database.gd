@@ -1,7 +1,7 @@
 @tool
 class_name Rendering2DPresetsDatabase 
 extends BaseDataPresetsDatabase
-## A collection of presets. Create as many database resources as needed
+## A collection of presets for CanvasItem
 
 
 func get_database_type() -> StringName:

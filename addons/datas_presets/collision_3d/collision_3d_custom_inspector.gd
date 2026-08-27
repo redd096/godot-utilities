@@ -21,6 +21,8 @@ func _get_ui_script_path() -> String:
 	return (Collision3DUI as Script).resource_path
 
 
+# no more necessary, now we add to property every custom inspector, no more in category
+
 # func _parse_category(object: Object, category: String) -> void:
 # 	# for CSGShape don't add editor ui in category. Will be added in property
 # 	if object is CSGShape3D:

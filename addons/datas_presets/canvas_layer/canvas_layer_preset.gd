@@ -1,7 +1,7 @@
 @tool
 class_name CanvasLayerPreset 
 extends BaseDataPreset
-## Single preset to add in database resource
+## Single preset to add in database resource. Use this for CanvasLayer
 
 ## See [member CanvasLayer.layer]
 @export var layer: int = 1:

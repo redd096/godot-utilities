@@ -1,7 +1,7 @@
 @tool
 class_name CanvasLayerPresetsDatabase 
 extends BaseDataPresetsDatabase
-## A collection of presets. Create as many database resources as needed
+## A collection of presets for CanvasLayer
 
 
 func get_database_type() -> StringName:

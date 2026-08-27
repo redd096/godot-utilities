@@ -1,7 +1,7 @@
 @tool
 class_name AudioStreamPlayerPreset 
 extends BaseDataPreset
-## Single preset to add in database resource
+## Single preset to add in database resource. Use this for AudioStreamPlayer, AudioStreamPlayer2D and AudioStreamPlayer3D
 
 enum EType { AudioStreamPlayer, AudioStreamPlayer3D, AudioStreamPlayer2D }
 

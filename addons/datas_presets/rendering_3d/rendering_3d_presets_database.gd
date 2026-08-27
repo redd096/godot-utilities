@@ -1,7 +1,7 @@
 @tool
 class_name Rendering3DPresetsDatabase 
 extends BaseDataPresetsDatabase
-## A collection of presets. Create as many database resources as needed
+## A collection of presets for VisualInstance3D
 
 
 func get_database_type() -> StringName:

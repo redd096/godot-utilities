@@ -1,7 +1,7 @@
 @tool
 class_name ThemeVariationPresetsDatabase 
 extends BaseDataPresetsDatabase
-## A collection of presets. Create as many database resources as needed
+## A collection of presets for Control
 
 
 func get_database_type() -> StringName:

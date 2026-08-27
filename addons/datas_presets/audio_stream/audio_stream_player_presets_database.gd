@@ -1,7 +1,7 @@
 @tool
 class_name AudioStreamPlayerPresetsDatabase 
 extends BaseDataPresetsDatabase
-## A collection of presets. Create as many database resources as needed
+## A collection of presets for AudioStreamPlayer, AudioStreamPlayer2D and AudioStreamPlayer3D
 
 
 func get_database_type() -> StringName:
