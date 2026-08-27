@@ -247,8 +247,8 @@ func _refresh_dropdown() -> void:
 	preset_dropdown.disabled = sorted_presets.is_empty()
 
 
-func _find_dropdown_index_by_id(id: int) -> int:
-	if id == ResourceUID.INVALID_ID:
+func _find_dropdown_index_by_id(id: String) -> int:
+	if id.is_empty():
 		return -1
 
 	# find index in presets by id
@@ -274,7 +274,7 @@ func _show_description(preset: BaseDataPreset) -> void:
 ## Ensures every preset in a database has a unique stable ID.
 ## This also repairs duplicated IDs if a preset resource was duplicated manually.
 func _ensure_preset_ids(db: BaseDataPresetsDatabase) -> void:
-	var used_ids: Array[int] = []
+	var used_ids: Array[String] = []
 	var changed: bool = false
 
 	for preset: BaseDataPreset in db.presets:
@@ -282,8 +282,8 @@ func _ensure_preset_ids(db: BaseDataPresetsDatabase) -> void:
 			continue
 
 		# if id is invalid or already used, generate a new one
-		if preset.id == ResourceUID.INVALID_ID or used_ids.has(preset.id):
-			preset.id = ResourceUID.create_id()
+		if preset.id.is_empty() or used_ids.has(preset.id):
+			preset.id = ResourceUID.id_to_text(ResourceUID.create_id())
 			changed = true
 
 		used_ids.append(preset.id)

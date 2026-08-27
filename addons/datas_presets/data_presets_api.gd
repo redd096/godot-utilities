@@ -7,8 +7,8 @@ extends RefCounted
 
 
 ## Returns the preset by ID from this database
-static func get_preset_by_id(database: BaseDataPresetsDatabase, preset_id: int) -> BaseDataPreset:
-	if database == null or preset_id == ResourceUID.INVALID_ID:
+static func get_preset_by_id(database: BaseDataPresetsDatabase, preset_id: String) -> BaseDataPreset:
+	if database == null or preset_id.is_empty():
 		return null
 
 	# find in array by id
@@ -40,7 +40,7 @@ static func get_node_preset_from_database(node: Object, database: BaseDataPreset
 	var database_type: StringName = database.get_database_type()
 
 	# try find preset by id
-	var preset_ids: Dictionary[StringName, int] = get_node_preset_ids(node)
+	var preset_ids: Dictionary[StringName, String] = get_node_preset_ids(node)
 	if preset_ids.has(database_type):
 		var preset: BaseDataPreset = get_preset_by_id(database, preset_ids[database_type])
 		if preset != null:
@@ -69,11 +69,11 @@ static func get_node_databases(node: Object) -> Dictionary[StringName, BaseDataP
 
 
 ## Return every preset ID referenced by this node (key: DatabaseType, value: Preset ID)
-static func get_node_preset_ids(node: Object) -> Dictionary[StringName, int]:
+static func get_node_preset_ids(node: Object) -> Dictionary[StringName, String]:
 	if node == null or not node.has_meta(DataPresetsConstants.META_PRESET_IDS_KEY):
 		return {}
 
-	return node.get_meta(DataPresetsConstants.META_PRESET_IDS_KEY) as Dictionary[StringName, int]
+	return node.get_meta(DataPresetsConstants.META_PRESET_IDS_KEY) as Dictionary[StringName, String]
 
 
 ## Return every preset name referenced by this node (key: DatabaseType, value: Preset name)
@@ -88,7 +88,7 @@ static func get_node_preset_names(node: Object) -> Dictionary[StringName, String
 static func get_node_presets(node: Object) -> Dictionary[StringName, BaseDataPreset]:
 	# get all databases and saved preset identifiers
 	var databases: Dictionary[StringName, BaseDataPresetsDatabase] = get_node_databases(node)
-	var preset_ids: Dictionary[StringName, int] = get_node_preset_ids(node)
+	var preset_ids: Dictionary[StringName, String] = get_node_preset_ids(node)
 	var preset_names: Dictionary[StringName, String] = get_node_preset_names(node)
 
 	var presets: Dictionary[StringName, BaseDataPreset] = {}
@@ -168,7 +168,7 @@ static func clear_node_preset(node: Object, database_type: StringName) -> void:
 		return
 	
 	# remove id and name from dictionaries
-	var preset_ids: Dictionary[StringName, int] = get_node_preset_ids(node)
+	var preset_ids: Dictionary[StringName, String] = get_node_preset_ids(node)
 	var preset_names: Dictionary[StringName, String] = get_node_preset_names(node)
 	preset_ids.erase(database_type)
 	preset_names.erase(database_type)
@@ -215,7 +215,7 @@ static func set_node_preset(node: Object, database: BaseDataPresetsDatabase, pre
 	
 	# add to dictionaries
 	var database_type: StringName = database.get_database_type()
-	var preset_ids: Dictionary[StringName, int] = get_node_preset_ids(node)
+	var preset_ids: Dictionary[StringName, String] = get_node_preset_ids(node)
 	var preset_names: Dictionary[StringName, String] = get_node_preset_names(node)
 	preset_ids[database_type] = preset.id
 	preset_names[database_type] = preset.name
@@ -248,9 +248,9 @@ static func update_saved_preset_reference(node: Object, database: BaseDataPreset
 	var database_type: StringName = database.get_database_type()
 	
 	# get saved id and name
-	var preset_ids: Dictionary[StringName, int] = get_node_preset_ids(node)
+	var preset_ids: Dictionary[StringName, String] = get_node_preset_ids(node)
 	var preset_names: Dictionary[StringName, String] = get_node_preset_names(node)
-	var saved_id: int = preset_ids.get(database_type, ResourceUID.INVALID_ID)
+	var saved_id: String = preset_ids.get(database_type, "")
 	var saved_name: String = preset_names.get(database_type, "")
 
 	# if different from preset, update them

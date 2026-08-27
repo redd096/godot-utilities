@@ -13,7 +13,7 @@ extends Resource
             emit_changed()
 
 ## Unique identifier, so renaming a preset does not break nodes that already reference it
-@export_storage var id: int = ResourceUID.INVALID_ID:
+@export_storage var id: String = "":
     set(new_value):
         if id != new_value:
             id = new_value

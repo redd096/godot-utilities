@@ -1,4 +1,4 @@
-class_name DataPresetsConstants 
+class_name DataPresetsConstants
 extends RefCounted
 
 
@@ -14,7 +14,7 @@ static var AUTOLOAD_PATH: String:
 ## key: Database type, value: reference to database resource of that type
 const META_DATABASES_REF_KEY: StringName = &"data_preset_databases"
 
-## Dictionary[StringName, int]
+## Dictionary[StringName, String]
 ## key: Database type, value: stable preset ID
 const META_PRESET_IDS_KEY: StringName = &"data_preset_ids"
 
