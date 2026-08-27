@@ -11,9 +11,13 @@ static var AUTOLOAD_PATH: String:
 
 
 ## Dictionary[StringName, BaseDataPresetsDatabase]
-## key: Database type, value: reference to database of that type
+## key: Database type, value: reference to database resource of that type
 const META_DATABASES_REF_KEY: StringName = &"data_preset_databases"
 
-## Dictionary[StringName, DataPresetStruct]
-## key: Database type, value: preset id and preset name
-const META_PRESETS_KEY: StringName = &"data_presets"
+## Dictionary[StringName, int]
+## key: Database type, value: stable preset ID
+const META_PRESET_IDS_KEY: StringName = &"data_preset_ids"
+
+## Dictionary[StringName, String]
+## key: Database type, value: preset name used as a fallback
+const META_PRESET_NAMES_KEY: StringName = &"data_preset_names"

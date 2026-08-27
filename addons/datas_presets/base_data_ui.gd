@@ -110,7 +110,7 @@ func _sync_from_target() -> void:
 			preset_dropdown.select(index)
 			_show_description(preset)
 			DataPresetsAPI.apply_preset_values(target, preset)
-			DataPresetsAPI.update_saved_struct_from_database_preset(target, database, preset)
+			DataPresetsAPI.update_saved_preset_reference(target, database, preset)
 			_syncing_ui = false
 			return
 
@@ -207,7 +207,7 @@ func _on_database_contents_changed() -> void:
 			preset_dropdown.select(index)
 			_show_description(preset)
 			DataPresetsAPI.apply_preset_values(target, preset)
-			DataPresetsAPI.update_saved_struct_from_database_preset(target, database, preset)
+			DataPresetsAPI.update_saved_preset_reference(target, database, preset)
 			EditorInterface.mark_scene_as_unsaved()
 			return
 
