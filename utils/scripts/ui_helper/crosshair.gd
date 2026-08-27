@@ -1,6 +1,7 @@
 ## Draw a point crosshair on the screen
 class_name Crosshair extends Control
 
+
 @export var dot_radius: float = 3.0
 @export var outline_width: float = 1.5
 @export var dot_color: Color = Color(1, 1, 1, 0.85)

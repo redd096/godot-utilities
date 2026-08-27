@@ -1,5 +1,6 @@
 class_name Rendering3DModelData extends Resource
 
+
 ## Name for this Data
 @export var name: StringName = "Data"
 ## Used to help with editor, e.g. to know where this Data is used

@@ -1,5 +1,6 @@
 class_name Collision2DDataController extends Node
 
+
 ## If true, obj will be set to self
 @export var obj_is_self: bool = true
 ## Set layer and mask to this collision object
@@ -8,6 +9,7 @@ class_name Collision2DDataController extends Node
 @export var model_data_name: StringName
 ## Resource used to find model data by Name
 @export var data_resource: Collision2DDataResource
+
 
 # how to set layer to 3 
 # (-1 because the parameter is an index but in inspector start from 1)
@@ -31,6 +33,6 @@ func _ready() -> void:
 		apply(model_data)
 
 
-func apply(model_data: Collision2DModelData):
+func apply(model_data: Collision2DModelData) -> void:
 	obj.collision_layer = model_data.collision_layer
 	obj.collision_mask = model_data.collision_mask

@@ -1,6 +1,7 @@
 ## RichTextLabel + open browser when click a link
 class_name RichTextClickableLink extends RichTextLabel
 
+
 ## If emulate_mouse_from_touch is true in ProjectSettings, this should be off to avoid double events (both touch and mouse)
 @export var check_also_touch_events: bool = false
 ## On ready, checks in ProjectSettings and set check_also_touch_events true or false based on emulate_mouse_from_touch
@@ -20,12 +21,10 @@ func _ready():
 	meta_clicked.connect(_on_meta_clicked)
 
 
-
 func _on_meta_clicked(meta: Variant):
 	# `meta` is of Variant type, so convert it to a String to avoid script errors at runtime. 
 	# (copy-paste from meta_clicked documentation)
 	OS.shell_open(str(meta))
-
 
 
 func _gui_input(event: InputEvent) -> void:

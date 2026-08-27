@@ -1,5 +1,6 @@
 class_name CanvasLayerDataController extends Node
 
+
 ## If true, obj will be set to self
 @export var obj_is_self: bool = true
 ## Set layer to this object
@@ -8,6 +9,7 @@ class_name CanvasLayerDataController extends Node
 @export var model_data_name: StringName
 ## Resource used to find model data by Name
 @export var data_resource: CanvasLayerDataResource
+
 
 # how to set layer to 3 
 # (-1 because the parameter is an index but in inspector start from 1)
@@ -30,5 +32,5 @@ func _ready() -> void:
 		apply(model_data)
 
 
-func apply(model_data: CanvasLayerModelData):
+func apply(model_data: CanvasLayerModelData) -> void:
 	obj.layer = model_data.layer

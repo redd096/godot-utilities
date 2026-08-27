@@ -36,10 +36,10 @@ class_name SimulateJoint
 static func apply_linear_spring_force(pivot: Node3D, target: RigidBody3D, local_anchor_point: Vector3 = Vector3.ZERO, frequency: float = 3.0, damping: float = 1.0, max_force: float = 80.0) -> void:
 	# instead of have a simple (pivot.global_position - target.global_position)
 	# we use the anchor point as target position
-	var world_anchor_point := target.to_global(local_anchor_point)
+	var world_anchor_point: Vector3 = target.to_global(local_anchor_point)
 	# calculate force
-	var displacement := pivot.global_position - world_anchor_point
-	var force := compute_linear_force(
+	var displacement: Vector3 = pivot.global_position - world_anchor_point
+	var force: Vector3 = compute_linear_force(
 		displacement,
 		target.linear_velocity,
 		target.mass,
@@ -57,12 +57,12 @@ static func apply_linear_spring_force(pivot: Node3D, target: RigidBody3D, local_
 ## Applies the angular spring torque to the rigidbody
 static func apply_angular_spring_torque(pivot: Node3D, target: RigidBody3D, frequency: float = 3.0, damping: float = 1.0, max_torque: float = 0.0) -> void:
 	# calculate necessary rotation
-	var rot_diff := get_rotation_difference(
+	var rot_diff: Vector3 = get_rotation_difference(
 		target.global_transform.basis,
 		pivot.global_transform.basis
 	)
 	# calculate torque
-	var torque := compute_angular_torque(
+	var torque: Vector3 = compute_angular_torque(
 		rot_diff,
 		target.global_transform.basis,
 		target.angular_velocity,
@@ -78,13 +78,13 @@ static func apply_angular_spring_torque(pivot: Node3D, target: RigidBody3D, freq
 ## Sets the angular velocity of the rigidbody
 static func apply_angular_spring_velocity(pivot: Node3D, target: RigidBody3D, delta: float, frequency: float = 10.0, damping: float = 1.0, rotation_speed: float = 10.0) -> void:
 	# calculate necessary rotation
-	var rot_diff := get_rotation_difference(
+	var rot_diff: Vector3 = get_rotation_difference(
 		target.global_transform.basis,
 		pivot.global_transform.basis
 	)
 	# use angular velocity instead of apply_torque to make it easier
-	var target_angular_vel := rot_diff * frequency
-	var target_damp := clampf(damping * delta * rotation_speed, 0.0, 1.0)
+	var target_angular_vel: Vector3 = rot_diff * frequency
+	var target_damp: float = clampf(damping * delta * rotation_speed, 0.0, 1.0)
 	# blend toward it (damping)
 	target.angular_velocity = target.angular_velocity.lerp(target_angular_vel, target_damp)
 
@@ -108,13 +108,13 @@ static func compute_linear_force(
 	max_force: float = 0.0
 ) -> Vector3:
 	# k = m * (2π * f)²
-	var omega := TAU * frequency
-	var k := mass * omega * omega
+	var omega: float = TAU * frequency
+	var k: float = mass * omega * omega
 	# c = m * 2 * d * (2π * f)
-	var c := mass * 2.0 * damping * omega
+	var c: float = mass * 2.0 * damping * omega
 
 	# F = k * displacement - c * velocity
-	var force := k * displacement - c * linear_velocity
+	var force: Vector3 = k * displacement - c * linear_velocity
 
 	# clamp to max force
 	if max_force > 0.0 and force.length() > max_force:
@@ -152,7 +152,7 @@ static func compute_angular_torque(
 	# omega = 2π * f
 	var omega: float = TAU * frequency
 	# k = m * omega²
-	var k: Basis= global_inertia * omega * omega
+	var k: Basis = global_inertia * omega * omega
 	# c = m * 2 * d * omega
 	var c: Basis = global_inertia * 2.0 * damping * omega
 
@@ -170,17 +170,17 @@ static func compute_angular_torque(
 ## Returns a Vector3 where direction = axis, length = angle in radians.
 static func get_rotation_difference(current_basis: Basis, target_basis: Basis) -> Vector3:
 	# relative rotation from current to target
-	var relative := target_basis * current_basis.inverse()
+	var relative: Basis = target_basis * current_basis.inverse()
 	# convert to quaternion to extract axis-angle
-	var quat := relative.get_rotation_quaternion()
+	var quat: Quaternion = relative.get_rotation_quaternion()
 	# ensure shortest path
 	if quat.w < 0.0:
 		quat = -quat
 	# get axis and angle
-	var angle := 2.0 * acos(clampf(quat.w, -1.0, 1.0))
+	var angle: float = 2.0 * acos(clampf(quat.w, -1.0, 1.0))
 	if angle < 0.001:
 		return Vector3.ZERO
-	var axis := Vector3(quat.x, quat.y, quat.z).normalized()
+	var axis: Vector3 = Vector3(quat.x, quat.y, quat.z).normalized()
 	return axis * angle
 
 

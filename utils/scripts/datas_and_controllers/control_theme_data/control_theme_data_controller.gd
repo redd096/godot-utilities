@@ -1,5 +1,6 @@
 class_name ControlThemeDataController extends Node
 
+
 ## If true, obj will be set to self
 @export var obj_is_self: bool = true
 ## Set theme to this object
@@ -27,6 +28,6 @@ func _ready() -> void:
 		apply(model_data)
 
 
-func apply(model_data: ControlThemeModelData):
+func apply(model_data: ControlThemeModelData) -> void:
 	obj.theme = model_data.theme
 	obj.theme_type_variation = model_data.theme_type_variation

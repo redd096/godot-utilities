@@ -3,6 +3,7 @@
 ## @experimental: PROBLEM: it gave me wrong values on WebGL build !
 class_name MarginContainerSafeArea extends MarginContainer
 
+
 func _ready() -> void:
 	# current margins
 	var left: int = get_theme_constant("margin_left")

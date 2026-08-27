@@ -1,10 +1,12 @@
 class_name UnityLike
 
+
 ## Equivalent of unity DontDestroyOnLoad(node)
 static func dont_destroy_on_load(node: Node) -> void:
 	# set root as parent (this isn't destroyed when change scene)
 	var root: Node = Engine.get_main_loop().root
 	set_parent(node, root)
+
 
 ## Equivalent of unity node.SetParent(parent)
 static func set_parent(node: Node, parent: Node) -> void:
@@ -18,6 +20,7 @@ static func set_parent(node: Node, parent: Node) -> void:
 	# and set child of new parent
 	parent.add_child(node)
 
+
 ## Return a random point in circle (XZ plane) with Y height
 static func random_point_in_circle_3d(position: Vector3, distance: float, pos_y: float) -> Vector3:
 	var angle := randf() * TAU
@@ -25,6 +28,7 @@ static func random_point_in_circle_3d(position: Vector3, distance: float, pos_y:
 		position.x + cos(angle) * distance, 
 		pos_y, 
 		position.z + sin(angle) * distance)
+
 
 ## Returns a random point inside a rectangle (XZ plane)
 static func random_point_in_rect(bottom_left: Vector2, top_right: Vector2, pos_y: float) -> Vector3:
@@ -34,17 +38,21 @@ static func random_point_in_rect(bottom_left: Vector2, top_right: Vector2, pos_y
 		randf_range(bottom_left.y, top_right.y)
 	)
 
+
 ## Checks if a point is inside a rectangle on XZ plane
 static func is_in_rect(point: Vector3, bottom_left: Vector2, top_right: Vector2) -> bool:
 	return point.x >= bottom_left.x and point.x <= top_right.x and point.z >= bottom_left.y and point.z <= top_right.y
 
+
 #region get component
+
 
 ## Equivalent of unity node.GetComponent<script_type>
 static func get_component(node: Node, script_type: Object) -> Variant:
 	if _has_component(node, script_type):
 		return node
 	return null
+
 
 ## Equivalent of unity node.GetComponentsInParent<script_type>
 static func get_components_in_parent(node: Node, script_type: Object) -> Array:
@@ -57,6 +65,7 @@ static func get_components_in_parent(node: Node, script_type: Object) -> Array:
 		parent = parent.get_parent()
 	return components
 
+
 ## Equivalent of unity node.GetComponentInParent<script_type>
 static func get_component_in_parent(node: Node, script_type: Object) -> Variant:
 	# check node and parents until find component
@@ -66,6 +75,7 @@ static func get_component_in_parent(node: Node, script_type: Object) -> Variant:
 			return parent
 		parent = parent.get_parent()	
 	return null
+
 
 ## Equivalent of unity node.GetComponentsInChildren<script_type>
 static func get_components_in_children(node: Node, script_type: Object) -> Array:
@@ -78,6 +88,7 @@ static func get_components_in_children(node: Node, script_type: Object) -> Array
 	_find_children_components_recursive(node, script_type, components)
 	return components
 
+
 ## Equivalent of unity node.GetComponentInChildren<script_type>
 static func get_component_in_children(node: Node, script_type: Object) -> Variant:
 	# var components: Array = get_components_in_children(node, script_type)
@@ -86,9 +97,12 @@ static func get_component_in_children(node: Node, script_type: Object) -> Varian
 		return node
 	return _find_first_children_component_recursive(node, script_type)
 
+
 #endregion
 
+
 #region find object of type
+
 
 ## Equivalent of unity FindObjectsOfType<script_type>
 static func find_objects_of_type(script_type: Object) -> Array:
@@ -97,6 +111,7 @@ static func find_objects_of_type(script_type: Object) -> Array:
 	# return root_node.find_children("*", str(type), true, false)
 	return _find_children_components_recursive(root_node, script_type, [])
 
+
 ## Equivalent of unity FindObjectOfType<script_type>
 static func find_object_of_type(script_type: Object) -> Variant:
 	# var components: Array = find_objects_of_type(script_type)
@@ -104,7 +119,9 @@ static func find_object_of_type(script_type: Object) -> Variant:
 	var root_node: Node = Engine.get_main_loop().root
 	return _find_first_children_component_recursive(root_node, script_type)
 
+
 #endregion
+
 
 # https://docs.godotengine.org/en/stable/tutorials/physics/ray-casting.html
 
@@ -119,7 +136,9 @@ static func find_object_of_type(script_type: Object) -> Variant:
 #    metadata: Variant() # metadata of collider
 # }
 
+
 #region raycast
+
 
 ## Equivalent of unity Physics.Raycast (can use node Raycast3D)
 static func raycast_3d(owner: Node3D, from: Vector3, to: Vector3, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
@@ -127,10 +146,12 @@ static func raycast_3d(owner: Node3D, from: Vector3, to: Vector3, collision_mask
 	var query := PhysicsRayQueryParameters3D.create(from, to, collision_mask, exclude)
 	return space_state.intersect_ray(query)
 
+
 ## Equivalent of unity Physics.Raycast (can use node Raycast3D)
 static func raycast_3d_with_query(owner: Node3D, query: PhysicsRayQueryParameters3D) -> Dictionary:
 	var space_state := owner.get_world_3d().direct_space_state
 	return space_state.intersect_ray(query)
+
 
 ## Equivalent of unity Physics2D.Raycast (can use node Raycast2D)
 static func raycast_2d(owner: Node2D, from: Vector2, to: Vector2, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
@@ -138,10 +159,12 @@ static func raycast_2d(owner: Node2D, from: Vector2, to: Vector2, collision_mask
 	var query := PhysicsRayQueryParameters2D.create(from, to, collision_mask, exclude)
 	return space_state.intersect_ray(query)
 
+
 ## Equivalent of unity Physics2D.Raycast (can use node Raycast2D)
 static func raycast_2d_with_query(owner: Node2D, query: PhysicsRayQueryParameters2D) -> Dictionary:
 	var space_state := owner.get_world_2d().direct_space_state
 	return space_state.intersect_ray(query)
+
 
 ## Equivalent of unity Physics.Spherecast (can use node ShapeCast3D)
 static func spherecast_3d(owner: Node3D, from: Vector3, to: Vector3, radius: float, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Array[Dictionary]:
@@ -158,10 +181,12 @@ static func spherecast_3d(owner: Node3D, from: Vector3, to: Vector3, radius: flo
 	query.exclude = exclude
 	return space.intersect_shape(query)
 
+
 ## Equivalent of unity Physics.Spherecast (can use node ShapeCast3D) - this can have different shapes
 static func shapecast_3d_with_query(owner: Node3D, query: PhysicsShapeQueryParameters3D) -> Array[Dictionary]:
 	var space := owner.get_world_3d().direct_space_state
 	return space.intersect_shape(query)
+
 
 ## Equivalent of unity Physics.Spherecast (can use node ShapeCast3D)
 static func circlecast_2d(owner: Node2D, from: Vector2, to: Vector2, radius: float, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Array[Dictionary]:
@@ -178,22 +203,29 @@ static func circlecast_2d(owner: Node2D, from: Vector2, to: Vector2, radius: flo
 	query.exclude = exclude
 	return space.intersect_shape(query)
 
+
 ## Equivalent of unity Physics.Spherecast (can use node ShapeCast3D) - this can have different shapes
 static func shapecast_2D_with_query(owner: Node2D, query: PhysicsShapeQueryParameters2D) -> Array[Dictionary]:
 	var space := owner.get_world_2d().direct_space_state
 	return space.intersect_shape(query)
 
+
 #endregion
 
+
 #region overlap
+
 
 ## Equivalent of unity Physics.OverlapSphere (can use node ShapeCast3D)
 static func overlap_sphere_3d(owner: Node3D, from: Vector3, radius: float, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Array[Dictionary]:
 	return spherecast_3d(owner, from, Vector3.ZERO, radius, collision_mask, exclude)
 
+
 #endregion
 
+
 #region private api
+
 
 ## Check if this node has this component or inherits
 static func _has_component(node: Node, script_type: Object) -> bool:
@@ -204,6 +236,7 @@ static func _has_component(node: Node, script_type: Object) -> bool:
 	# else:
 	# 	return node.is_class(script_type.get_class())
 
+
 ## Find children with component recursively. 
 # Alternative to node.find_children("*", str(_get_string_from_script_type(script_type))), 
 # that probably works only with godot classes and not with custom scripts
@@ -213,6 +246,7 @@ static func _find_children_components_recursive(node: Node, script_type: Object,
 			result.append(child)
 		_find_children_components_recursive(child, script_type, result)
 	return result
+
 
 ## Find first child with component recursively
 static func _find_first_children_component_recursive(node: Node, script_type: Object) -> Variant:
@@ -225,6 +259,7 @@ static func _find_first_children_component_recursive(node: Node, script_type: Ob
 		if child_component:
 			return child_component
 	return null
+
 
 ## Return class name or filename
 static func _get_string_from_script_type(script_type: Object) -> String:
@@ -240,5 +275,6 @@ static func _get_string_from_script_type(script_type: Object) -> String:
 	else:
 		type = script_type.get_class()
 	return type
+
 
 #endregion

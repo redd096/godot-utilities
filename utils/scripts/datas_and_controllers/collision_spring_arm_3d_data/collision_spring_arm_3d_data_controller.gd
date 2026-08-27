@@ -1,5 +1,6 @@
 class_name CollisionSpringArm3DDataController extends Node
 
+
 ## If true, obj will be set to self
 @export var obj_is_self: bool = true
 ## Set collision mask to this spring arm
@@ -8,6 +9,7 @@ class_name CollisionSpringArm3DDataController extends Node
 @export var model_data_name: StringName
 ## Resource used to find model data by Name
 @export var data_resource: CollisionSpringArm3DDataResource
+
 
 # set layer to 3 
 # (-1 because the parameter is an index but in inspector start from 1)
@@ -31,5 +33,5 @@ func _ready() -> void:
 		apply(model_data)
 
 
-func apply(model_data: CollisionSpringArm3DModelData):
+func apply(model_data: CollisionSpringArm3DModelData) -> void:
 	obj.collision_mask = model_data.collision_mask

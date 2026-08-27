@@ -1,6 +1,7 @@
 ## ScrollContainer + drag with mouse or touch to scroll + scroll with keyboard or gamepad
 class_name ScrollContainerHelper extends ScrollContainer
 
+
 @export_group("Drag to Scroll")
 ## Can user drag with mouse or touch to scroll?
 @export var enabled_drag_to_scroll: bool = true
@@ -134,6 +135,7 @@ func _get_content_global_rect() -> Rect2:
 func _get_global_point_position(pos: Vector2) -> Vector2:
 	# the same as get_global_mouse_position() but works with every position (e.g. for touch)
 	return get_viewport().canvas_transform.affine_inverse() * pos
+
 
 #endregion
 

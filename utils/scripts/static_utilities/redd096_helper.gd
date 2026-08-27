@@ -1,5 +1,6 @@
 class_name Redd096Helper
 
+
 ## Create a parent for this node. [br]
 ## e.g. create Camera parent to do CameraShake on it and avoid conflict with camera movements
 static func create_parent(node: Node3D) -> Node:

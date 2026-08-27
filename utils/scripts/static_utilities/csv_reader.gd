@@ -1,5 +1,6 @@
 class_name  CsvReader
 
+
 ## Return a dictionary with the contents of a CSV file 
 ## key: String (header, the strings inside the first row of the csv), 
 ## value: Array (every cell in column)

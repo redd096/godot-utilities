@@ -1,5 +1,6 @@
 class_name GizmosDebug
 
+
 static func create_rect(parent_node: Node, bottom_left: Vector2, top_right: Vector2, pos_y: float, color: Color = Color(0, 1, 0, 0.5)) -> MeshInstance3D:
 	# create mesh
 	var mesh_instance = MeshInstance3D.new()
@@ -33,6 +34,7 @@ static func create_rect(parent_node: Node, bottom_left: Vector2, top_right: Vect
 	# add to scene
 	parent_node.add_child(mesh_instance)
 	return mesh_instance
+
 
 static func create_circle(parent_node: Node, position: Vector3, radius: float, color: Color = Color(0, 1, 0, 0.5)) -> MeshInstance3D:
 	# create mesh

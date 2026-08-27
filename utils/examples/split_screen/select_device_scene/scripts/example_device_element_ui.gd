@@ -1,7 +1,9 @@
 class_name ExampleDeviceElementUI extends Node
 
+
 @export var label : Label
 
-##update label text
-func update_label(text : String):
+
+## Update label text
+func update_label(text : String) -> void:
 	label.text = text

@@ -1,9 +1,11 @@
 class_name InterfacesLocator
 
+
 # key: node that implement interfaces
 # value: Dictionary[Object, Variant]
 # 	where key: script_type, value: result
 static var _interfaces: Dictionary#[Object, Dictionary] # for now untyped to avoid godot error when erase freed node
+
 
 # avoid too much memory
 const MAX_COUNT: int = 100
@@ -41,7 +43,6 @@ static func _create_new_dictionary(node: Object) -> void:
 	_nodes.append(node)
 	if _nodes.size() > MAX_COUNT:
 		_interfaces.erase(_nodes.pop_front())
-
 
 
 #region copy-paste from unity_like

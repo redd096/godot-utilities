@@ -26,14 +26,14 @@ func _ready() -> void:
 		return
 
 	# find data by name
-	var model_data := data_resource.get_model_by_name(model_data_name)
+	var model_data: Collision3DModelData = data_resource.get_model_by_name(model_data_name)
 	
 	# apply
 	if model_data:
 		apply(model_data)
 
 
-func apply(model_data: Collision3DModelData):
+func apply(model_data: Collision3DModelData) -> void:
 	if obj:
 		obj.collision_layer = model_data.collision_layer
 		obj.collision_mask = model_data.collision_mask

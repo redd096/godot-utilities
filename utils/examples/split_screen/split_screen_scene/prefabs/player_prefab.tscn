@@ -1,8 +1,11 @@
 [gd_scene format=3 uid="uid://byn0rt8cp6x30"]
 
 [ext_resource type="Script" uid="uid://dn4bh834balc0" path="res://utils/examples/split_screen/split_screen_scene/scripts/example_player_split_screen.gd" id="1_7j7eg"]
+[ext_resource type="Script" uid="uid://cpf33vmshpsf1" path="res://addons/datas_presets/base_data_presets_database.gd" id="2_cegga"]
 [ext_resource type="Material" uid="uid://2urvv4mlk2wx" path="res://utils/examples/split_screen/split_screen_scene/materials/sunglasses_material.tres" id="2_fegb1"]
 [ext_resource type="Script" uid="uid://bmyntv4hbv2ur" path="res://utils/scripts/datas_and_controllers/collision_3d_data/collision_3d_data_controller.gd" id="3_4sm5p"]
+[ext_resource type="Resource" uid="uid://dx3l2bk2erkvn" path="res://new_resource.tres" id="3_8h1p4"]
+[ext_resource type="Script" uid="uid://nx0b6p43kh7g" path="res://addons/datas_presets/data_preset_struct.gd" id="4_bh1dc"]
 [ext_resource type="Resource" uid="uid://duolfw0vsfe0o" path="res://utils/examples/split_screen/split_screen_scene/datas/collision_3d_data.tres" id="4_cq8p4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4kjla"]
@@ -22,6 +25,15 @@ body = NodePath("CharacterBody3D")
 camera = NodePath("Camera3D")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1824997112]
+collision_layer = 9
+collision_mask = 9
+metadata/data_preset_databases = Dictionary[StringName, ExtResource("2_cegga")]({
+&"Collision3DPresetsDatabase": ExtResource("3_8h1p4")
+})
+metadata/data_presets = Dictionary[StringName, ExtResource("4_bh1dc")]({
+&"Collision3DPresetsDatabase": Object(RefCounted,"script":ExtResource("4_bh1dc"),"id":2478282342829088261,"name":"")
+
+})
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=1478266895]
 shape = SubResource("CapsuleShape3D_4kjla")
