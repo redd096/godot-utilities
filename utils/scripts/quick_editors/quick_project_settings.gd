@@ -5,7 +5,7 @@ extends Node
 ## Add this script to a Node, press the desired buttons, then remove the Node.
 
 
-# region inputs
+#region inputs
 
 
 @export_group("Inputs")
@@ -33,14 +33,14 @@ func _add_gamepad_ui_buttons() -> void:
 	if changed:
 		_save_project_settings("Gamepad UI buttons added")
 	else:
-		_no_changes_message("Gamepad UI buttons are already added to InputMap")
+		_warning_message("Gamepad UI buttons are already added to InputMap")
 
 
 func _add_gamepad_button(action: StringName, joypad_button: JoyButton) -> bool:
 	# get action from settings (instead of InputMap)
 	var action_setting_path: String = INPUTS_SETTING + action
 	if not ProjectSettings.has_setting(action_setting_path):
-		push_warning("There is NOT '", action, "' in InputMap. I'm creating it with InputEvent: ", joypad_button)
+		_warning_message("There is NOT '", action, "' in InputMap. I'm creating it with InputEvent: ", joypad_button)
 	var action_data: Dictionary = ProjectSettings.get_setting(action_setting_path, 
 		{
 			"deadzone": 0.5,
@@ -52,7 +52,7 @@ func _add_gamepad_button(action: StringName, joypad_button: JoyButton) -> bool:
 
 	# if already contains this event, return false
 	if _contains_joypad_button(events, joypad_button):
-		push_warning("Action '", action, "' already contains InputEvent: ", joypad_button)
+		_warning_message("Action '", action, "' already contains InputEvent: ", joypad_button)
 		return false
 	
 	# else, add this input event
@@ -102,14 +102,14 @@ const VIEWPORT_MODE: String = "viewport"
 
 
 func _set_canvas_for_3d() -> void:
-	_set_canvas_internal(CANVAS_ITEMS_MODE, str("Canvas stretch mode set to '", CANVAS_ITEMS_MODE, "' for 3D"))
+	_set_canvas_internal(CANVAS_ITEMS_MODE, "Canvas stretch mode set to '", CANVAS_ITEMS_MODE, "' for 3D")
 
 
 func _set_canvas_for_2d_pixel_art() -> void:
-	_set_canvas_internal(VIEWPORT_MODE, str("Canvas stretch mode set to '", VIEWPORT_MODE, "' for 2D pixel art"))
+	_set_canvas_internal(VIEWPORT_MODE, "Canvas stretch mode set to '", VIEWPORT_MODE, "' for 2D pixel art")
 
 
-func _set_canvas_internal(stretch_mode: String, success_message: String) -> void:
+func _set_canvas_internal(stretch_mode: String, ...success_message: Array) -> void:
 	# update stretch mode
 	var setting: String = ProjectSettings.get_setting(STRETCH_MODE_SETTING, "")
 	if setting != stretch_mode:
@@ -117,20 +117,20 @@ func _set_canvas_internal(stretch_mode: String, success_message: String) -> void
 		_save_project_settings(success_message)
 	# if not already set
 	else:
-		_no_changes_message(str("Canvas stretch mode is already '", stretch_mode, "'"))
+		_warning_message("Canvas stretch mode is already '", stretch_mode, "'")
 
 
 #endregion
 
 
-func _save_project_settings(success_message: String) -> void:
-	var error: Error = ProjectSettings.save()
-	if error == OK:
+func _save_project_settings(...success_message: Array) -> void:
+	var save_error: Error = ProjectSettings.save()
+	if save_error == OK:
 		print("Quick Project Settings SUCCESS: ", success_message)
 		push_warning("Project Settings saved! Reload the project to avoid cache bugs")
 	else:
-		push_error("Quick Project Settings ERROR: ", error_string(error))
+		push_error("Quick Project Settings ERROR: Cannot save Project Settings: ", error_string(save_error))
 
 
-func _no_changes_message(warning_message: String) -> void:
-	push_warning("Quick Project Settings WARNING: ", warning_message)
+func _warning_message(...message: Array) -> void:
+	push_warning("Quick Project Settings WARNING: ", message)
