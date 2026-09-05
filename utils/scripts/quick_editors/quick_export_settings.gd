@@ -15,7 +15,7 @@ extends Node
 @export_global_dir var builds_root: String = _get_default_builds_root()
 
 
-## Reset the builds root to the current user's Documents/Builds folder
+## Reset the builds root to the current user's Documents/project_name/Builds folder
 @export_tool_button("Reset path to Documents/Builds")
 var reset_builds_root: Callable = _reset_builds_root
 
@@ -25,12 +25,12 @@ func _get_default_builds_root() -> String:
 	var documents_path: String = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS)
 	if documents_path.is_empty():
 		return ""
-	# and return path/to/Documents/Builds
-	return documents_path.path_join("Builds")
+	# and return path/to/Documents/project_name/Builds
+	return documents_path.path_join(_get_project_name()).path_join("Builds")
 
 
 func _reset_builds_root() -> void:
-	# reset path to Documents/Builds folder, and update variable in inspector
+	# reset path to default folder, and update variable in inspector
 	builds_root = _get_default_builds_root()
 	notify_property_list_changed()
 	_success_message(str("Builds root reset to '", builds_root, "'"))
@@ -234,15 +234,15 @@ func _get_device_from_platform(platform: String) -> String:
 			return ""
 
 
-# return path/to/Documents/Builds/device/project_name/file_name.extension
+# return path/to/Documents/project_name/Builds/device/file_name.extension
 func _get_export_path(config: ConfigFile, options_section: String, device: String) -> String:
-	var project_name: String = _get_project_name()
-
-	# get "path/to/Documents/Builds/device/project_name" 
+	# get "path/to/Documents/project_name/Builds/device/" 
 	# where device is Android, Linux, etc...
 	if builds_root.is_empty():
 		_reset_builds_root()
-	var export_directory: String = builds_root.simplify_path().path_join(device).path_join(project_name)
+	var export_directory: String = builds_root.simplify_path().path_join(device)
+
+	var project_name: String = _get_project_name()
 	var file_name: String
 
 	# get file_name.extension
