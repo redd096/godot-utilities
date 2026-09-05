@@ -298,6 +298,11 @@ var set_keystore_to_project_root: Callable = _set_keystore_to_project_root
 @export_global_file var  safe_keystore_credentials_path: String = ""
 
 
+## Generate file with correct format
+@export_tool_button("Create Safe Keystore credentials file")
+var create_safe_keystore_credentials_file: Callable = _create_safe_keystore_credentials_file
+
+
 ## Read alias and password from keystore_credentials.txt
 @export_tool_button("Create keystore - Safe")
 var create_keystore_safe: Callable = _create_keystore_safe
@@ -319,6 +324,10 @@ const KEYSTORE_PASSWORD_KEY: String = "password"
 
 ## Password used only by Fast creation
 @export var fast_keystore_password: String = ""
+
+
+## After create keystore with Fast Creation, clear alias and password from inspector
+@export var clear_credentials_after_create_keystore: bool = true
 
 
 ## Create the keystore using credentials written in the Inspector
@@ -353,6 +362,37 @@ func _get_global_path(current_path: String) -> String:
 		return ""
 	# if local to project, return absolute path
 	return ProjectSettings.globalize_path(current_path).simplify_path()
+
+
+## Generate file with correct format
+func _create_safe_keystore_credentials_file() -> void:
+	var credentials_path: String = str(START_PROJECT_PATH, "keystore_credentials.txt")
+
+	# never overwrite an existing credentials file.
+	if FileAccess.file_exists(credentials_path):
+		_warning_message(str("Safe keystore credentials file already exists at '", credentials_path, "'. The existing file has not been overwritten."))
+		
+		# update variable in inspector
+		safe_keystore_credentials_path = credentials_path
+		notify_property_list_changed()
+		
+		return
+
+	# create file with alias "" and password ""
+	var credentials := ConfigFile.new()
+	credentials.set_value(KEYSTORE_CREDENTIALS_SECTION, KEYSTORE_ALIAS_KEY, "")
+	credentials.set_value(KEYSTORE_CREDENTIALS_SECTION, KEYSTORE_PASSWORD_KEY, "")
+
+	# save it
+	var save_error: Error = credentials.save(credentials_path)
+	if save_error == OK:
+		_success_message(str("Safe keystore credentials file created at '", credentials_path, "'"))
+		_warn_if_path_is_inside_project(credentials_path, "The credentials file")
+		# update variable in inspector
+		safe_keystore_credentials_path = credentials_path
+		notify_property_list_changed()
+	else:
+		_error_message("Cannot create Safe keystore credentials file: ", save_error)
 
 
 ## Read alias and password from keystore_credentials.txt
@@ -427,9 +467,10 @@ func _create_keystore_fast() -> void:
 		_configure_android_release_credentials(keystore_path, alias, password)
 
 		# Remove credentials from the exported Inspector properties.
-		fast_keystore_alias = ""
-		fast_keystore_password = ""
-		notify_property_list_changed()
+		if clear_credentials_after_create_keystore:
+			fast_keystore_alias = ""
+			fast_keystore_password = ""
+			notify_property_list_changed()
 
 		# warn if keystore is inside project folder
 		_warn_if_path_is_inside_project(keystore_path, "The release keystore")
@@ -613,7 +654,6 @@ func _load_export_settings() -> ConfigFile:
 
 
 func _save_export_settings(config: ConfigFile) -> void:
-	# save file if edited
 	var save_error: Error = config.save(export_presets_path)
 	if save_error == OK:
 		_success_message("Export presets configured")
