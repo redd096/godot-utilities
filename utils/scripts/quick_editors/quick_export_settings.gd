@@ -16,7 +16,7 @@ extends Node
 
 
 ## Reset the builds root to the current user's Documents/project_name/Builds folder
-@export_tool_button("Reset path to Documents/Builds")
+@export_tool_button("Reset path to Documents/ProjectName/Builds")
 var reset_builds_root: Callable = _reset_builds_root
 
 
@@ -280,7 +280,7 @@ func _set_value_if_different(config: ConfigFile, section: String, key: String, v
 @export_group("Android release keystore")
 
 
-## Complete path of the keystore that will be generated
+## Path to the keystore used for android release builds
 @export_global_file var android_keystore_path: String = ""
 
 
@@ -294,13 +294,13 @@ var set_keystore_to_project_root: Callable = _set_keystore_to_project_root
 
 
 ## For a Safe Creation, create a file .txt with format: [keystore] \n alias="alias_value" \n password="password_value" [br]
-## instead of write them in inspector
+## and save it outside the project
 @export_global_file var  safe_keystore_credentials_path: String = ""
 
 
-## Generate file with correct format
-@export_tool_button("Create Safe Keystore credentials file")
-var create_safe_keystore_credentials_file: Callable = _create_safe_keystore_credentials_file
+## Generate safe_keystore_credentials with correct format
+@export_tool_button("Generate default file with correct format")
+var generate_default_file_with_correct_format: Callable = _generate_default_file_with_correct_format
 
 
 ## Read alias and password from keystore_credentials.txt
@@ -326,7 +326,8 @@ const KEYSTORE_PASSWORD_KEY: String = "password"
 @export var fast_keystore_password: String = ""
 
 
-## After create keystore with Fast Creation, clear alias and password from inspector
+## After create keystore with Fast Creation, clear alias and password from inspector. [br]
+## This is used to avoid push credentials unintentionally
 @export var clear_credentials_after_create_keystore: bool = true
 
 
@@ -364,11 +365,11 @@ func _get_global_path(current_path: String) -> String:
 	return ProjectSettings.globalize_path(current_path).simplify_path()
 
 
-## Generate file with correct format
-func _create_safe_keystore_credentials_file() -> void:
+## Generate safe_keystore_credentials with correct format
+func _generate_default_file_with_correct_format() -> void:
 	var credentials_path: String = str(START_PROJECT_PATH, "keystore_credentials.txt")
 
-	# never overwrite an existing credentials file.
+	# never overwrite an existing credentials file
 	if FileAccess.file_exists(credentials_path):
 		_warning_message(str("Safe keystore credentials file already exists at '", credentials_path, "'. The existing file has not been overwritten."))
 		
@@ -428,7 +429,7 @@ func _create_keystore_safe() -> void:
 		_error_message_only("The credentials file must contain a valid alias and password")
 		return
 
-	# generate keystore and edit export settings to use it
+	# generate keystore and configure export_credentials to use it
 	if _generate_android_keystore(keystore_path, alias, password):
 		_configure_android_release_credentials(keystore_path, alias, password)
 
@@ -455,25 +456,22 @@ func _create_keystore_fast() -> void:
 	var alias: String = fast_keystore_alias.strip_edges()
 	var password: String = fast_keystore_password
 
-	if alias.is_empty():
-		_error_message_only("Fast keystore alias is empty")
+	if alias.is_empty() or password.is_empty():
+		_error_message_only("Fast keystore alias or password are empty")
 		return
 
-	if password.is_empty():
-		_error_message_only("Fast keystore password is empty")
-		return
-
+	# generate keystore and configure export_credentials to use it
 	if _generate_android_keystore(keystore_path, alias, password):
 		_configure_android_release_credentials(keystore_path, alias, password)
 
-		# Remove credentials from the exported Inspector properties.
+		# warn if keystore is inside project folder
+		_warn_if_path_is_inside_project(keystore_path, "The release keystore")
+
+		# remove credentials from the inspector
 		if clear_credentials_after_create_keystore:
 			fast_keystore_alias = ""
 			fast_keystore_password = ""
 			notify_property_list_changed()
-
-		# warn if keystore is inside project folder
-		_warn_if_path_is_inside_project(keystore_path, "The release keystore")
 
 
 ## Execute [br]
@@ -546,19 +544,9 @@ func _get_keytool_path() -> String:
 	return executable_name
 
 
-func _warn_if_path_is_inside_project(path: String, description: String) -> void:
-	# check if path is inside project
-	var global_path: String = ProjectSettings.globalize_path(path)
-	var localized_path: String = ProjectSettings.localize_path(global_path)
-
-	# if inside project, show a warning message
-	if localized_path.begins_with(START_PROJECT_PATH):
-		_warning_message(str(description, " is inside the project. Do not push it to the repository. Add it to .gitignore or, preferably, keep it outside the project."))
-
-
 func _configure_android_release_credentials(keystore_path: String, alias: String, password: String) -> void:
-	# load export_presets.cfg file
-	# Used only to discover which presets are Android presets.
+	# load export_presets.cfg file. 
+	# Used only to discover which presets are Android presets
 	var export_settings: ConfigFile = _load_export_settings()
 	if not export_settings:
 		return
@@ -588,7 +576,7 @@ func _configure_android_release_credentials(keystore_path: String, alias: String
 			# get options (they are named preset.0.options, preset.1.options, etc...)
 			var options_section: String = preset_section + OPTIONS_SECTION_SUFFIX
 
-			# set keystore, alias and password, inside export_credentials, but using export_preset found options_section
+			# set keystore, alias and password, inside export_credentials, by using found options_section
 			export_credentials_config.set_value(options_section, ANDROID_RELEASE_KEYSTORE_PATH_KEY, keystore_path)
 			export_credentials_config.set_value(options_section, ANDROID_RELEASE_ALIAS_KEY, alias)
 			export_credentials_config.set_value(options_section, ANDROID_RELEASE_PASSWORD_KEY, password)
@@ -611,6 +599,16 @@ func _configure_android_release_credentials(keystore_path: String, alias: String
 		return
 	
 	_save_export_credentials(export_credentials_config, android_presets_found)
+
+
+func _warn_if_path_is_inside_project(path: String, description: String) -> void:
+	# check if path is inside project
+	var global_path: String = ProjectSettings.globalize_path(path)
+	var localized_path: String = ProjectSettings.localize_path(global_path)
+
+	# if inside project, show a warning message
+	if localized_path.begins_with(START_PROJECT_PATH):
+		_warning_message(str(description, " is inside the project. Do not push it to the repository. Add it to .gitignore or, preferably, keep it outside the project."))
 
 
 #endregion
