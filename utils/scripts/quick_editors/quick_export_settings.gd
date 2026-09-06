@@ -77,40 +77,53 @@ func _settings_for_android() -> void:
 @export_file var export_presets_path: String = "res://export_presets.cfg"
 
 
-## Configure every supported export presets
-@export_tool_button("Configure all export presets")
-var configure_all_presets: Callable = _configure_all_presets
-
-
-## Configure only Android presets
-@export_tool_button("Configure Android presets")
-var configure_android_presets: Callable = _configure_android_presets
-
-
-## Configure only Linux presets
-@export_tool_button("Configure Linux presets")
-var configure_linux_presets: Callable = _configure_linux_presets
-
-
-## Configure only Windows presets
-@export_tool_button("Configure Windows presets")
-var configure_windows_presets: Callable = _configure_windows_presets
-
-
-## Configure only WebGL presets
-@export_tool_button("Configure WebGL presets")
-var configure_webgl_presets: Callable = _configure_webgl_presets
-
-
 # how are declared presets inside the file
 const PRESET_SECTION_PREFIX: String = "preset."		# preset.0, preset.1, etc...
 const OPTIONS_SECTION_SUFFIX: String = ".options"	# preset.0.options, preset.1.options, etc...
 
 # possible devices
-const DEVICE_ANDROID: String = "Android"
-const DEVICE_LINUX: String = "Linux"
-const DEVICE_WINDOWS: String = "Windows"
-const DEVICE_WEBGL: String = "WebGL"
+enum Device {
+	NONE = 0,
+	ANDROID = 1 << 0,
+	LINUX = 1 << 1,
+	WINDOWS = 1 << 2,
+	WEBGL = 1 << 3,
+	ALL = (1 << 4) - 1,
+}
+
+func _get_device_name(device: Device) -> String:
+	return str(Device.find_key(device))
+
+
+## Devices affected by the buttons below
+@export_flags("Android", "Linux", "Windows", "WebGL")
+var selected_devices: int = Device.ALL
+
+
+## Create the selected device folders without editing export_presets.cfg
+@export_tool_button("Create folders")
+var create_export_folders: Callable = _create_export_folders
+
+
+## Set the export build path for the selected devices
+@export_tool_button("Set export build path")
+var set_export_build_path: Callable = _set_export_build_path
+
+
+## Set embed PCK for desktop and mobile texture compression for WebGL
+@export_tool_button("Set generic settings")
+var set_generic_settings: Callable = _set_generic_settings
+
+
+## Disable immersive mode in the selected Android presets
+@export_tool_button("Disable immersive mode Android")
+var disable_immersive_mode_android: Callable = _disable_immersive_mode_android
+
+
+## Run every operation above for the selected devices
+@export_tool_button("Do everything")
+var do_everything: Callable = _do_everything
+
 
 # necessary options
 const PLATFORM_KEY: String = "platform"
@@ -120,42 +133,84 @@ const ANDROID_FORMAT_KEY: String = "gradle_build/export_format"
 const EXPORT_PATH_KEY: String = "export_path" # for every device
 const EMBED_PCK_KEY: String = "binary_format/embed_pck" # for linux and windows
 const WEB_MOBILE_COMPRESSION_KEY: String = "vram_texture_compression/for_mobile" # for webgl
+const ANDROID_IMMERSIVE_MODE_KEY: String = "screen/immersive_mode" # for android
 
 
-func _configure_all_presets() -> void:
-	_configure_presets(PackedStringArray([
-		DEVICE_ANDROID,
-		DEVICE_LINUX,
-		DEVICE_WINDOWS,
-		DEVICE_WEBGL,
-	]))
+enum Action {
+	NONE = 0,
+	CREATE_FOLDERS = 1 << 0, # create folders in computer
+	SET_EXPORT_PATH = 1 << 1, # set export path in export_presets for selected devices
+	SET_GENERIC_SETTINGS = 1 << 2, # set almost always correct settings (linux and windows embed_pck, texture compression for webgl)
+	DISABLE_ANDROID_IMMERSIVE_MODE = 1 << 3, # disable immersive mode for android (e.g. on Jolla phone keyboard doesn't appear when select a LineEdit if immersive mode is enabled)
+	ALL = (1 << 4) - 1,
+}
 
 
-func _configure_android_presets() -> void:
-	_configure_presets(PackedStringArray([DEVICE_ANDROID]))
+func _create_export_folders() -> void:
+	_configure_selected_presets(Action.CREATE_FOLDERS)
 
 
-func _configure_linux_presets() -> void:
-	_configure_presets(PackedStringArray([DEVICE_LINUX]))
+func _set_export_build_path() -> void:
+	_configure_selected_presets(Action.SET_EXPORT_PATH)
 
 
-func _configure_windows_presets() -> void:
-	_configure_presets(PackedStringArray([DEVICE_WINDOWS]))
+func _set_generic_settings() -> void:
+	_configure_selected_presets(Action.SET_GENERIC_SETTINGS)
 
 
-func _configure_webgl_presets() -> void:
-	_configure_presets(PackedStringArray([DEVICE_WEBGL]))
+func _disable_immersive_mode_android() -> void:
+	# be sure to select android to set its immersive mode
+	if (selected_devices & Device.ANDROID) == 0:
+		_warning_message("Select Android before disable immersive mode")
+		return
+	_configure_selected_presets(Action.DISABLE_ANDROID_IMMERSIVE_MODE)
 
 
+func _do_everything() -> void:
+	_configure_selected_presets(Action.ALL)
 
-func _configure_presets(requested_devices: PackedStringArray) -> void:
+
+func _get_selected_devices() -> Array[Device]:
+	# from flags, return readable devices
+	var devices: Array[Device] = []
+	if (selected_devices & Device.ANDROID) != 0:
+		devices.append(Device.ANDROID)
+	if (selected_devices & Device.LINUX) != 0:
+		devices.append(Device.LINUX)
+	if (selected_devices & Device.WINDOWS) != 0:
+		devices.append(Device.WINDOWS)
+	if (selected_devices & Device.WEBGL) != 0:
+		devices.append(Device.WEBGL)
+	return devices
+
+
+func _configure_selected_presets(actions: int) -> void:
+	# get an array of requested devices (Android, Linux, etc...)
+	var requested_devices: Array[Device] = _get_selected_devices()
+	if requested_devices.is_empty():
+		_warning_message("Select at least one device")
+		return
+
+	# create folders
+	var folders_created: bool = false
+	if (actions & Action.CREATE_FOLDERS) != 0:
+		folders_created = _create_folders_for_devices(requested_devices)
+		if folders_created:
+			_success_message("Export folders created")
+
+	# creating folders does not need to read or edit export_presets.cfg, so can stop here
+	if actions == Action.CREATE_FOLDERS:
+		if not folders_created:
+			_warning_message(_get_no_changes_message(actions))
+		return
+
 	# load export_presets.cfg file
 	var export_settings: ConfigFile = _load_export_settings()
 	if not export_settings:
-		return 
+		return
 
-	var changed: bool = false
-	var matched_devices := PackedStringArray()
+	var config_changed: bool = false
+	var matched_devices: Array[Device] = []
 	var preset_index: int = 0
 
 	# cycle every preset (they are named preset.0, preset.1, etc...)
@@ -166,95 +221,133 @@ func _configure_presets(requested_devices: PackedStringArray) -> void:
 
 		# check if this is a requested device to edit
 		var platform: String = str(export_settings.get_value(preset_section, PLATFORM_KEY, ""))
-		var device: String = _get_device_from_platform(platform)
+		var device: Device = _get_device_from_platform(platform)
 		if requested_devices.has(device):
-			matched_devices.append(device)
+			if not matched_devices.has(device):
+				matched_devices.append(device)
+
 			# and try edit it
-			changed = _configure_preset(export_settings, preset_section, device) or changed
+			config_changed = _apply_actions_to_preset(export_settings, preset_section, device, actions) or config_changed
 
 		preset_index += 1
 
 	# warning for every device not found
-	for device: String in requested_devices:
+	for device: Device in requested_devices:
 		if not matched_devices.has(device):
-			_warning_message(str("No ", device, " export preset found"))
+			_warning_message(str("No ", _get_device_name(device), " export preset found"))
 
-	# if nothing changed, warning
-	if not changed:
-		_warning_message("Export presets are already configured")
-		return
+	if config_changed:
+		_save_export_settings(export_settings)
 
-	# save file if edited
-	_save_export_settings(export_settings)
+	if not config_changed and not folders_created:
+		_warning_message(_get_no_changes_message(actions))
 
 
-# configure single preset
+func _create_folders_for_devices(devices: Array[Device]) -> bool:
+	if builds_root.is_empty():
+		_reset_builds_root()
+
+	var folder_created: bool = false
+
+	for device: Device in devices:
+		# get "path/to/Documents/project_name/Builds/device/" 
+		# where device is Android, Linux, etc...
+		var export_directory: String = builds_root.simplify_path().path_join(_get_device_name(device))
+
+		# create folders if not exist
+		if DirAccess.dir_exists_absolute(export_directory):
+			continue
+
+		var directory_error: Error = DirAccess.make_dir_recursive_absolute(export_directory)
+		if directory_error != OK: # and directory_error != ERR_ALREADY_EXISTS:
+			_error_message(str("Cannot create '", export_directory, "': "), directory_error)
+		else:
+			folder_created = true
+
+	return folder_created
+
+
+# Apply the requested actions to a single preset.
 # config is export_presets file, 
 # preset_section is preset.0, preset.1, etc...
 # device is Android, Linux, etc...
-func _configure_preset(config: ConfigFile, preset_section: String, device: String) -> bool:
+# actions is the list of action to do (set export path, generic settings, etc...)
+func _apply_actions_to_preset(config: ConfigFile, preset_section: String, device: Device, actions: int) -> bool:
 	# get options (they are named preset.0.options, preset.1.options, etc...)
 	var options_section: String = preset_section + OPTIONS_SECTION_SUFFIX
 
-	# get export path
-	var export_path: String = _get_export_path(config, options_section, device)
+	var config_changed: bool = false
 
-	# create folders if not exist
-	var export_directory: String = export_path.get_base_dir()
-	var directory_error: Error = DirAccess.make_dir_recursive_absolute(export_directory)
-	if directory_error != OK and directory_error != ERR_ALREADY_EXISTS:
-		_error_message(str("Cannot create '", export_directory, "': "), directory_error)
-		return false
+	# set export path
+	if (actions & Action.SET_EXPORT_PATH) != 0:
+		var export_path: String = _get_export_path(config, options_section, device)
+		config_changed = _set_value_if_different(config, preset_section, EXPORT_PATH_KEY, export_path) or config_changed
 
-	# and set export path
-	var changed: bool = _set_value_if_different(config, preset_section, EXPORT_PATH_KEY, export_path)
+	# set generic settings
+	if (actions & Action.SET_GENERIC_SETTINGS) != 0:
+		match device:
+			Device.LINUX, Device.WINDOWS:
+				config_changed = _set_value_if_different(config, options_section, EMBED_PCK_KEY, true) or config_changed
+			Device.WEBGL:
+				config_changed = _set_value_if_different(config, options_section, WEB_MOBILE_COMPRESSION_KEY, true) or config_changed
 
-	# and set specific device options
-	match device:
-		DEVICE_LINUX, DEVICE_WINDOWS:
-			changed = _set_value_if_different(config, options_section, EMBED_PCK_KEY, true) or changed
-		DEVICE_WEBGL:
-			changed = _set_value_if_different(config, options_section, WEB_MOBILE_COMPRESSION_KEY, true) or changed
+	# disable android immersive mode
+	if (actions & Action.DISABLE_ANDROID_IMMERSIVE_MODE) != 0 and device == Device.ANDROID:
+		config_changed = _set_value_if_different(config, options_section, ANDROID_IMMERSIVE_MODE_KEY, false) or config_changed
 
-	return changed
+	return config_changed
 
 
-func _get_device_from_platform(platform: String) -> String:
+func _get_no_changes_message(actions: int) -> String:
+	match actions:
+		Action.CREATE_FOLDERS:
+			return "Selected export folders already exist"
+		Action.SET_EXPORT_PATH:
+			return "Selected export build paths are already configured"
+		Action.SET_GENERIC_SETTINGS:
+			return "Generic settings are already configured for the selected devices"
+		Action.DISABLE_ANDROID_IMMERSIVE_MODE:
+			return "Android immersive mode is already disabled"
+		_:
+			return "Everything is already configured for the selected devices"
+
+
+func _get_device_from_platform(platform: String) -> Device:
 	# from options platform, return readable device
 	match platform:
 		"Android":
-			return DEVICE_ANDROID
+			return Device.ANDROID
 		"Linux", "Linux/BSD", "Linux/X11":
-			return DEVICE_LINUX
+			return Device.LINUX
 		"Windows", "Windows Desktop":
-			return DEVICE_WINDOWS
+			return Device.WINDOWS
 		"Web", "WebGL", "HTML5":
-			return DEVICE_WEBGL
+			return Device.WEBGL
 		_:
-			return ""
+			return Device.NONE
 
 
 # return path/to/Documents/project_name/Builds/device/file_name.extension
-func _get_export_path(config: ConfigFile, options_section: String, device: String) -> String:
+func _get_export_path(config: ConfigFile, options_section: String, device: Device) -> String:
 	# get "path/to/Documents/project_name/Builds/device/" 
 	# where device is Android, Linux, etc...
 	if builds_root.is_empty():
 		_reset_builds_root()
-	var export_directory: String = builds_root.simplify_path().path_join(device)
+	var export_directory: String = builds_root.simplify_path().path_join(_get_device_name(device))
 
 	var project_name: String = _get_project_name()
 	var file_name: String
 
 	# get file_name.extension
 	match device:
-		DEVICE_ANDROID:
+		Device.ANDROID:
 			var android_format: int = int(config.get_value(options_section, ANDROID_FORMAT_KEY, 0))
 			file_name = project_name + (".aab" if android_format == 1 else ".apk")
-		DEVICE_LINUX:
+		Device.LINUX:
 			file_name = project_name + ".x86_64"
-		DEVICE_WINDOWS:
+		Device.WINDOWS:
 			file_name = project_name + ".exe"
-		DEVICE_WEBGL:
+		Device.WEBGL:
 			file_name = "index.html"
 		_:
 			file_name = project_name
@@ -570,8 +663,8 @@ func _configure_android_release_credentials(keystore_path: String, alias: String
 
 		# check if this is an Android device to edit
 		var platform: String = str(export_settings.get_value(preset_section, PLATFORM_KEY, ""))
-		var device: String = _get_device_from_platform(platform)
-		if device == DEVICE_ANDROID:
+		var device: Device = _get_device_from_platform(platform)
+		if device == Device.ANDROID:
 
 			# get options (they are named preset.0.options, preset.1.options, etc...)
 			var options_section: String = preset_section + OPTIONS_SECTION_SUFFIX
