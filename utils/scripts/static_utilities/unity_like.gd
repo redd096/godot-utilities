@@ -153,6 +153,13 @@ static func raycast_3d_with_query(owner: Node3D, query: PhysicsRayQueryParameter
 	return space_state.intersect_ray(query)
 
 
+## Equivalent of unity Physics.Raycast with Camera.ScreenPointToRay
+static func raycast_3d_from_camera(camera: Camera3D, mouse_position: Vector2, ray_length: float = 1000.0, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
+	var from: Vector3 = camera.project_ray_origin(mouse_position)
+	var to: Vector3 = from + camera.project_ray_normal(mouse_position) * ray_length
+	return raycast_3d(camera, from, to, collision_mask, exclude)
+
+
 ## Equivalent of unity Physics2D.Raycast (can use node Raycast2D)
 static func raycast_2d(owner: Node2D, from: Vector2, to: Vector2, collision_mask: int = 4294967295, exclude: Array[RID] = []) -> Dictionary:
 	var space_state := owner.get_world_2d().direct_space_state
