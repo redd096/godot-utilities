@@ -4,7 +4,7 @@ class_name InterfacesLocator
 # key: node that implement interfaces
 # value: Dictionary[Object, Variant]
 # 	where key: script_type, value: result
-static var _interfaces: Dictionary#[Object, Dictionary] # for now untyped to avoid godot error when erase freed node
+static var _interfaces: Dictionary ## [Object, Dictionary] # for now untyped to avoid godot error when erase freed node
 
 
 # avoid too much memory
