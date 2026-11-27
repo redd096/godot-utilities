@@ -22,15 +22,25 @@ func _ready() -> void:
 
 
 ## Start ragdoll and after few seconds, destroy this unit
-func death_animation(node_colliders: Array[CollisionShape3D], node_animations: Array[AnimationTree], node: Node3D,
-	impulse: Vector3 = Vector3(0.0, 2.0, 3.0), 
-	ragdoll_time_before_destroy: float = 10.0) -> void:
-		# start ragdoll and disable node colliders
+func death_animation(
+	node_colliders: Array[CollisionShape3D],	## node colliders to disable when start ragdoll 
+	node_animations: Array[AnimationTree],		## node animations to disable when start ragdoll
+	node: Node3D,								## node to destroy after ragdoll
+	from_hit: Vector3,							## hit global position, to know the direction for the push
+	push_force: float = 3.0,					## horizontal push force 
+	up_force: float = 2.0,						## vertical push force
+	ragdoll_time_before_destroy: float = 10.0	## time in ragdoll before destroy the node
+	) -> void:
+		# horizontal impulse + vertical impulse
+		var direction: Vector3 = node.global_position - from_hit
+		var push: Vector3 = Vector3(direction.x, 0.0, direction.z).normalized()
+		push *= push_force
+		push.y = up_force
+
+		# start ragdoll, apply impulse, wait and destroy
 		start_ragdoll(node_colliders, node_animations)
-		apply_impulse(node.global_basis * impulse)
-		# wait few seconds
+		apply_impulse(push)
 		await get_tree().create_timer(ragdoll_time_before_destroy).timeout
-		# then destroy node
 		node.queue_free()
 
 
